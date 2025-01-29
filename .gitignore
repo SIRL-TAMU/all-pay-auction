@@ -1,0 +1,4 @@
+# Emitted from LaTeX
+*.aux
+*.log
+*.out
