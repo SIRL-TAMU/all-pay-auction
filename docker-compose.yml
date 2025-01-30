@@ -1,0 +1,45 @@
+services:
+  app:
+    build:
+      context: /home/blender/Documents/TAMU/Software-Engineering/project
+      dockerfile: Dockerfile
+    command: 
+      - bash
+      - -c
+      - rm -f tmp/pids/server.pid && rails server -b 0.0.0.0
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env_dev  # Use environment file
+    environment:
+      DB_HOST: db
+    networks:
+      - project_network
+    ports:
+      - "3000:3000"  # Simplified port mapping
+    volumes:
+      - /home/blender/Documents/TAMU/Software-Engineering/project:/app
+      - bundle:/usr/local/bundle
+
+  db:
+    image: postgres:16
+    env_file: .env_dev  # Add this line
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - project_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+networks:
+  project_network:
+    name: project_default
+
+volumes:
+  bundle:
+    name: project_bundle
+  postgres_data:
+    name: project_postgres_data
