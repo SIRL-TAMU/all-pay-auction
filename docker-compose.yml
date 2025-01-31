@@ -1,7 +1,7 @@
 services:
   app:
     build:
-      context: /home/blender/Documents/TAMU/Software-Engineering/project
+      context: .
       dockerfile: Dockerfile
     command: 
       - bash
@@ -18,7 +18,7 @@ services:
     ports:
       - "3000:3000"  # Simplified port mapping
     volumes:
-      - /home/blender/Documents/TAMU/Software-Engineering/project:/app
+      - .:/app
       - bundle:/usr/local/bundle
 
   db:
