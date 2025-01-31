@@ -54,7 +54,7 @@ The tentative meeting schedule is as follows:
 | Day          | Time        |
 | -----------  | ----------- |
 | Thuesday     |  10 AM      |
-| Thursday     |  10 PM       |
+| Thursday     |  10 AM       |
 | Friday       |  7 PM       |
 
 
