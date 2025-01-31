@@ -1,0 +1,122 @@
+\documentclass[10pt]{article}
+ 
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb, graphicx, multicol, array}
+ \usepackage{float}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+ 
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+%%%%%%%%%%%%%%%%%
+\usepackage[dvipsnames]{xcolor}
+
+\usepackage{tikz}
+
+\makeatletter
+\newcommand*{\encircled}[1]{\relax\ifmmode\mathpalette\@encircled@math{#1}\else\@encircled{#1}\fi}
+\newcommand*{\@encircled@math}[2]{\@encircled{$\m@th#1#2$}}
+\newcommand*{\@encircled}[1]{%
+  \tikz[baseline,anchor=base]{\node[draw,circle,outer sep=0pt,inner sep=.2ex] {#1};}}
+\makeatother
+%%%%%%%%%%%%%%%%%%%
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+
+%%%%%%%%%%%%%%%%%
+
+\begin{document}
+ 
+\title{Sprint 1}
+\author{All Pay Auction\\
+CSCE 606 - Spring 2025}
+\maketitle
+
+\section{Team Roles}
+\begin{itemize}
+    \item Product owner: Jason Le 
+    \item Scrum master: Praewa Pitiphat
+    \item Developers:
+        \begin{itemize}
+            \item Arkan Abuyazid
+            \item Ruvail Shahzad 
+            \item Steve Wang 
+        \end{itemize}
+\end{itemize}
+
+\noindent\rule{8cm}{0.4pt} %%line break
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Customer Meetings}
+
+\subsection{Date/Time/Place}
+%Customer meeting date/time/place: The team product owner should contact the customer and set up a regular weekly meeting.
+
+
+
+\subsection{Summary}
+%Summary: Write a two-paragraph (max) summary of the main customer need and how the application will meet it, including who the stakeholders are.
+
+
+\noindent\rule{8cm}{0.4pt} %%line break
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{User Stories}
+
+\begin{enumerate}
+    \item User Story 1: Seller Creates an Auction\\
+    As a seller,\\
+    I want to create an auction with a closing date,\\
+    so that I can start accepting bids for my item.
+
+    \item User Story 2: Bidder Places a Bid\\
+    As a bidder,\\
+    I want to place a bid in the auction,\\
+    so that I have a chance to win the item.
+
+    \item User Story 3: Auctioneer Settles the Auction\\
+    As an auctioneer,\\
+    I want to settle the auction after the closing date,\\
+    so that I can determine the winner and collect payments from all bidders.
+
+    \item User Story 4: Bidder Views Auction Status\\
+    As a bidder,\\
+    I want to view the current status of the auction,\\
+    so that I can decide whether to place a bid or increase my bid.
+
+    \item User Story 5: Seller Views Auction Results\\
+    As a seller,
+    I want to view the results of the auction after it closes,
+    so that I can see who won and how much was collected.
+\end{enumerate}
+\noindent\rule{8cm}{0.4pt} %%line break
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{User interface (Lofi-sketch)}
+
+
+\noindent\rule{8cm}{0.4pt} %%line break
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Links}
+% Note: Pivotal Tracker no longer available. Use GitHub Projects instead
+
+\begin{itemize}
+    \item \href{https://github.com/SIRL-TAMU/all-pay-auction}{GitHub Repo}
+    \item \href{https://discord.gg/37kNGVctuf}{Discord}
+\end{itemize}
+
+
+\noindent\rule{8cm}{0.4pt} %%line break
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
