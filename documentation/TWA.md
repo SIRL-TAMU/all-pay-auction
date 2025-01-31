@@ -42,6 +42,7 @@ The roles will be rotated each sprint.
 
 
 ## Communication channels
+Communication is key. Response to teammates in a timely manner and be sure to give notice if you're unable to attend meetings.
 Main communication channel is Discord server.  
 
 ## Meetings
@@ -53,8 +54,8 @@ The meeting will be held 3 times/week (subject to change anytime).
 The tentative meeting schedule is as follows:
 | Day          | Time        |
 | -----------  | ----------- |
-| Thuesday     |  10 AM      |
-| Thursday     |  10 AM       |
+| Tuesday      |  10 AM      |
+| Thursday     |  10 AM      |
 | Friday       |  7 PM       |
 
 
