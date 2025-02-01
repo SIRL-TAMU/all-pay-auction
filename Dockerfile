@@ -25,7 +25,7 @@ WORKDIR /app
 
 # Copy Gemfile first (even if Gemfile.lock is missing)
 COPY Gemfile /app/Gemfile
-RUN if [ -f Gemfile.lock ]; then cp Gemfile.lock /app/Gemfile.lock; fi
+RUN touch /app/Gemfile.lock
 
 
 

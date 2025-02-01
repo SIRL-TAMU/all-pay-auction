@@ -33,7 +33,6 @@ gem "bootsnap", require: false
 
 gem 'rack', '~> 3.1.8'
 
-
 ####TEST
 gem 'rubocop', '~> 1.71.0'
 

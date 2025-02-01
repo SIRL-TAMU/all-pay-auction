@@ -9,6 +9,7 @@
 /config/master.key
 
 # Add this to your .gitignore
+Gemfile.lock
 # Rails
 /log/*
 /tmp/*
