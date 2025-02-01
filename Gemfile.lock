@@ -144,8 +144,6 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.4)
-    nokogiri (1.18.2-x64-mingw-ucrt)
-      racc (~> 1.4)
     nokogiri (1.18.2-x86_64-linux-gnu)
       racc (~> 1.4)
     parallel (1.26.3)
@@ -153,7 +151,6 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.9)
-    pg (1.5.9-x64-mingw-ucrt)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -209,14 +206,14 @@ GEM
     reline (0.6.0)
       io-console (~> 0.5)
     rexml (3.4.0)
-    rubocop (1.71.0)
+    rubocop (1.71.1)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.9.3, < 3.0)
-      rubocop-ast (>= 1.36.2, < 2.0)
+      rubocop-ast (>= 1.38.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
     rubocop-ast (1.38.0)
@@ -263,8 +260,6 @@ GEM
       railties (>= 6.0.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    tzinfo-data (1.2025.1)
-      tzinfo (>= 1.0.0)
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
@@ -284,7 +279,6 @@ GEM
     zeitwerk (2.7.1)
 
 PLATFORMS
-  x64-mingw-ucrt
   x86_64-linux
 
 DEPENDENCIES
@@ -298,6 +292,7 @@ DEPENDENCIES
   puma (>= 5.0)
   rack (~> 3.1.8)
   rails (~> 7.2.2, >= 7.2.2.1)
+  rubocop (~> 1.71.0)
   rubocop-rails-omakase
   selenium-webdriver
   sprockets-rails (~> 3.4)

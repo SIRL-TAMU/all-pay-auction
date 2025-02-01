@@ -27,11 +27,14 @@ WORKDIR /app
 COPY Gemfile /app/Gemfile
 RUN if [ -f Gemfile.lock ]; then cp Gemfile.lock /app/Gemfile.lock; fi
 
-# Install gems
-RUN bundle install
+
+
 
 # Copy application code
 COPY . .
+
+# Install gems
+RUN bundle install
 
 # Entrypoint script to wait for PostgreSQL
 COPY entrypoint.sh /usr/bin/
