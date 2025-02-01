@@ -2,3 +2,51 @@
 *.aux
 *.log
 *.out
+
+.env
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
+
+# Add this to your .gitignore
+Gemfile.lock
+# Rails
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/storage/*
+!/storage/.keep
+/public/assets
+/public/packs
+/public/vite
+
+# Environment
+.env
+.env.*
+/config/credentials/*.key
+
+# Docker
+docker-compose.override.yml
+**/.dockerignore
+**/docker-data/
+
+# Dependencies
+/node_modules
+/vendor/bundle
+/vendor/cache
+
+# Database
+*.sqlite3
+*.sqlite3-*
+/db/*.sql
+/db/*.backup
+
+# IDE/Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
