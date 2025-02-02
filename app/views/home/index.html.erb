@@ -33,19 +33,19 @@
 
         toggleBtn.onclick = function () {
             dropDownMenu.classList.toggle('open');
-            
             const isOpen = dropDownMenu.classList.contains('open');
-
             toggleBtnIcon.classList = isOpen ? "fa-solid fa-xmark" : "fa-solid fa-bars";
         }
-
     </script>
 </header>
 
 <main>
     <section id="hero">
         <h1>Welcome</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit excepturi <br/>voluptate quae adipisci repellat magni fugiat consequuntur porro illo a.</p>
+        <p>POV: me blasting Fetty while working on this website</p>
+        <audio controls autoplay loop>
+            <source src="<%= asset_path 'fun-fetty.mp3' %>" type="audio/mp3">
+        </audio>
     </section>
 
 </main>
