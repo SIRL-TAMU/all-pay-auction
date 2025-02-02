@@ -1,2 +1,51 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
+<header>
+    <div class="navbar">
+        <div class="logo">
+            <a href="#">All Pay Auction</a>
+        </div>
+
+        <ul class="links">
+            <li><a href="hero">Home</a></li>
+            <li><a href="about">Buy</a></li>
+            <li><a href="contact">Sell</a></li>
+            <li><a href="hero">About Us</a></li>
+        </ul>
+
+        <a href="#" class="login-btn">Login</a>
+        <div class="toggle-btn">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+    </div>
+
+    <div class="dropdown-menu">
+        <li><a href="hero">Home</a></li>
+        <li><a href="about">Buy</a></li>
+        <li><a href="contact">Sell</a></li>
+        <li><a href="hero">About Us</a></li>
+        <a href="#" class="login-btn">Login</a>
+    </div>
+
+    <script>
+        const toggleBtn = document.querySelector('.toggle-btn');
+        const toggleBtnIcon = document.querySelector('.toggle-btn i ');
+        const dropDownMenu = document.querySelector('.dropdown-menu');
+
+
+        toggleBtn.onclick = function () {
+            dropDownMenu.classList.toggle('open');
+            
+            const isOpen = dropDownMenu.classList.contains('open');
+
+            toggleBtnIcon.classList = isOpen ? "fa-solid fa-xmark" : "fa-solid fa-bars";
+        }
+
+    </script>
+</header>
+
+<main>
+    <section id="hero">
+        <h1>Welcome</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit excepturi <br/>voluptate quae adipisci repellat magni fugiat consequuntur porro illo a.</p>
+    </section>
+
+</main>
