@@ -25,6 +25,7 @@ Gemfile.lock
 .env
 .env.*
 /config/credentials/*.key
+.bundle
 
 # Docker
 docker-compose.override.yml

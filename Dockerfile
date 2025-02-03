@@ -27,9 +27,6 @@ WORKDIR /app
 COPY Gemfile /app/Gemfile
 RUN touch /app/Gemfile.lock
 
-
-
-
 # Copy application code
 COPY . .
 
