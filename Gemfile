@@ -35,6 +35,7 @@ gem "rack", "~> 3.1.8"
 gem "rubocop", "~> 1.71.0"
 gem "sassc-rails"
 
+
 #########
 
 
