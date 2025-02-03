@@ -1,45 +1,4 @@
-<header>
-    <div class="navbar">
-        <div class="logo">
-            <a href="#">All Pay Auction</a>
-        </div>
-
-        <ul class="links">
-            <li><a href="/">Home</a></li>
-            <li><a href="#">Buy</a></li>
-            <li><a href="#">Sell</a></li>
-            <li><a href="#">About Us</a></li>
-        </ul>
-
-        <a href="/login" class="login-btn">Login</a>
-        <div class="toggle-btn">
-            <i class="fa-solid fa-bars"></i>
-        </div>
-    </div>
-
-    <div class="dropdown-menu">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Buy</a></li>
-        <li><a href="#">Sell</a></li>
-        <li><a href="#">About Us</a></li>
-        <a href="/login" class="login-btn">Login</a>
-    </div>
-
-    <script>
-        const toggleBtn = document.querySelector('.toggle-btn');
-        const toggleBtnIcon = document.querySelector('.toggle-btn i ');
-        const dropDownMenu = document.querySelector('.dropdown-menu');
-
-
-        toggleBtn.onclick = function () {
-            dropDownMenu.classList.toggle('open');
-            const isOpen = dropDownMenu.classList.contains('open');
-            toggleBtnIcon.classList = isOpen ? "fa-solid fa-xmark" : "fa-solid fa-bars";
-        }
-    </script>
-</header>
-
 <main>
-<h1>Sessions#new</h1>
-<p>Find me in app/views/sessions/new.html.erb</p>
+    <h1>Sessions#new</h1>
+    <p>Find me in app/views/sessions/new.html.erb</p>
 </main>
