@@ -1,5 +1,5 @@
 class BuyerInterfaceController < ApplicationController
-  #before_action :require_login
+  before_action :require_login
   before_action :ensure_buyer
 
   def index
