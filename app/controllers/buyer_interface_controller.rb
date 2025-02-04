@@ -9,11 +9,11 @@ class BuyerInterfaceController < ApplicationController
   private
 
   def ensure_buyer
-   # if !buyer?
-   #   flash[:alert] = "Invalid email or password"
-   #   Rails.logger.debug "are you a buyer"
+    # if !buyer?
+    #   flash[:alert] = "Invalid email or password"
+    #   Rails.logger.debug "are you a buyer"
 
-   # end
-    redirect_to login_path, alert: "Access denied!" unless buyer? #TODO test later
+    # end
+    redirect_to login_path, alert: "Access denied!" unless buyer? # TODO test later
   end
 end

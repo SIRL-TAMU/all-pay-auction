@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   # Root path
   root "home#index"
 
-  #Sessions user login/logout
+  # Sessions user login/logout
   get "home/index"
   get "/login", to: "sessions#new"
   post "/login", to: "sessions#create"
@@ -20,5 +20,4 @@ Rails.application.routes.draw do
 
   # Seller Dashboard
   get "/seller/dashboard", to: "seller_interface#index", as: :seller_dashboard
-  
 end
