@@ -10,6 +10,7 @@ done
 >&2 echo "PostgreSQL is up - executing command"
 
 # Create and migrate database
+bundle install
 bundle exec rails db:prepare
 
 exec "$@"
