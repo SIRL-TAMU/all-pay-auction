@@ -4,9 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile
     command: 
-      - bash
-      - -c
-      - bundle install && rm -f tmp/pids/server.pid && rails server -b 0.0.0.0
     depends_on:
       db:
         condition: service_healthy
@@ -43,3 +40,6 @@ volumes:
     name: project_bundle
   postgres_data:
     name: project_postgres_data
+    #- bash
+    #- -c
+    #- bundle install && rm -f tmp/pids/server.pid && rails server -b 0.0.0.0

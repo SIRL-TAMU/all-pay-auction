@@ -1,4 +1,22 @@
-<main>
-    <h1>Sessions#new</h1>
-    <p>Find me in app/views/sessions/new.html.erb</p>
-</main>
+<h2>Login</h2>
+
+<%= form_with url: login_path, method: :post do %>  
+  <!-- Send post request to login path -->
+  <div>
+    <%= label_tag :account_type, "Login as" %>
+    <%= select_tag :account_type, options_for_select([["Buyer", "buyer"], ["Seller", "seller"]]) %>
+  </div>
+
+  <div>
+    <%= label_tag :email %>
+    <%= text_field_tag :email, params[:email] %>
+  </div>
+
+  <div>
+    <%= label_tag :password %>
+    <%= password_field_tag :password %>
+  </div>
+
+  <%= submit_tag "Login" %>
+  <!-- Send post request with information from fields -->
+<% end %>

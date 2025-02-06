@@ -27,14 +27,11 @@ WORKDIR /app
 COPY Gemfile /app/Gemfile
 RUN touch /app/Gemfile.lock
 
-
-
-
 # Copy application code
 COPY . .
 
 # Install gems
-RUN bundle install
+# RUN bundle install
 
 # Entrypoint script to wait for PostgreSQL
 COPY entrypoint.sh /usr/bin/

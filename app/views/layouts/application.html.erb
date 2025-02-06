@@ -19,10 +19,28 @@
 
     <!-- Rails Application Styles -->
     <%= stylesheet_link_tag "application" %>
+    <%= javascript_importmap_tags %>
   </head>
 
   <body>
     <%= render "shared/navbar" %> 
+
+    <% if flash[:notice] %>
+      <div class="flash-message flash-success">
+        <span><%= flash[:notice] %></span>
+        <button onclick="this.parentElement.style.display='none'">✖</button>
+      </div>
+    <% end %>
+
+    <% if flash[:alert] %>
+      <div class="flash-message flash-danger">
+        <span><%= flash[:alert] %></span>
+        <button onclick="this.parentElement.style.display='none'">✖</button>
+      </div>
+    <% end %>
+
+
+
     <%= yield %>
 </body>
 </html>
