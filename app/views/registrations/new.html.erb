@@ -1,0 +1,30 @@
+<%= form_with url: signup_path(account_type: @account_type), method: :post, scope: :user do |f| %>
+  <p>Signing up as a <%= @account_type.present? ? @account_type.capitalize : "User" %></p>
+
+  <div>
+    <%= f.label :first_name, "First Name" %>
+    <%= f.text_field :first_name %>
+  </div>
+
+  <div>
+    <%= f.label :last_name, "Last Name" %>
+    <%= f.text_field :last_name %>
+  </div>
+
+  <div>
+    <%= f.label :email, "Email" %>
+    <%= f.email_field :email %>
+  </div>
+
+  <div>
+    <%= f.label :password, "Password" %>
+    <%= f.password_field :password %>
+  </div>
+
+  <div>
+    <%= f.label :password_confirmation, "Confirm Password" %>
+    <%= f.password_field :password_confirmation %>
+  </div>
+
+  <%= f.submit "Sign Up" %>
+<% end %>

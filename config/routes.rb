@@ -15,6 +15,10 @@ Rails.application.routes.draw do
   post "/login", to: "sessions#create"
   delete "/logout", to: "sessions#destroy"
 
+  # User registration
+  get "/signup", to: "registrations#new", as: :signup
+  post "/signup", to: "registrations#create"
+
   # Buyer Dashboard
   get "/buyer/dashboard", to: "buyer_interface#index", as: :buyer_dashboard
 
