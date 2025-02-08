@@ -1,11 +1,18 @@
 class RegistrationsController < ApplicationController
   def new
     @account_type = params[:account_type]
+    unless %w[buyer seller].include?(@account_type)
+      redirect_to root_path, alert: "Invalid account type"
+    end
     @user = @account_type == "buyer" ? Buyer.new : Seller.new
   end
 
   def create
     account_type = params[:account_type]
+    unless %w[buyer seller].include?(account_type)
+      redirect_to signup_path, alert: "Invalid account type" and return
+    end
+
     user_class = account_type == "buyer" ? Buyer : Seller
     @user = user_class.new(user_params)
 
