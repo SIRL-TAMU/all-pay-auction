@@ -6,12 +6,20 @@
 
         <ul class="links">
             <li><%= link_to "Home", root_path %></li>
-            <li><%= link_to "Buy", "/buyer/dashboard" %></li>
-            <li><%= link_to "Sell", "/seller/dashboard" %></li>
+            <li><%= link_to "Buy", buyer_dashboard_path %></li>
+            <li><%= link_to "Sell", seller_dashboard_path %></li>
             <li><%= link_to "About Us", "#" %></li>
         </ul>
 
-        <%= link_to "Login", login_path, class: "login-btn" %>
+       <% if logged_in? %>
+            <span>
+                Logged in as <%= current_user.first_name %> 
+                (<%= session[:account_type].capitalize %>)
+            </span>
+            <%= link_to "Logout", logout_path, method: :delete, class: "logout-btn" %>
+        <% else %>
+            <%= link_to "Login", login_path, class: "login-btn" %>
+        <% end %>
 
         <div class="toggle-btn">
             <i class="fa-solid fa-bars"></i>
@@ -20,10 +28,15 @@
 
     <div class="dropdown-menu">
         <li><%= link_to "Home", root_path %></li>
-        <li><%= link_to "Buy", "/buyer/dashboard" %></li>
-        <li><%= link_to "Sell", "/seller/dashboard" %></li>
+        <li><%= link_to "Buy", buyer_dashboard_path %></li>
+        <li><%= link_to "Sell", seller_dashboard_path %></li>
         <li><%= link_to "About Us", "#" %></li>
-        <%= link_to "Login", login_path, class: "login-btn" %>
+        
+        <% if logged_in? %>
+            <%= link_to "Logout", logout_path, method: :delete, class: "logout-btn" %>
+        <% else %>
+            <%= link_to "Login", login_path, class: "login-btn" %>
+        <% end %>
     </div>
 
     <script>

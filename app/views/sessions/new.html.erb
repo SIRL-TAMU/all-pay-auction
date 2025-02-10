@@ -20,3 +20,9 @@
   <%= submit_tag "Login" %>
   <!-- Send post request with information from fields -->
 <% end %>
+
+
+<p>Don't have an account? 
+  <a href="<%= signup_path(account_type: 'buyer') %>">Sign up as a Buyer</a> or 
+  <a href="<%= signup_path(account_type: 'seller') %>">Sign up as a Seller</a>.
+</p>
