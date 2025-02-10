@@ -321,10 +321,46 @@
           null
         ]
       },
-      "/app/app/controllers/home_controller.rb": {
+      "/app/app/controllers/sessions_controller.rb": {
         "lines": [
           1,
           1,
+          null,
+          null,
+          null,
+          1,
+          0,
+          0,
+          0,
+          null,
+          null,
+          0,
+          null,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          null,
+          1,
+          0,
+          0,
+          0,
           null,
           null
         ]
@@ -389,6 +425,14 @@
           null
         ]
       },
+      "/app/app/controllers/home_controller.rb": {
+        "lines": [
+          1,
+          1,
+          null,
+          null
+        ]
+      },
       "/app/app/controllers/registrations_controller.rb": {
         "lines": [
           1,
@@ -426,52 +470,8 @@
           null,
           null
         ]
-      },
-      "/app/app/controllers/sessions_controller.rb": {
-        "lines": [
-          1,
-          1,
-          null,
-          null,
-          null,
-          1,
-          0,
-          0,
-          0,
-          null,
-          null,
-          0,
-          null,
-          0,
-          0,
-          null,
-          0,
-          0,
-          0,
-          null,
-          null,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          null,
-          null,
-          0,
-          0,
-          null,
-          null,
-          null,
-          1,
-          0,
-          0,
-          0,
-          null,
-          null
-        ]
       }
     },
-    "timestamp": 1739213429
+    "timestamp": 1739215807
   }
 }
