@@ -63,5 +63,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   # Add SimpleCov for test coverage reporting
-  gem 'simplecov', require: false
+  gem "simplecov", require: false
 end
