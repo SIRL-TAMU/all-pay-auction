@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# This migration creates the buyers table in the database.
 class CreateBuyers < ActiveRecord::Migration[7.2]
   def change
     create_table :buyers do |t|

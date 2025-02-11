@@ -1,16 +1,17 @@
+# frozen_string_literal: true
+
+# Handles user registration logic, including account type and creation.
 class RegistrationsController < ApplicationController
   def new
     @account_type = params[:account_type]
-    unless %w[buyer seller].include?(@account_type)
-      redirect_to root_path, alert: "Invalid account type"
-    end
+    redirect_to root_path, alert: I18n.t("alerts.invalid_account_type") unless %w[buyer seller].include?(@account_type)
     @user = @account_type == "buyer" ? Buyer.new : Seller.new
   end
 
   def create
     @account_type = params[:account_type]
     unless %w[buyer seller].include?(@account_type)
-      redirect_to signup_path, alert: "Invalid account type" and return
+      redirect_to signup_path, alert: I18n.t("alerts.invalid_account_type") and return
     end
 
     user_class = @account_type == "buyer" ? Buyer : Seller
@@ -19,7 +20,8 @@ class RegistrationsController < ApplicationController
     if @user.save
       session[:user_id] = @user.id
       session[:account_type] = @account_type
-      redirect_to @account_type == "buyer" ? buyer_dashboard_path : seller_dashboard_path, notice: "Welcome, #{@account_type.capitalize}!"
+      redirect_to @account_type == "buyer" ? buyer_dashboard_path : seller_dashboard_path,
+                  notice: "Welcome, #{@account_type.capitalize}!"
     else
       flash[:alert] = @user.errors.full_messages.to_sentence
       render :new, status: :unprocessable_entity

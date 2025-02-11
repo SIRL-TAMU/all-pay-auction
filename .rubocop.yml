@@ -9,3 +9,9 @@ inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 AllCops:
   NewCops: enable
   DisabledByDefault: false
+
+Metrics/AbcSize:
+  Max: 35
+
+Metrics/MethodLength:
+  Max: 30

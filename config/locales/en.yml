@@ -28,4 +28,12 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  alerts:
+    access_denied: "Access denied!"
+    invalid_account_type: "Invalid account type"
+  notices:
+    hi_buyer: "Hi Buyer!"
+    hi_seller: "Hi Seller!"
+    logged_out: "Logged out!"
+  errors:
+    invalid_credentials: "Invalid email or password"
