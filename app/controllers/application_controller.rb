@@ -1,9 +1,14 @@
+# frozen_string_literal: true
+
+# Base controller class for the application.
+# All controllers inherit from this class to share common logic.
 class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
   helper_method :current_user, :logged_in?, :buyer?, :seller?
 
-  def current_user  # check is user is logged in, will check database
+  # check is user is logged in, will check database
+  def current_user
     if session[:account_type] == "buyer"
       @current_user ||= Buyer.find_by(id: session[:user_id])
     elsif session[:account_type] == "seller"
@@ -24,9 +29,9 @@ class ApplicationController < ActionController::Base
   end
 
   def require_login
-    unless logged_in?
+    return if logged_in?
+
       # redirect_to login_path
       Rails.logger.debug "Debug: You need be logged in!"
-    end
   end
 end

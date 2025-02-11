@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "boot"
 
 require "rails/all"
@@ -7,6 +9,7 @@ require "rails/all"
 Bundler.require(*Rails.groups)
 
 module App
+  # Main application class for the Rails application.
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.2
