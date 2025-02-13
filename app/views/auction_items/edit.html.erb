@@ -1,2 +1,50 @@
-<h1>AuctionItems#edit</h1>
-<p>Find me in app/views/auction_items/edit.html.erb</p>
+<h1>Edit Auction Item</h1>
+
+<%= form_with(model: @auction_item, local: true) do |form| %>
+  <% if @auction_item.errors.any? %>
+    <div>
+      <h2><%= pluralize(@auction_item.errors.count, "error") %> prohibited this auction item from being saved:</h2>
+      <ul>
+        <% @auction_item.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <label for="name">Item Name:</label>
+    <%= form.text_field :name, required: true %>
+  </div>
+
+  <div>
+    <label for="description">Description:</label>
+    <%= form.text_area :description, required: true %>
+  </div>
+
+  <div>
+    <label for="max_bid">Max Bid:</label>
+    <%= form.number_field :max_bid, step: 0.01, required: true %>
+  </div>
+
+  <div>
+    <label for="opening_date">Opening Date:</label>
+    <%= form.datetime_local_field :opening_date, required: true %>
+  </div>
+
+  <div>
+    <label for="closing_date">Closing Date:</label>
+    <%= form.datetime_local_field :closing_date, required: true %>
+  </div>
+
+  <div>
+    <label for="image">Image URL:</label>
+    <%= form.text_field :image, placeholder: "https://example.com/image.jpg" %>
+  </div>
+
+  <div>
+    <%= form.submit "Update Auction Item" %>
+  </div>
+<% end %>
+
+<%= link_to "Back to Auction Items", auction_items_path %>

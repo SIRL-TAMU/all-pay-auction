@@ -1,2 +1,17 @@
-<h1>AuctionItems#index</h1>
-<p>Find me in app/views/auction_items/index.html.erb</p>
+<h1>All Auction Items</h1>
+
+<% @auction_items.each do |item| %>
+  <div>
+    <h2><%= link_to item.name, auction_item_path(item) %></h2>
+    <p><%= item.description %></p>
+    <p>Max Bid: $<%= item.max_bid %></p>
+    <p>Closing Date: <%= item.closing_date.strftime('%Y-%m-%d') %></p>
+   <%= image_tag(item.image.present? && item.image.start_with?("http") ? item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
+
+
+  </div>    
+<% end %>
+
+<% if seller? %>
+  <%= link_to "Create New Auction", new_auction_item_path %>
+<% end %>
