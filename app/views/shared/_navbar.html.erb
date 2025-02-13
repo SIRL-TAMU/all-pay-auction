@@ -9,7 +9,6 @@
             <li><%= link_to "Buy", buyer_dashboard_path %></li>
             <li><%= link_to "Sell", seller_dashboard_path %></li>
             <li><%= link_to "Auction Items", auction_items_path %></li>
-            <li><%= link_to "About Us", "#" %></li>
         </ul>
 
        <% if logged_in? %>
@@ -31,7 +30,6 @@
         <li><%= link_to "Home", root_path %></li>
         <li><%= link_to "Buy", buyer_dashboard_path %></li>
         <li><%= link_to "Sell", seller_dashboard_path %></li>
-        <li><%= link_to "About Us", "#" %></li>
         
         <% if logged_in? %>
             <%= link_to "Logout", logout_path, method: :delete, class: "logout-btn" %>
