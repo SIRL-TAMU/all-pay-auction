@@ -64,4 +64,8 @@ group :test do
   gem "selenium-webdriver"
   # Add SimpleCov for test coverage reporting
   gem "simplecov", require: false
+
+  # set false because we don't want cucumber code to be loaded into Rails every time it boots up (in non-test env)
+  gem "cucumber-rails", require: false
+  gem "rspec-rails"
 end
