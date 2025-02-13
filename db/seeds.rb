@@ -3,11 +3,11 @@
 # Only run seed data in development
 if Rails.env.development?
   # Clear existing data to avoid duplicates
-  Buyer.destroy_all
-  Seller.destroy_all
-  AuctionItem.destroy_all
   Bid.destroy_all
   Transaction.destroy_all
+  AuctionItem.destroy_all
+  Buyer.destroy_all
+  Seller.destroy_all
 
   # Passwords will automatically be hashed
 
