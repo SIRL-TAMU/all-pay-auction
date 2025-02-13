@@ -6,7 +6,7 @@
     <p><%= item.description %></p>
     <p>Max Bid: $<%= item.max_bid %></p>
     <p>Closing Date: <%= item.closing_date.strftime('%Y-%m-%d') %></p>
-   <%= image_tag(item.image.present? && item.image.start_with?("http") ? item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
+    <%= image_tag(item.image.present? && item.image.start_with?("http") ? item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
 
 
   </div>    
