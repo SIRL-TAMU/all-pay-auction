@@ -10,9 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_03_202230) do
+ActiveRecord::Schema[7.2].define(version: 2025_02_13_020006) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "auction_items", force: :cascade do |t|
+    t.bigint "seller_id", null: false
+    t.string "name"
+    t.text "description"
+    t.decimal "max_bid"
+    t.datetime "opening_date"
+    t.datetime "closing_date"
+    t.string "image"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["seller_id"], name: "index_auction_items_on_seller_id"
+  end
+
+  create_table "bids", force: :cascade do |t|
+    t.bigint "buyer_id", null: false
+    t.bigint "auction_item_id", null: false
+    t.decimal "amount"
+    t.datetime "created_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["auction_item_id"], name: "index_bids_on_auction_item_id"
+    t.index ["buyer_id"], name: "index_bids_on_buyer_id"
+  end
 
   create_table "buyers", force: :cascade do |t|
     t.string "first_name", limit: 64, null: false
@@ -21,6 +45,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_03_202230) do
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "amount"
     t.index ["email"], name: "index_buyers_on_email", unique: true
   end
 
@@ -31,6 +56,26 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_03_202230) do
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "amount"
     t.index ["email"], name: "index_sellers_on_email", unique: true
   end
+
+  create_table "transactions", force: :cascade do |t|
+    t.bigint "buyer_id", null: false
+    t.bigint "seller_id", null: false
+    t.decimal "amount"
+    t.boolean "is_credit"
+    t.boolean "is_buyer"
+    t.datetime "created_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["buyer_id"], name: "index_transactions_on_buyer_id"
+    t.index ["seller_id"], name: "index_transactions_on_seller_id"
+  end
+
+  add_foreign_key "auction_items", "sellers"
+  add_foreign_key "bids", "auction_items"
+  add_foreign_key "bids", "buyers"
+  add_foreign_key "transactions", "buyers"
+  add_foreign_key "transactions", "sellers"
 end

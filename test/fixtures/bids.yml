@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  buyer: one
+  auction_item: one
+  amount: 9.99
+  created_date: 2025-02-12 17:59:57
+
+two:
+  buyer: two
+  auction_item: two
+  amount: 9.99
+  created_date: 2025-02-12 17:59:57

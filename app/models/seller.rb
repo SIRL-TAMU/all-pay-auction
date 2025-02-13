@@ -4,4 +4,6 @@
 class Seller < ApplicationRecord
   has_secure_password # Automatically handles password hashing
   validates :email, presence: true, uniqueness: true
+  has_many :transactions
 end
+
