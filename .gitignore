@@ -51,4 +51,4 @@ docker-compose.override.yml
 
 # OS
 .DS_Store
-/2
+/2coverage/
