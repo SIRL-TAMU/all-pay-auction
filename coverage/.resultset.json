@@ -4,6 +4,8 @@
       "/app/config/environment.rb": {
         "lines": [
           null,
+          null,
+          null,
           1,
           null,
           null,
@@ -12,6 +14,8 @@
       },
       "/app/config/environments/test.rb": {
         "lines": [
+          null,
+          null,
           1,
           null,
           null,
@@ -86,8 +90,9 @@
           null,
           null,
           null,
-          1,
           null,
+          null,
+          1,
           null,
           null,
           null,
@@ -126,11 +131,15 @@
           null,
           null,
           null,
+          null,
+          null,
           null
         ]
       },
       "/app/config/initializers/filter_parameter_logging.rb": {
         "lines": [
+          null,
+          null,
           null,
           null,
           null,
@@ -143,6 +152,8 @@
       },
       "/app/config/initializers/inflections.rb": {
         "lines": [
+          null,
+          null,
           null,
           null,
           null,
@@ -175,11 +186,15 @@
           null,
           null,
           null,
+          null,
+          null,
           null
         ]
       },
       "/app/config/routes.rb": {
         "lines": [
+          null,
+          null,
           1,
           null,
           1,
@@ -211,11 +226,14 @@
       },
       "/app/test/controllers/home_controller_test.rb": {
         "lines": [
+          null,
+          null,
           1,
           null,
           1,
           1,
           1,
+          null,
           1,
           null,
           null
@@ -223,6 +241,8 @@
       },
       "/app/test/controllers/registrations_controller_test.rb": {
         "lines": [
+          null,
+          null,
           1,
           null,
           1,
@@ -266,9 +286,54 @@
       },
       "/app/test/controllers/sessions_controller_test.rb": {
         "lines": [
+          null,
+          null,
           1,
           null,
           1,
+          1,
+          6,
+          6,
+          null,
+          null,
+          1,
+          1,
+          null,
+          1,
+          null,
+          null,
+          1,
+          1,
+          null,
+          1,
+          1,
+          1,
+          null,
+          null,
+          1,
+          1,
+          1,
+          1,
+          1,
+          null,
+          null,
+          1,
+          1,
+          1,
+          1,
+          1,
+          null,
+          null,
+          null,
+          1,
+          1,
+          1,
+          1,
+          null,
+          null,
+          1,
+          1,
+          null,
           1,
           1,
           1,
@@ -278,6 +343,8 @@
       },
       "/app/test/models/buyer_test.rb": {
         "lines": [
+          null,
+          null,
           1,
           null,
           1,
@@ -289,6 +356,8 @@
       },
       "/app/test/models/seller_test.rb": {
         "lines": [
+          null,
+          null,
           1,
           null,
           1,
@@ -300,6 +369,9 @@
       },
       "/app/app/models/buyer.rb": {
         "lines": [
+          null,
+          null,
+          null,
           1,
           1,
           1,
@@ -308,6 +380,9 @@
       },
       "/app/app/models/application_record.rb": {
         "lines": [
+          null,
+          null,
+          null,
           1,
           1,
           null
@@ -315,6 +390,9 @@
       },
       "/app/app/models/seller.rb": {
         "lines": [
+          null,
+          null,
+          null,
           1,
           1,
           1,
@@ -323,128 +401,151 @@
       },
       "/app/app/controllers/sessions_controller.rb": {
         "lines": [
-          1,
-          1,
           null,
           null,
           null,
           1,
-          0,
-          0,
-          0,
-          null,
-          null,
-          0,
-          null,
-          0,
-          0,
-          null,
-          0,
-          0,
-          0,
-          null,
-          null,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          null,
-          null,
-          0,
-          0,
+          1,
           null,
           null,
           null,
           1,
-          0,
-          0,
-          0,
+          4,
+          4,
+          4,
+          null,
+          null,
+          4,
+          null,
+          3,
+          1,
+          null,
+          4,
+          2,
+          2,
+          null,
+          null,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          null,
+          null,
+          2,
+          2,
+          null,
+          null,
+          null,
+          1,
+          1,
+          1,
+          1,
           null,
           null
         ]
       },
       "/app/app/controllers/application_controller.rb": {
         "lines": [
+          null,
+          null,
+          null,
+          null,
           1,
           null,
           1,
           1,
           null,
+          null,
           1,
-          4,
+          8,
           0,
-          4,
-          0,
-          null,
-          null,
-          null,
-          1,
-          4,
-          null,
-          null,
-          1,
+          8,
           0,
           null,
           null,
+          null,
           1,
-          0,
+          8,
           null,
           null,
           1,
           0,
           null,
+          null,
+          1,
           0,
           null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          0,
           null,
           null
         ]
       },
       "/app/app/helpers/application_helper.rb": {
         "lines": [
+          null,
+          null,
+          null,
           1,
           null
         ]
       },
       "/app/app/helpers/home_helper.rb": {
         "lines": [
+          null,
+          null,
+          null,
           1,
           null
         ]
       },
       "/app/app/helpers/registrations_helper.rb": {
         "lines": [
+          null,
+          null,
+          null,
           1,
           null
         ]
       },
       "/app/app/helpers/sessions_helper.rb": {
         "lines": [
+          null,
+          null,
+          null,
           1,
           null
         ]
       },
       "/app/app/controllers/home_controller.rb": {
         "lines": [
-          1,
-          1,
           null,
+          null,
+          null,
+          1,
+          1,
           null
         ]
       },
       "/app/app/controllers/registrations_controller.rb": {
         "lines": [
-          1,
-          1,
-          0,
-          0,
-          0,
           null,
-          0,
           null,
           null,
           1,
+          1,
+          0,
+          0,
+          0,
+          null,
+          null,
+          1,
           2,
           2,
           0,
@@ -457,6 +558,7 @@
           2,
           2,
           2,
+          null,
           null,
           0,
           0,
@@ -472,6 +574,6 @@
         ]
       }
     },
-    "timestamp": 1739215807
+    "timestamp": 1739488586
   }
 }
