@@ -43,7 +43,12 @@ class AuctionItemsController < ApplicationController
   def destroy
     if current_user == @auction_item.seller
       @auction_item.destroy
-      redirect_to auction_items_path, notice: "Auction item was successfully deleted."
+
+      if request.referer.include?(seller_dashboard_path)
+        redirect_to seller_dashboard_path, notice: "Auction item was successfully deleted."
+      else
+        redirect_to auction_items_path, notice: "Auction item was successfully deleted."
+      end
     else
       redirect_to auction_items_path, alert: "You are not authorized to delete this auction item."
     end
