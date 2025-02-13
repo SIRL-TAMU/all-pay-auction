@@ -13,7 +13,7 @@
       <img src="./assets/0.13.1/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" class="hide">
-      <div class="timestamp">Generated <abbr class="timeago" title="2025-02-13T23:16:26+00:00">2025-02-13T23:16:26+00:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2025-02-13T23:26:22+00:00">2025-02-13T23:26:22+00:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
@@ -303,7 +303,7 @@
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#199daf51163eacd1556c2e8b01de04e8c1a5cb13" class="src_link" title="test/controllers/sessions_controller_test.rb">test/controllers/sessions_controller_test.rb</a></td>
             <td class="green strong cell--number t-file__coverage">100.00 %</td>
-            <td class="cell--number">53</td>
+            <td class="cell--number">55</td>
             <td class="cell--number">32</td>
             <td class="cell--number">32</td>
             <td class="cell--number">0</td>
@@ -5602,14 +5602,12 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="27">
-            
-              <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="27">
             
 
             
 
-            <code class="ruby">    assert_equal session[:user_id], @seller.id</code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -5621,7 +5619,7 @@
 
             
 
-            <code class="ruby">    assert_equal session[:account_type], &quot;seller&quot;</code>
+            <code class="ruby">    assert_equal session[:user_id], @seller.id</code>
           </li>
         </div>
       
@@ -5633,17 +5631,19 @@
 
             
 
-            <code class="ruby">    assert_redirected_to seller_dashboard_path</code>
+            <code class="ruby">    assert_equal &quot;seller&quot;, session[:account_type]</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="30">
+          <li class="covered" data-hits="1" data-linenumber="30">
+            
+              <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">  end</code>
+            <code class="ruby">    assert_redirected_to seller_dashboard_path</code>
           </li>
         </div>
       
@@ -5653,19 +5653,17 @@
 
             
 
-            <code class="ruby"></code>
+            <code class="ruby">  end</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="32">
-            
-              <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="32">
             
 
             
 
-            <code class="ruby">  test &quot;should not log in with invalid credentials&quot; do</code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -5677,7 +5675,7 @@
 
             
 
-            <code class="ruby">    post login_path, params: { account_type: &quot;buyer&quot;, email: @buyer.email, password: &quot;wrongpassword&quot; }</code>
+            <code class="ruby">  test &quot;should not log in with invalid credentials&quot; do</code>
           </li>
         </div>
       
@@ -5689,19 +5687,17 @@
 
             
 
-            <code class="ruby">    assert_nil session[:user_id]</code>
+            <code class="ruby">    post login_path, params: { account_type: &quot;buyer&quot;, email: @buyer.email, password: &quot;wrongpassword&quot; }</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="35">
-            
-              <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="35">
             
 
             
 
-            <code class="ruby">    assert_response :success</code>
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -5713,78 +5709,12 @@
 
             
 
-            <code class="ruby">    assert_match I18n.t(&quot;errors.invalid_credentials&quot;), @response.body</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="37">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="38">
-            
-
-            
-
-            <code class="ruby">  end</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="never" data-hits="" data-linenumber="39">
-            
-
-            
-
-            <code class="ruby"></code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="40">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">  test &quot;should not log in with non-existent user&quot; do</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="41">
-            
-              <span class="hits">1</span>
-            
-
-            
-
-            <code class="ruby">    post login_path, params: { account_type: &quot;buyer&quot;, email: &quot;nonexistent@example.com&quot;, password: &quot;password123&quot; }</code>
-          </li>
-        </div>
-      
-        <div>
-          <li class="covered" data-hits="1" data-linenumber="42">
-            
-              <span class="hits">1</span>
-            
-
-            
-
             <code class="ruby">    assert_nil session[:user_id]</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="43">
+          <li class="covered" data-hits="1" data-linenumber="37">
             
               <span class="hits">1</span>
             
@@ -5796,7 +5726,19 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="44">
+          <li class="covered" data-hits="1" data-linenumber="38">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    assert_match I18n.t(&quot;errors.invalid_credentials&quot;), @response.body</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="39">
             
 
             
@@ -5806,7 +5748,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="45">
+          <li class="never" data-hits="" data-linenumber="40">
             
 
             
@@ -5816,31 +5758,31 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="46">
+          <li class="covered" data-hits="1" data-linenumber="41">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">  test &quot;should log out successfully&quot; do</code>
+            <code class="ruby">  test &quot;should not log in with non-existent user&quot; do</code>
           </li>
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="47">
+          <li class="covered" data-hits="1" data-linenumber="42">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">    delete logout_path</code>
+            <code class="ruby">    post login_path, params: { account_type: &quot;buyer&quot;, email: &quot;nonexistent@example.com&quot;, password: &quot;password123&quot; }</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="48">
+          <li class="never" data-hits="" data-linenumber="43">
             
 
             
@@ -5850,7 +5792,7 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="49">
+          <li class="covered" data-hits="1" data-linenumber="44">
             
               <span class="hits">1</span>
             
@@ -5862,14 +5804,68 @@
         </div>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="50">
+          <li class="covered" data-hits="1" data-linenumber="45">
             
               <span class="hits">1</span>
             
 
             
 
-            <code class="ruby">    assert_nil session[:account_type]</code>
+            <code class="ruby">    assert_response :success</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="46">
+            
+
+            
+
+            <code class="ruby">  end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="47">
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="48">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  test &quot;should log out successfully&quot; do</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="49">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    delete logout_path</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="50">
+            
+
+            
+
+            <code class="ruby"></code>
           </li>
         </div>
       
@@ -5881,12 +5877,36 @@
 
             
 
+            <code class="ruby">    assert_nil session[:user_id]</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="52">
+            
+              <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    assert_nil session[:account_type]</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="53">
+            
+              <span class="hits">1</span>
+            
+
+            
+
             <code class="ruby">    assert_redirected_to root_path</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="52">
+          <li class="never" data-hits="" data-linenumber="54">
             
 
             
@@ -5896,7 +5916,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="53">
+          <li class="never" data-hits="" data-linenumber="55">
             
 
             

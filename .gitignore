@@ -21,6 +21,9 @@ Gemfile.lock
 /public/packs
 /public/vite
 
+# Coverage Test Report
+coverage/
+
 # Environment
 .env
 .env.*
@@ -51,4 +54,4 @@ docker-compose.override.yml
 
 # OS
 .DS_Store
-/2coverage/
+/2
