@@ -48,7 +48,9 @@ group :development, :test do
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
+  gem "cucumber-rails", require: false
 
+  gem "rspec-rails", "~> 6.0.0"
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 end
@@ -61,11 +63,10 @@ end
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
+  # set false because we don't want cucumber code to be loaded into Rails
+  # every time it boots up (in non-test env)
+  gem "database_cleaner-active_record", "~> 2.0.1"
   gem "selenium-webdriver"
   # Add SimpleCov for test coverage reporting
   gem "simplecov", require: false
-
-  # set false because we don't want cucumber code to be loaded into Rails every time it boots up (in non-test env)
-  gem "cucumber-rails", require: false
-  gem "rspec-rails"
 end
