@@ -27,11 +27,4 @@ class ApplicationController < ActionController::Base
   def seller?
     session[:account_type] == "seller"
   end
-
-  def require_login
-    return if logged_in?
-
-      # redirect_to login_path
-      Rails.logger.debug "Debug: You need be logged in!"
-  end
 end
