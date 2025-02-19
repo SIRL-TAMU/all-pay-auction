@@ -1,8 +1,7 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  seller: one
-  seller_id: 980190962
+  seller: john
   name: MyString
   description: MyText
   max_bid: 9.99
@@ -11,7 +10,7 @@ one:
   image: MyString
 
 two:
-  seller: two
+  seller: jane
   name: MyString
   description: MyText
   max_bid: 9.99

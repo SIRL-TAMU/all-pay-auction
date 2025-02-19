@@ -4,7 +4,6 @@ john:
   last_name: Appleseed
   email: johnny@example.com
   password_digest: <%= BCrypt::Password.create('password456') %>
-  id: 980190962
 
 jane:
   first_name: Alice
