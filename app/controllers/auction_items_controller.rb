@@ -9,8 +9,7 @@ class AuctionItemsController < ApplicationController
     @auction_items = AuctionItem.all
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @auction_item = current_user.auction_items.build

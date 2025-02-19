@@ -30,5 +30,5 @@ Rails.application.routes.draw do
   # Auction Items
   resources :auction_items
 
-  resources :bids, only: [:create, :index, :show]
+  resources :bids, only: %i[create index show update] #update bid incase of repeat bids, CAN ONLY INCREASE.
 end

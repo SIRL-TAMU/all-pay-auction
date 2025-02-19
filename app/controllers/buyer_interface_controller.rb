@@ -6,7 +6,7 @@ class BuyerInterfaceController < ApplicationController
   before_action :ensure_buyer
 
   def index
-    # Buyer-specific logic (e.g., browsing auctions)
+    @bidded_items = current_user.bids.includes(:auction_item).map(&:auction_item).uniq
   end
 
   private
