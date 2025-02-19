@@ -2,6 +2,7 @@
 
 one:
   seller: one
+  seller_id: 980190962
   name: MyString
   description: MyText
   max_bid: 9.99
