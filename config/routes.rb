@@ -29,4 +29,6 @@ Rails.application.routes.draw do
 
   # Auction Items
   resources :auction_items
+
+  resources :bids, only: [:create, :index, :show]
 end
