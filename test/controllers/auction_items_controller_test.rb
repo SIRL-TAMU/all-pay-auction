@@ -44,8 +44,12 @@ class AuctionItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy auction item" do
-    delete auction_item_path(@auction_item)
+    @auction_item = auction_items(:one)
 
-    assert_response :redirect
+    assert_difference("AuctionItem.count", -1) do
+      delete auction_item_path(@auction_item), headers: { "HTTP_REFERER" => seller_dashboard_path }
+    end
+
+    assert_redirected_to seller_dashboard_path
   end
 end
