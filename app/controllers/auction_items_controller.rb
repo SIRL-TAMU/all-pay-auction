@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Controller for managing auction items, including CRUD operations
 class AuctionItemsController < ApplicationController
   before_action :set_auction_item, only: %i[show edit update destroy]
   before_action :require_seller_login, only: %i[new create edit update destroy]
@@ -9,8 +10,7 @@ class AuctionItemsController < ApplicationController
     @auction_items = AuctionItem.all
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @auction_item = current_user.auction_items.build
@@ -19,14 +19,14 @@ class AuctionItemsController < ApplicationController
   def edit
     return if current_user == @auction_item.seller
 
-      redirect_to auction_items_path, alert: "You are not authorized to edit this auction item."
+    redirect_to auction_items_path, alert: t("errors.unauthorized_edit")
   end
 
   def create
     @auction_item = current_user.auction_items.build(auction_item_params)
 
     if @auction_item.save
-      redirect_to @auction_item, notice: "Auction item was successfully created."
+      redirect_to @auction_item, notice: t("notices.auction_item_created")
     else
       render :new
     end
@@ -34,7 +34,7 @@ class AuctionItemsController < ApplicationController
 
   def update
     if current_user == @auction_item.seller && @auction_item.update(auction_item_params)
-      redirect_to @auction_item, notice: "Auction item was successfully updated."
+      redirect_to @auction_item, notice: t("notices.auction_item_updated")
     else
       render :edit
     end
@@ -44,13 +44,10 @@ class AuctionItemsController < ApplicationController
     if current_user == @auction_item.seller
       @auction_item.destroy
 
-      if request.referer.include?(seller_dashboard_path)
-        redirect_to seller_dashboard_path, notice: "Auction item was successfully deleted."
-      else
-        redirect_to auction_items_path, notice: "Auction item was successfully deleted."
-      end
+      redirect_path = request.referer&.include?(seller_dashboard_path) ? seller_dashboard_path : auction_items_path
+      redirect_to redirect_path, notice: t("notices.auction_item_deleted")
     else
-      redirect_to auction_items_path, alert: "You are not authorized to delete this auction item."
+      redirect_to auction_items_path, alert: t("errors.unauthorized_delete")
     end
   end
 
@@ -67,12 +64,12 @@ class AuctionItemsController < ApplicationController
   def require_seller_login
     return if seller?
 
-      redirect_to auction_items_path, alert: "Only sellers can perform this action."
+    redirect_to auction_items_path, alert: t("errors.only_sellers")
   end
 
   def authorize_seller!
     return if current_user == @auction_item.seller
 
-      redirect_to auction_items_path, alert: "You are not authorized to edit or delete this auction item."
+    redirect_to auction_items_path, alert: t("errors.unauthorized_edit_delete")
   end
 end
