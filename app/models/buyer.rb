@@ -11,8 +11,10 @@ class Buyer < ApplicationRecord
 
 
   # ensure buyer has enough funds for placing bid
-  def sufficient_funds?(bid_amount)
-    amount >= bid_amount
+  def sufficient_funds?(bid_amount, auction_item)
+    highest_previous_bid = bids.where(auction_item: auction_item).maximum(:amount) || 0
+    amount_to_deduct = bid_amount - highest_previous_bid
+    amount >= amount_to_deduct
   end
 
 # after buyer places bid, subtract from their balance.

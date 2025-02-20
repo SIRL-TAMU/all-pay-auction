@@ -5,6 +5,6 @@ class AuctionItem < ApplicationRecord
   has_many :bids
 
   def max_bid
-    bids.maximum(:amount) || starting_price
+    bids.maximum(:amount) || self[:max_bid] || 0 # here max_bid could be starting price
   end
 end

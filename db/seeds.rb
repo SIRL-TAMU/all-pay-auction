@@ -28,7 +28,7 @@ if Rails.env.development?
                              password: "securepass456",
                              password_confirmation: "securepass456",
                              amount: 1500.00
-                           }
+                           },
                            {
                             first_name: "Bob",
                             last_name: "Boo",
