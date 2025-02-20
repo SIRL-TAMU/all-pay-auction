@@ -3,45 +3,55 @@
 require "test_helper"
 
 class AuctionItemsControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    @seller = sellers(:john)
+    @auction_item = auction_items(:one)
+    log_in_as_seller(@seller)
+  end
+
   test "should get index" do
-    get auction_items_index_url
+    get auction_items_path
 
     assert_response :success
   end
 
   test "should get show" do
-    get auction_items_show_url
+    get auction_item_path(@auction_item)
 
     assert_response :success
   end
 
   test "should get new" do
-    get auction_items_new_url
+    get new_auction_item_path
 
     assert_response :success
   end
 
-  test "should get create" do
-    get auction_items_create_url
+  test "should create auction item" do
+    post auction_items_path, params: { auction_item: { name: "Item", description: "Description", max_bid: 100 } }
 
-    assert_response :success
+    assert_response :redirect
   end
 
   test "should get edit" do
-    get auction_items_edit_url
+    get edit_auction_item_path(@auction_item)
 
     assert_response :success
   end
 
-  test "should get update" do
-    get auction_items_update_url
+  test "should update auction item" do
+    patch auction_item_path(@auction_item), params: { auction_item: { name: "Updated Item" } }
 
-    assert_response :success
+    assert_response :redirect
   end
 
-  test "should get destroy" do
-    get auction_items_destroy_url
+  test "should destroy auction item" do
+    @auction_item = auction_items(:one)
 
-    assert_response :success
+    assert_difference("AuctionItem.count", -1) do
+      delete auction_item_path(@auction_item), headers: { "HTTP_REFERER" => seller_dashboard_path }
+    end
+
+    assert_redirected_to seller_dashboard_path
   end
 end

@@ -21,6 +21,9 @@ Gemfile.lock
 /public/packs
 /public/vite
 
+# Coverage Test Report
+/coverage/
+
 # Environment
 .env
 .env.*

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Migration to create auction items
 class CreateAuctionItems < ActiveRecord::Migration[7.2]
   def change
     create_table :auction_items do |t|

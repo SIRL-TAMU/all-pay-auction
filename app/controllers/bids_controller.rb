@@ -2,7 +2,6 @@
 
 # app/controllers/bids_controller.rb
 class BidsController < ApplicationController
-    before_action :require_login
     before_action :ensure_buyer
 
     def create
@@ -33,6 +32,8 @@ class BidsController < ApplicationController
     end
 
     def ensure_buyer
-      redirect_to login_path, alert: I18n.t("alerts.access_denied") unless buyer?
-    end
+        return if logged_in? && buyer?
+          redirect_to root_path, alert: I18n.t("alerts.access_denied")
+      end
+    
 end

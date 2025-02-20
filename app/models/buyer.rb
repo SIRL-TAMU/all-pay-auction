@@ -4,8 +4,8 @@
 class Buyer < ApplicationRecord
   has_secure_password # Automatically handles password hashing
   validates :email, presence: true, uniqueness: true
-  has_many :bids
-  has_many :transactions
+  has_many :bids, dependent: :destroy
+  has_many :transactions, dependent: :destroy
   validates :amount, numericality: { greater_than_or_equal_to: 0 }
   has_many :auction_items, through: :bids
 
