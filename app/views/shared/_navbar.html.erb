@@ -15,6 +15,7 @@
             <span>
                 Logged in as <%= current_user.first_name %> 
                 (<%= session[:account_type].capitalize %>)
+                Balance: $<%= number_to_currency(current_user.amount, unit: "", precision: 2) %>
             </span>
             <%= link_to "Logout", logout_path, method: :delete, class: "logout-btn" %>
         <% else %>

@@ -16,6 +16,7 @@ class RegistrationsController < ApplicationController
 
     user_class = @account_type == "buyer" ? Buyer : Seller
     @user = user_class.new(user_params)
+    @user.amount = 0 # initial balance is 0
 
     if @user.save
       session[:user_id] = @user.id

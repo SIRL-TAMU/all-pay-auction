@@ -1,1 +1,46 @@
-Welcome to buyers interface!
+<style>
+table {
+    border-collapse: collapse;
+    width: 80%;
+  }
+
+</style>
+
+Welcome to buyers interface!    
+
+<br>
+
+<h1>Your Bidded Items</h1>
+
+<% if @bidded_items.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Item Name</th>
+        <th>Current Max Bid</th>
+        <th>Your Highest Bid</th>
+        <th>Auction Ends</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @bidded_items.each do |item| %>
+        <tr>
+          <td><%= link_to item.name, auction_item_path(item) %></td>
+          <td>$<%= item.max_bid %></td>
+          <td>$<%= current_user.bids.where(auction_item: item).maximum(:amount) %></td>
+          <td><%= item.closing_date.strftime('%B %d, %Y at %I:%M %p') %></td>
+          <td><%= Time.now < item.closing_date ? 'Active' : 'Closed' %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>You haven't placed any bids yet.</p>
+<% end %>
+<br>
+
+<%= link_to "Browse All Auctions", auction_items_path %>
+<br>
+<br>
+There will be a link to add funds to account, likely in next sprint
