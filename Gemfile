@@ -70,3 +70,5 @@ group :production do
   # Use postgresql as the database for Active Record
   gem "pg", "~> 1.1"
 end
+
+gem "rubocop-rails", "~> 2.30"

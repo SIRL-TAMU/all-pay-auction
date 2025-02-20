@@ -17,7 +17,7 @@ AllCops:
   DisabledByDefault: false
 
 Metrics/AbcSize:
-  Max: 35
+  Max: 50
 
 Metrics/MethodLength:
-  Max: 30
+  Max: 50

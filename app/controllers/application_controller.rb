@@ -28,4 +28,3 @@ class ApplicationController < ActionController::Base
     session[:account_type] == "seller"
   end
 end
-

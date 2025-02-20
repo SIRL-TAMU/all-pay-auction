@@ -13,6 +13,4 @@ class Bid < ApplicationRecord
 
       errors.add(:amount, "must be higher than the current maximum bid")
   end
-
-
 end

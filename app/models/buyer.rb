@@ -9,7 +9,6 @@ class Buyer < ApplicationRecord
   validates :amount, numericality: { greater_than_or_equal_to: 0 }
   has_many :auction_items, through: :bids
 
-
   # ensure buyer has enough funds for placing bid
   def sufficient_funds?(bid_amount, auction_item)
     highest_previous_bid = bids.where(auction_item: auction_item).maximum(:amount) || 0

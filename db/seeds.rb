@@ -9,7 +9,6 @@ if Rails.env.development?
   Buyer.destroy_all
   Seller.destroy_all
 
-
   # Passwords will automatically be hashed
 
   # Create sample buyers
@@ -31,13 +30,13 @@ if Rails.env.development?
                              amount: 1500.00
                            },
                            {
-                            first_name: "Bob",
-                            last_name: "Boo",
-                            email: "buyer3@example.com",
-                            password: "testing",
-                            password_confirmation: "testing",
-                            amount: 150000.00
-                          }
+                             first_name: "Bob",
+                             last_name: "Boo",
+                             email: "buyer3@example.com",
+                             password: "testing",
+                             password_confirmation: "testing",
+                             amount: 150_000.00
+                           }
                          ])
 
   # Create sample sellers
@@ -62,25 +61,25 @@ if Rails.env.development?
 
   # Create sample auction items
   auction_items = AuctionItem.create!([
-                                                                            {
-                                                                              seller: sellers.first,
-                                                                              name: "Antique Vase",
-                                                                              description: "A beautiful antique vase from the 18th century.",
-                                                                              max_bid: 500.00,
-                                                                              opening_date: Time.zone.now,
-                                                                              closing_date: 7.days.from_now,
-                                                                              image: "vase.jpg"
-                                                                            },
-                                                                            {
-                                                                              seller: sellers.last,
-                                                                              name: "Vintage Watch",
-                                                                              description: "A rare vintage watch in excellent condition.",
-                                                                              max_bid: 1000.00,
-                                                                              opening_date: Time.zone.now,
-                                                                              closing_date: 5.days.from_now,
-                                                                              image: "watch.jpg"
-                                                                            }
-                                                                          ])
+                                        {
+                                          seller: sellers.first,
+                                          name: "Antique Vase",
+                                          description: "A beautiful antique vase from the 18th century.",
+                                          max_bid: 500.00,
+                                          opening_date: Time.zone.now,
+                                          closing_date: 7.days.from_now,
+                                          image: "vase.jpg"
+                                        },
+                                        {
+                                          seller: sellers.last,
+                                          name: "Vintage Watch",
+                                          description: "A rare vintage watch in excellent condition.",
+                                          max_bid: 1000.00,
+                                          opening_date: Time.zone.now,
+                                          closing_date: 5.days.from_now,
+                                          image: "watch.jpg"
+                                        }
+                                      ])
 
   # Create sample bids
   Bid.create!([
