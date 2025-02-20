@@ -1,0 +1,16 @@
+<h1><%= @auction_item.name %></h1>
+<p><%= @auction_item.description %></p>
+<p>Max Bid: $<%= @auction_item.max_bid %></p>
+<p>Opening Date: <%= @auction_item.opening_date.strftime('%Y-%m-%d') %></p>
+<p>Closing Date: <%= @auction_item.closing_date.strftime('%Y-%m-%d') %></p>
+
+<p>Created by: <%= @auction_item.seller.first_name %> <%= @auction_item.seller.last_name %></p>
+
+ <%= image_tag(@auction_item.image.present? && @auction_item.image.start_with?("http") ? @auction_item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
+
+<% if seller? && current_user == @auction_item.seller %>
+  <%= link_to "Edit", edit_auction_item_path(@auction_item) %> |
+  <%= link_to "Delete", auction_item_path(@auction_item), method: :delete, data: { confirm: "Are you sure?" } %>
+<% end %>
+
+<%= link_to "Back to Listings", auction_items_path %>

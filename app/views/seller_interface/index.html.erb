@@ -1,1 +1,24 @@
-Welcome to sellers interface!
+<h1>Welcome to Seller's Interface!</h1>
+
+<ul>
+  <li><%= link_to "Create New Auction Item", new_auction_item_path %></li>
+</ul>
+
+<h2>Your Auction Items</h2>
+<% if seller? %>
+  <% current_user.auction_items.each do |item| %>
+    <div>
+      <h3><%= link_to item.name, auction_item_path(item) %></h3>
+      <p><%= item.description %></p>
+      <p>Max Bid: $<%= item.max_bid %></p>
+      <p>Closing Date: <%= item.closing_date.strftime('%Y-%m-%d') %></p>
+      <%= image_tag(item.image.present? && item.image.start_with?("http") ? item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
+      <br>
+      <%= link_to "Edit", edit_auction_item_path(item) %> |
+      <%= link_to "Delete", auction_item_path(item), method: :delete, data: { confirm: "Are you sure?" } %>
+    </div>
+    <hr>
+  <% end %>
+<% else %>
+  <p>You are not a seller.</p>
+<% end %>

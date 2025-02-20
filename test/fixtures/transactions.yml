@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  buyer: john
+  seller: john
+  amount: 9.99
+  is_credit: false
+  is_buyer: false
+  created_date: 2025-02-12 18:00:06
+
+two:
+  buyer: jane
+  seller: jane
+  amount: 9.99
+  is_credit: false
+  is_buyer: false
+  created_date: 2025-02-12 18:00:06
