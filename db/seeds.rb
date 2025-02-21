@@ -28,6 +28,14 @@ if Rails.env.development?
                              password: "securepass456",
                              password_confirmation: "securepass456",
                              amount: 1500.00
+                           },
+                           {
+                             first_name: "Bob",
+                             last_name: "Boo",
+                             email: "buyer3@example.com",
+                             password: "testing",
+                             password_confirmation: "testing",
+                             amount: 150_000.00
                            }
                          ])
 
@@ -108,7 +116,6 @@ if Rails.env.development?
                           created_date: Time.zone.now
                         }
                       ])
-
                       Rails.logger.debug do
                         "Created #{Buyer.count} buyers, #{Seller.count} sellers, " \
                           "#{AuctionItem.count} auction items, #{Bid.count} bids, " \

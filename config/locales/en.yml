@@ -44,3 +44,9 @@ en:
     unauthorized_delete: "You are not authorized to delete this auction item."
     only_sellers: "Only sellers can perform this action."
     unauthorized_edit_delete: "You are not authorized to edit or delete this auction item."
+  bids:
+    create:
+      success: "Bid placed successfully!"
+      insufficient_funds: "Insufficient funds to place this bid."
+      missing_amount: "Please enter a bid amount."
+      bid_error: "Error placing bid."

@@ -4,5 +4,7 @@
 class Seller < ApplicationRecord
   has_secure_password # Automatically handles password hashing
   validates :email, presence: true, uniqueness: true
+  has_many :transactions, dependent: :destroy
   has_many :auction_items, dependent: :destroy
+  # required to render seller dashboard
 end
