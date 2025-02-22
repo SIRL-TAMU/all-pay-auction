@@ -1,28 +1,55 @@
-<h2>Login</h2>
+<div class="onboarding-container"> 
+  <div class="onboarding-card">
 
-<%= form_with url: login_path, method: :post do %>  
-  <!-- Send post request to login path -->
-  <div>
-    <%= label_tag :account_type, "Login as" %>
-    <%= select_tag :account_type, options_for_select([["Buyer", "buyer"], ["Seller", "seller"]]) %>
+    <%# Title %>
+    <div class="login-title">Welcome Back</div>
+
+    <%# Account Selection (Buyer / Seller) %>
+    <div class="account-selection">
+      <%= link_to "Buyer", login_path(account_type: "buyer"), class: "account-btn #{params[:account_type].blank? || params[:account_type] == 'buyer' ? 'active' : ''}" %>
+      <%= link_to "Seller", login_path(account_type: "seller"), class: "account-btn #{params[:account_type] == 'seller' ? 'active' : ''}" %>
+    </div>
+
+    <%# Login Form %>
+    <%= form_with url: login_path, method: :post, class: "login-form" do %>  
+      <%= hidden_field_tag :account_type, params[:account_type] || "buyer" %>
+
+
+      <div class="form-group">
+        <%= label_tag :email, "Email" %>
+        <%= email_field_tag :email, params[:email], class: "input-field" %>
+      </div>
+
+      <div class="form-group">
+        <%= label_tag :password, "Password" %>
+        <%= password_field_tag :password, nil, class: "input-field" %>
+      </div>
+
+      <div class="forgot-password">
+        <%= link_to "Forgot password?", "#", class: "temp" %>
+      </div>
+
+      <%= submit_tag "Log in", class: "login-btn" %>
+    <% end %>
+
+    <%# Divider with OR %>
+    <div class="divider">
+      <span>OR</span>
+    </div>
+
+    <%# Google Login Button %>
+    <div class="google-login">
+      <button class="google-btn temp">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
+          Continue with Google
+      </button>
+    </div>
+
+
+    <%# Sign-up Option %>
+    <div class="signup-switch">
+      Don't have an account? <%= link_to "Sign up", signup_path(account_type: 'buyer') %>
+    </div>
+
   </div>
-
-  <div>
-    <%= label_tag :email %>
-    <%= text_field_tag :email, params[:email] %>
-  </div>
-
-  <div>
-    <%= label_tag :password %>
-    <%= password_field_tag :password %>
-  </div>
-
-  <%= submit_tag "Login" %>
-  <!-- Send post request with information from fields -->
-<% end %>
-
-
-<p>Don't have an account? 
-  <a href="<%= signup_path(account_type: 'buyer') %>">Sign up as a Buyer</a> or 
-  <a href="<%= signup_path(account_type: 'seller') %>">Sign up as a Seller</a>.
-</p>
+</div>

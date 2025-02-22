@@ -23,7 +23,7 @@
 
   </head>
 
-  <body>
+  <body class="<%= "#{controller_name}-#{action_name}" %>">
     <%= render "shared/navbar" %> 
 
     <% if flash[:notice] %>
@@ -40,8 +40,19 @@
       </div>
     <% end %>
 
-
-
     <%= yield %>
-</body>
+ </body>
+
+
+  <script>
+    // temp
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".temp").forEach(tempLink => {
+            tempLink.addEventListener("click", function (event) {
+                event.preventDefault();
+                alert("Feature: To be implemented");
+            });
+        });
+    }); 
+  </script>
 </html>
