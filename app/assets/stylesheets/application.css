@@ -13,18 +13,21 @@
  *= require_tree .
  *= require_self
  */
+
+
+ @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
  
- *{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Open Sans", "sans-serif";
+    font-family: "Inter", sans-serif;
 }
 
 body {
     height: 100vh;
     background-color: #fff;
-    background-image: none;
 }
 
 li {
