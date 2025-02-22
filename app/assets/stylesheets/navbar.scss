@@ -28,6 +28,13 @@
     height: 100%;
 }
 
+.navbar .user-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    height: 100%;
+}
+
 .navbar .toggle-btn {
     font-size: 1.5rem;
     cursor: pointer;

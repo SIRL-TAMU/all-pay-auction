@@ -4,7 +4,16 @@
             <%= link_to "All Pay Auction", root_path %>
         </div>
 
+
         <div class="links">
+            <li><%= link_to "Auction Block", auction_items_path %></li>
+            <%= link_to "Sell", "#", class: "temp" %>
+            <%= link_to "About Us", "#", class: "temp" %>
+
+        </div>
+
+
+        <div class="user-links">
             <% if logged_in? %>
                 <div class="profile-btn">
                     <div class="user-name">
@@ -16,6 +25,9 @@
                         <% if seller? %>
                             <%= link_to "Seller Dashboard", seller_dashboard_path %>
                         <% end %>
+
+
+                        <%= link_to "Settings", "#", class: "temp" %>
 
                         <%= link_to "Logout", logout_path, method: :delete%>
                     </div>
@@ -40,5 +52,14 @@
             profileBtnIcon.classList = isOpen ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
         };
 
+        // temp
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".temp").forEach(tempLink => {
+                tempLink.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    alert("Feature: To be implemented");
+                });
+            });
+        }); 
     </script>
 </header>
