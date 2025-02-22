@@ -49,6 +49,9 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem "cucumber-rails", require: false
+  gem "rspec-rails", "~> 6.0.0"
 end
 
 group :development do
@@ -64,6 +67,8 @@ group :test do
   gem "selenium-webdriver"
   # Add SimpleCov for test coverage reporting
   gem "simplecov", require: false
+
+  gem "database_cleaner-active_record", "~> 2.0.1"
 end
 
 group :production do
