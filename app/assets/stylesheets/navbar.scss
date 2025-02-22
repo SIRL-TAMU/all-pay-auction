@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
+
+
 .navbar {
     width: 100%;
     height: 60px;
@@ -8,14 +11,21 @@
     justify-content: space-between;
 }
 
-.navbar .logo a {
-    font-size: 1.5rem;
-    font-weight: bold; 
+
+.logo a {
+  font-family: 'Julius Sans One', sans-serif;
+  font-size: 2rem;        
+  font-weight: normal;
+  text-transform: uppercase;
+  color: #1E3A8A;         
+  text-decoration: none;  
 }
 
 .navbar .links {
     display: flex;
+    align-items: center;
     gap: 2rem;
+    height: 100%;
 }
 
 .navbar .toggle-btn {
@@ -25,78 +35,79 @@
 }
 
 .login-btn {
+    font-size: 1rem;
+}
+
+.signup-btn {
     background-color: #0c243c;
     color: #fff;
-    padding: 0.5rem 1rem;
-    border: none;
-    outline: none;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: bold;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
     cursor: pointer;
     transition: scale 0.2 ease;
 }
 
-.login-btn:hover {
+.signup-btn:hover {
     scale: 1.05;
     color: #fff;
 }
 
-.login-btn:active {
+.signup-btn:active {
     scale: 0.95;
 }
 
-/* DROPDOWN MENU*/
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    right: 2rem;
-    top: 60px;
-    width: 300px;
-    height: 0px;
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(15px);
-    border-radius: 10px;
-    overflow: hidden;
-    transition: height .2s cubic-bezier(0.175, 0.885, 0.32, 1.275)
-}
-
-.dropdown-menu.open {
-    height: 200px;
-}
-
-.dropdown-menu li {
-    padding: 0.7rem;
+.profile-btn {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    min-width: max-content;
+    border-bottom: 3px solid transparent;
+
+    &:hover,
+    &:active,
+    &.active {
+        border-bottom-color: #1E3A8A;
+    }
 }
 
-.dropdown-menu .login-btn {
-    width: 100%;
+.profile-btn .user-name {
+    text-transform: uppercase;
+}
+  
+.profile-dropdown-menu { 
+    position: absolute;
     display: flex;
-    justify-content: center;
+    gap: 1rem;
+    flex-direction: column;
+    top: 125%;
+    right: 0;
+    width: 0;
+    height: 0;
+    background: rgba(256, 256, 256, 0.4);
+    backdrop-filter: blur(15px);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: height 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 100;
+}
+  
+.profile-dropdown-menu.open {
+    height: 200px;
+    width: 300px;
+    padding: 1rem 1.5rem;
+}
+  
+.profile-dropdown-menu a {
+    text-decoration: none;
+    display: block;
+    transition: color 0.2s ease-in-out, border-bottom 0.2s ease-in-out;
 }
 
-/* RESPONSIVE DESIGN */
-
-@media (max-width: 992px) {
-    .navbar .links,
-    .navbar .login-btn {
-        display:none
-    }
-
-    .navbar .toggle-btn {
-        display: block;
-    }
-    .dropdown-menu {
-        display: block;
-    }
-}
-
-@media (max-width: 576px) {
-    .dropdown-menu {
-        left: 2rem;
-        width: unset;
-    }
+.profile-dropdown-menu a:hover,
+.profile-dropdown-menu a:focus,
+.profile-dropdown-menu a:active {
+    color: #1E3A8A;
 }
