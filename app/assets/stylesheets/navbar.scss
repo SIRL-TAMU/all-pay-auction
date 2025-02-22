@@ -1,14 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
 
 
+/* Make the entire navbar white across full width */
 .navbar {
+    background-color: #fff;
     width: 100%;
     height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Keep content centered */
+.navbar-container {
+    width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 0 1rem;
 }
 
 
