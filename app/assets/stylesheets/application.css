@@ -13,3 +13,36 @@
  *= require_tree .
  *= require_self
  */
+ 
+ *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Open Sans", "sans-serif";
+}
+
+body {
+    height: 100vh;
+    background-color: #fff;
+    background-image: none;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+    font-size: 1rem;
+}
+
+a:hover {
+    color: #0c243c;
+}
+
+
+header {
+    position: relative;
+    padding: 0 2rem;
+}
