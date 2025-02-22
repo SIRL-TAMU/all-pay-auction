@@ -1,12 +1,11 @@
 <main>
-    <section id="hero">
-    </section>
-
-    <div class="debug-card">
-        <h3>Debugging Info</h3>
-        <p><strong>Account Type:</strong> <%= buyer? ? "Buyer" : "Seller" %></p>
-        <p><strong>Name:</strong> <%= current_user.first_name %> <%= current_user.last_name %></p>
-        <p><strong>Email:</strong> <%= current_user.email %></p>
-        <p><strong>Balance:</strong> $<%= number_to_currency(current_user.amount, unit: "", precision: 2) %></p>
-    </div>
+    <% if logged_in? %>
+        <div class="debug-card">
+            <h3>Debugging Info</h3>
+            <p><strong>Account Type:</strong> <%= buyer? ? "Buyer" : "Seller" %></p>
+            <p><strong>Name:</strong> <%= current_user.first_name %> <%= current_user.last_name %></p>
+            <p><strong>Email:</strong> <%= current_user.email %></p>
+            <p><strong>Balance:</strong> $<%= number_to_currency(current_user.amount, unit: "", precision: 2) %></p>
+        </div>
+    <% end %>
 </main>
