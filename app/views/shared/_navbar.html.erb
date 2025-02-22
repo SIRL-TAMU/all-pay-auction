@@ -28,8 +28,8 @@
                         </div>
                     </div>
                 <% else %>
-                    <%= link_to "Log in", login_path, class: "login-btn" %>
-                    <%= link_to "Sign up", signup_path(account_type: 'buyer'), class: "signup-btn" %>
+                    <%= link_to "Log in", login_path(account_type: params[:account_type] || "buyer"), class: "login-btn" %>
+                    <%= link_to "Sign up", signup_path(account_type: params[:account_type] || "buyer"), class: "signup-btn" %>
                 <% end %>
             </div>
         </div>

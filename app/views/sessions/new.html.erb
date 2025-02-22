@@ -48,8 +48,9 @@
 
     <%# Sign-up Option %>
     <div class="signup-switch">
-      Don't have an account? <%= link_to "Sign up", signup_path(account_type: 'buyer') %>
+      Don't have an account? <%= link_to "Sign up", signup_path(account_type: params[:account_type] || "buyer") %>
     </div>
+
 
   </div>
 </div>

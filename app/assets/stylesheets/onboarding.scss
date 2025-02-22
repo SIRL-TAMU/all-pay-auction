@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    height: 90vh;
     background: white
 }
 
@@ -135,6 +135,33 @@
 
 
 
+/* Name Fields Side by Side */
+.form-group-grouped {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-group-grouped .form-group {
+    flex: 1;
+}
+
+/* Ensure form width consistency */
+.input-field {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+// /* Change button text size for consistency */
+// .login-btn {
+//     font-size: 1.1rem;
+//     font-weight: bold;
+// }
+
+
+
 .google-login {
     display: flex;
     justify-content: center;
@@ -166,3 +193,5 @@
 .google-btn:hover {
     background: #f0f0f0;
 }
+
+
