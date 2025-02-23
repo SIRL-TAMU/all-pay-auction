@@ -6,51 +6,81 @@
       <div class="auction-card">
         <%# Image and Countdown %>
         <div class="auction-card-image">
-          <% if is_active %>
-              <span id="countdown" data-end-time="<%= @active_or_upcoming_auction.closing_date.iso8601 %>"></span>
-          <% end %>
-
           <%= image_tag(@active_or_upcoming_auction.image.present? && @active_or_upcoming_auction.image.start_with?("http") ? @active_or_upcoming_auction.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
+          <div class="countdown-container">
+            <% if is_active %>
+              <p>Closing in&nbsp;
+                <strong><span id="countdown" data-end-time="<%= @active_or_upcoming_auction.closing_date.iso8601 %>"></span></strong>
+              </p>
+            <% end %>
+          </div>
         </div>
 
         <%# Info %>
-        <div>
-          <h3><%= @active_or_upcoming_auction.name %></h3>
+        <div class="auction-card-info">
+          <div class="main-info">
+            <div class="card-title"><%= @active_or_upcoming_auction.name %></div>
 
-          <%# Bidding Info %>
-          <div class="bid-info">
-            <p><strong>Max Bid:</strong> $<%= @active_or_upcoming_auction.max_bid %></p>
-            <p><strong>Total Bids:</strong> <%= @active_or_upcoming_auction.total_bids %></p>
-            <p><strong>Bid Pool:</strong> $<%= @active_or_upcoming_auction.bid_pool %></p>
-          </div>
+            <%# Estimated Value %>
+            <div class="card-subtitle">
+              Est: N/A
+            </div>
 
-          <%# Estimated Value %>
-          <div>
-            Est: N/A
+            <%# Bidding Info %>
+            <div class="bid-info">
+              <div class="bid-item">
+                <span class="bid-value">$<%= @active_or_upcoming_auction.bid_pool %> USD</span>
+                <span class="bid-label">Bid Pool</span>
+              </div>
+
+              <div class="bid-item">
+                <span class="bid-value">$<%= @active_or_upcoming_auction.max_bid %> USD</span>
+                <span class="bid-label">Max Bid</span>
+              </div>
+
+              <div class="bid-item">
+                <span class="bid-value"><%= @active_or_upcoming_auction.total_bids %> bids</span>
+                <span class="bid-label">Total Bids</span>
+              </div>
+            </div>            
           </div>
 
           <%# Latest Bid/Upcoming Auction Start Date %>
           <% if is_active %>
-            <h4>Latest Bids</h4>
-            <ul class="latest-bids">
-              <% @active_or_upcoming_auction.latest_bids.each do |bid| %>
-                <li>
-                  <strong>$<%= bid.amount %></strong> - Placed by <strong><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></strong> on <%= bid.created_at.strftime("%B %d, %Y %I:%M %p") %>
-                </li>
-              <% end %>
-            </ul>
+            <div class="latest-bids-title">Latest Bids</div>
+
+            <% if @active_or_upcoming_auction.latest_bids.any? %>
+              <ul class="latest-bids">
+                <% @active_or_upcoming_auction.latest_bids.each do |bid| %>
+                  <li class="bidder-item">
+                    <div class="bidder-info">
+                      <div class="bidder-details">
+                        <%= bid.buyer.first_name %> <%= bid.buyer.last_name %>
+                        <span class="bidder-time"><%= bid.created_at.strftime("%B %d, %Y at %I:%M%p") %></span>
+                      </div>
+                    </div>
+                    <div class="bidder-amount">
+                      $<%= bid.amount %> USD
+                    </div>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <p class="no-bids-message">No bids have been placed yet.</p>
+            <% end %>
           <% else %>
-            <p><strong>Status:</strong> Opens on <%= @active_or_upcoming_auction.opening_date.strftime('%B %d, %Y %I:%M %p') %></p>
+            <div class="upcoming-auction">
+              <p>This auction will begin on</p>
+              <div class="upcoming-date"><%= @active_or_upcoming_auction.opening_date.strftime('%B %d, %Y %I:%M %p') %></div>
+            </div>
           <% end %>
         </div>
       </div>
-
-
     <% end %>
-
-    <div class="view-auction-btn-container">
-      <%= link_to "View Auction", auction_item_path(@active_or_upcoming_auction), class: "view-auction-btn" %>
-    </div>
+    
+    <%= link_to auction_item_path(@active_or_upcoming_auction), class: "view-auction-btn" do %>
+      <i class="fa-solid fa-eye"></i> View Listing
+    <% end %>
   </div>
 <% else %>
   <div class="create-auction-container">
