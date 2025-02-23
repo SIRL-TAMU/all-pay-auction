@@ -4,42 +4,48 @@
   <div class="active-auction">
     <%= link_to auction_item_path(@active_or_upcoming_auction), class: "auction-card-link" do %>
       <div class="auction-card">
-        <h3><%= @active_or_upcoming_auction.name %></h3>
-        <p><strong>Max Bid:</strong> $<%= @active_or_upcoming_auction.max_bid %></p>
-        <p><strong><%= is_active ? "Closing Date" : "Opening Date" %>:</strong>
+        <%# Image and Countdown %>
+        <div class="auction-card-image">
           <% if is_active %>
-            <span id="countdown" data-end-time="<%= @active_or_upcoming_auction.closing_date.iso8601 %>"></span>
-          <% else %>
-            <%= @active_or_upcoming_auction.opening_date.strftime('%B %d, %Y %I:%M %p') %>
+              <span id="countdown" data-end-time="<%= @active_or_upcoming_auction.closing_date.iso8601 %>"></span>
           <% end %>
-        </p>
 
-        <p><strong>Max Bid:</strong> $<%= @active_or_upcoming_auction.max_bid %></p>
-        <p><strong>Total Bids:</strong> <%= @active_or_upcoming_auction.total_bids %></p>
-        <p><strong>Bid Pool:</strong> $<%= @active_or_upcoming_auction.bid_pool %></p>
+          <%= image_tag(@active_or_upcoming_auction.image.present? && @active_or_upcoming_auction.image.start_with?("http") ? @active_or_upcoming_auction.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
+        </div>
 
-        <% if is_active %>
-          <p><strong>Status:</strong> Live Now</p>
-        <% else %>
-          <p><strong>Status:</strong> Opens on <%= @active_or_upcoming_auction.opening_date.strftime('%B %d, %Y %I:%M %p') %></p>
-        <% end %>
+        <%# Info %>
+        <div>
+          <h3><%= @active_or_upcoming_auction.name %></h3>
 
+          <%# Bidding Info %>
+          <div class="bid-info">
+            <p><strong>Max Bid:</strong> $<%= @active_or_upcoming_auction.max_bid %></p>
+            <p><strong>Total Bids:</strong> <%= @active_or_upcoming_auction.total_bids %></p>
+            <p><strong>Bid Pool:</strong> $<%= @active_or_upcoming_auction.bid_pool %></p>
+          </div>
 
-        <% if is_active %>
-          <h4>Latest Bids</h4>
-          <ul class="latest-bids">
-            <% @active_or_upcoming_auction.latest_bids.each do |bid| %>
-              <li>
-                <strong>$<%= bid.amount %></strong> - Placed by <strong><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></strong> on <%= bid.created_at.strftime("%B %d, %Y %I:%M %p") %>
-              </li>
-            <% end %>
-          </ul>
-        <% end %>
+          <%# Estimated Value %>
+          <div>
+            Est: N/A
+          </div>
 
-
-        
-        <%= image_tag(@active_or_upcoming_auction.image.present? && @active_or_upcoming_auction.image.start_with?("http") ? @active_or_upcoming_auction.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
+          <%# Latest Bid/Upcoming Auction Start Date %>
+          <% if is_active %>
+            <h4>Latest Bids</h4>
+            <ul class="latest-bids">
+              <% @active_or_upcoming_auction.latest_bids.each do |bid| %>
+                <li>
+                  <strong>$<%= bid.amount %></strong> - Placed by <strong><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></strong> on <%= bid.created_at.strftime("%B %d, %Y %I:%M %p") %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p><strong>Status:</strong> Opens on <%= @active_or_upcoming_auction.opening_date.strftime('%B %d, %Y %I:%M %p') %></p>
+          <% end %>
+        </div>
       </div>
+
+
     <% end %>
 
     <div class="view-auction-btn-container">
