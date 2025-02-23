@@ -26,7 +26,7 @@ class AuctionItemsController < ApplicationController
     @auction_item = current_user.auction_items.build(auction_item_params)
 
     if @auction_item.save
-      redirect_to @auction_item, notice: t("notices.auction_item_created")
+      redirect_to seller_dashboard_path, notice: t("notices.auction_item_created")
     else
       render :new
     end
