@@ -301,7 +301,7 @@
 .past-auctions-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1rem;
+    gap: 0.5rem;
     justify-content: center; 
 }
 
@@ -315,7 +315,7 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 300px;
+    max-width: 290px;
     min-height: 450px;
     transition: box-shadow 0.2s ease-in-out, transform 0.1s ease-in-out;
 }
