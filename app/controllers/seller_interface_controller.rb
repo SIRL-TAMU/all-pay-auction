@@ -5,9 +5,14 @@ class SellerInterfaceController < ApplicationController
   before_action :ensure_seller
 
   def index
-    # Seller-specific logic (e.g., listing auctions)
+    @active_or_upcoming_auction = current_user.auction_items
+                                               .where("opening_date <= ? AND closing_date >= ?", Time.zone.now, Time.zone.now)
+                                               .or(current_user.auction_items.where("opening_date > ?", Time.zone.now))
+                                               .order(:opening_date)
+                                               .first
+    @past_auctions = current_user.auction_items.where("closing_date < ?", Time.zone.now).order(closing_date: :desc)
   end
-
+  
   private
 
   def ensure_seller

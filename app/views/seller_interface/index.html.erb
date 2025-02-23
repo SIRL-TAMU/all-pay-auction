@@ -1,24 +1,87 @@
-<h1>Welcome to Seller's Interface!</h1>
+<% if @active_or_upcoming_auction %>
+  <% is_active = @active_or_upcoming_auction.opening_date <= Time.zone.now && @active_or_upcoming_auction.closing_date >= Time.zone.now %>
+  
+  <div class="active-auction">
+    <%= link_to auction_item_path(@active_or_upcoming_auction), class: "auction-card-link" do %>
+      <div class="auction-card">
+        <h3><%= @active_or_upcoming_auction.name %></h3>
+        <p><strong>Max Bid:</strong> $<%= @active_or_upcoming_auction.max_bid %></p>
+        <p><strong><%= is_active ? "Closing Date" : "Opening Date" %>:</strong>
+          <% if is_active %>
+            <span id="countdown" data-end-time="<%= @active_or_upcoming_auction.closing_date.iso8601 %>"></span>
+          <% else %>
+            <%= @active_or_upcoming_auction.opening_date.strftime('%B %d, %Y %I:%M %p') %>
+          <% end %>
+        </p>
 
-<ul>
-  <li><%= link_to "Create New Auction Item", new_auction_item_path %></li>
-</ul>
+        <p><strong>Max Bid:</strong> $<%= @active_or_upcoming_auction.max_bid %></p>
+        <p><strong>Total Bids:</strong> <%= @active_or_upcoming_auction.total_bids %></p>
+        <p><strong>Bid Pool:</strong> $<%= @active_or_upcoming_auction.bid_pool %></p>
 
-<h2>Your Auction Items</h2>
-<% if seller? %>
-  <% current_user.auction_items.each do |item| %>
-    <div>
-      <h3><%= link_to item.name, auction_item_path(item) %></h3>
-      <p><%= item.description %></p>
-      <p>Max Bid: $<%= item.max_bid %></p>
-      <p>Closing Date: <%= item.closing_date.strftime('%Y-%m-%d') %></p>
-      <%= image_tag(item.image.present? && item.image.start_with?("http") ? item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
-      <br>
-      <%= link_to "Edit", edit_auction_item_path(item) %> |
-      <%= link_to "Delete", auction_item_path(item), method: :delete, data: { confirm: "Are you sure?" } %>
+        <% if is_active %>
+          <p><strong>Status:</strong> Live Now</p>
+        <% else %>
+          <p><strong>Status:</strong> Opens on <%= @active_or_upcoming_auction.opening_date.strftime('%B %d, %Y %I:%M %p') %></p>
+        <% end %>
+
+
+        <% if is_active %>
+          <h4>Latest Bids</h4>
+          <ul class="latest-bids">
+            <% @active_or_upcoming_auction.latest_bids.each do |bid| %>
+              <li>
+                <strong>$<%= bid.amount %></strong> - Placed by <strong><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></strong> on <%= bid.created_at.strftime("%B %d, %Y %I:%M %p") %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+
+
+        
+        <%= image_tag(@active_or_upcoming_auction.image.present? && @active_or_upcoming_auction.image.start_with?("http") ? @active_or_upcoming_auction.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
+      </div>
+    <% end %>
+
+    <div class="view-auction-btn-container">
+      <%= link_to "View Auction", auction_item_path(@active_or_upcoming_auction), class: "view-auction-btn" %>
     </div>
-    <hr>
-  <% end %>
+  </div>
 <% else %>
-  <p>You are not a seller.</p>
+  <div class="create-auction-container">
+    <div class="create-auction">
+      <p>You have no active auction. Click to create an auction.</p>
+      <%= link_to new_auction_item_path, class: "create-auction-btn" do %>
+        <i class="fa-solid fa-plus"></i>
+      <% end %>
+    </div>
+  </div>
 <% end %>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const countdownElement = document.getElementById("countdown");
+      if (!countdownElement) return;
+
+      const endTime = new Date(countdownElement.dataset.endTime).getTime();
+
+      function updateCountdown() {
+          const now = new Date().getTime();
+          const timeRemaining = endTime - now;
+
+          if (timeRemaining <= 0) {
+              countdownElement.innerHTML = "Auction Closed";
+              return;
+          }
+
+          const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+
+          countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m`;
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 60000); // Update every minute
+  });
+</script>

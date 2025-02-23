@@ -1,0 +1,110 @@
+.create-auction-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 300px;
+    background: white;
+    margin-top: 2rem;
+}
+
+.create-auction {
+    position: relative;
+    width: 500px;
+    height: 100%;
+    border: 1px solid #000;
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+}
+
+.create-auction p {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #808080;
+    font-size: 1rem;
+    white-space: nowrap;
+}
+
+.create-auction-btn {
+    background: #1E3A8A;
+    color: white;
+    padding: 1rem;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    text-decoration: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.create-auction-btn:hover {
+    color: white;
+    background: #142766;
+}
+
+
+.auction-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Auction Card */
+.auction-card {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.view-auction-btn-container {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.view-auction-btn {
+    display: inline-block;
+    background: #1E3A8A;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.2s ease;
+}
+
+.view-auction-btn:hover {
+    background: #142766;
+    color: white;
+}
+
+.latest-bids {
+    margin-top: 1rem;
+    padding: 0;
+    list-style: none;
+    background: #f9f9f9;
+    padding: 0.5rem;
+    border-radius: 5px;
+}
+
+.latest-bids li {
+    padding: 0.5rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.latest-bids li:last-child {
+    border-bottom: none;
+}
