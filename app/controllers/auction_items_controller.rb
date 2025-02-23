@@ -43,14 +43,12 @@ class AuctionItemsController < ApplicationController
   def destroy
     if current_user == @auction_item.seller
       @auction_item.destroy
-
-      redirect_path = request.referer&.include?(seller_dashboard_path) ? seller_dashboard_path : auction_items_path
-      redirect_to redirect_path, notice: t("notices.auction_item_deleted")
+      redirect_to seller_dashboard_path, notice: t("notices.auction_item_deleted")
     else
       redirect_to auction_items_path, alert: t("errors.unauthorized_delete")
     end
   end
-
+  
   private
 
   def set_auction_item

@@ -1,6 +1,7 @@
-<%= link_to seller_dashboard_path, class: "back-link" do %>
+<%= link_to auction_item_path(@auction_item), class: "back-link" do %>
   <i class="fa-solid fa-chevron-left"></i> Back
 <% end %>
+
 
 <%= form_with(model: @auction_item, local: true, class: "auction-form") do |form| %>
   <div class="auction-container">
@@ -64,6 +65,8 @@
           <% end %>
         </div>
 
+        <%= form.hidden_field :image, id: "image-url-hidden" %>
+
         <div class="image-thumbnails">
           <% if @auction_item.image.present? %>
             <div class="thumbnail">
@@ -73,16 +76,6 @@
           <div class="thumbnail add-image-btn" onclick="openImageModal()">
             <i class="fa-solid fa-plus"></i>
           </div>
-        </div>
-      </div>
-
-      <!-- Modal for Adding Image URL -->
-      <div id="imageModal" class="modal">
-        <div class="modal-content">
-          <span class="close" onclick="closeImageModal()">&times;</span>
-          <p>Enter Image URL:</p>
-          <input type="text" id="imageUrlInput" class="input-field" placeholder="https://example.com/image.jpg">
-          <button onclick="addImage()">Update Image</button>
         </div>
       </div>
     </div>
@@ -95,32 +88,38 @@
 
 <% end %>
 
-<div class="bottom-padding"></div>
-
+<!-- Modal for Adding Image URL -->
 <div id="imageModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeImageModal()">&times;</span>
-    <p>Enter Image URL</p>
-    <input type="text" id="image-url" placeholder="https://example.com/image.jpg">
-    <button type="button" onclick="updateImage()">Save</button>
+    <p>Enter Image URL:</p>
+    <input type="text" id="imageUrlInput" class="input-field" placeholder="https://example.com/image.jpg">
+    <button onclick="updateImage()">Update Image</button>
   </div>
 </div>
+
+<div class="bottom-padding"></div>
 
 <script>
   function openImageModal() {
     document.getElementById("imageModal").style.display = "flex";
-}
+  }
 
-function closeImageModal() {
+  function closeImageModal() {
     document.getElementById("imageModal").style.display = "none";
-}
+  }
 
-function addImage() {
+  function updateImage() {
     let imageUrl = document.getElementById("imageUrlInput").value;
     if (imageUrl.trim() !== "") {
-        document.querySelector(".image-placeholder").outerHTML = 
-            `<img src="${imageUrl}" id="preview-image" class="product-image">`;
-        
+        // Replace placeholder with actual image
+        let previewContainer = document.querySelector(".product-image-container");
+        previewContainer.innerHTML = `<img src="${imageUrl}" id="preview-image" class="product-image">`;
+
+        // Update the hidden input field
+        document.getElementById("image-url-hidden").value = imageUrl;
+
+        // Add a new thumbnail
         let thumbnailContainer = document.querySelector(".image-thumbnails");
         let newThumbnail = document.createElement("div");
         newThumbnail.classList.add("thumbnail");
