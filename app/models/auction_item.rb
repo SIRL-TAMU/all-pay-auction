@@ -12,7 +12,7 @@ class AuctionItem < ApplicationRecord
   def total_bids
     bids.count
   end
-  
+
   # Calculate bid pool by summing each user's highest bid
   def bid_pool
     bids.group(:buyer_id).maximum(:amount).values.sum || 0
@@ -21,5 +21,4 @@ class AuctionItem < ApplicationRecord
   def latest_bids(limit = 4)
     bids.includes(:buyer).order(created_at: :desc).limit(limit)
   end
-  
 end

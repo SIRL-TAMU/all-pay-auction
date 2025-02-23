@@ -1,7 +1,8 @@
-class StaticPagesController < ApplicationController
-  def sell
-  end
+# frozen_string_literal: true
 
-  def about
-  end
+# Controller for static pages like home, about, and sell.
+class StaticPagesController < ApplicationController
+  def sell; end
+
+  def about; end
 end
