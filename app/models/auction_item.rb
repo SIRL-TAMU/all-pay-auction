@@ -18,7 +18,8 @@ class AuctionItem < ApplicationRecord
     bids.group(:buyer_id).maximum(:amount).values.sum || 0
   end
 
-  def latest_bids
-    bids.includes(:buyer).order(created_at: :desc).limit(4)
+  def latest_bids(limit = 4)
+    bids.includes(:buyer).order(created_at: :desc).limit(limit)
   end
+  
 end
