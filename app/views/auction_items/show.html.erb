@@ -1,26 +1,114 @@
-<h1><%= @auction_item.name %></h1>
-<p><%= @auction_item.description %></p>
-<p>Max Bid: $<%= @auction_item.max_bid %></p>
-<p>Opening Date: <%= @auction_item.opening_date.strftime('%Y-%m-%d') %></p>
-<p>Closing Date: <%= @auction_item.closing_date.strftime('%Y-%m-%d') %></p>
-
-<p>Created by: <%= @auction_item.seller.first_name %> <%= @auction_item.seller.last_name %></p>
-
-<%= image_tag(@auction_item.image.present? && @auction_item.image.start_with?("http") ? @auction_item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
-
-<% if seller? && current_user == @auction_item.seller %>
-  <%= link_to "Edit", edit_auction_item_path(@auction_item) %> |
-  <%= link_to "Delete", auction_item_path(@auction_item), method: :delete, data: { confirm: "Are you sure?" } %>
+<%= link_to auction_items_path, class: "back-link" do %>
+  <i class="fa-solid fa-chevron-left"></i> Back
 <% end %>
 
-<% if buyer? %>
-  <h3>Place a Bid</h3>
-  <%= form_with(model: Bid.new, local: true) do |form| %>
-    <%= form.hidden_field :auction_item_id, value: @auction_item.id %>
-    <%= form.label :amount, "Your Bid:" %>
-    <%= form.number_field :amount, step: 0.01, min: (@auction_item.max_bid + 0.01) %>
-    <%= form.submit "Place Bid", class: "primary-btn" %>
-  <% end %>
-<% end %>
+<div class="auction-item-container">
+  <!-- Left Side: Auction Image & Details -->
+  <div class="auction-item-image-container">
+    <%= image_tag(@auction_item.image.present? && @auction_item.image.start_with?("http") ? @auction_item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", class: "auction-item-image") %>
+  </div>
 
-<%= link_to "Back to Listings", auction_items_path, class: "back-link" %>
+  <!-- Right Side: Auction Info -->
+  <div class="auction-item-info">
+    <div class="auction-item-status">
+      <%= @auction_item.status_text %>
+    </div>
+
+    <% if seller? && current_user == @auction_item.seller %>
+      <p class="auction-item-estimate">Est: $<%= @auction_item.starting_price || 'N/A' %> USD</p>
+      <div class="auction-item-bid-info">
+        <strong>$<%= @auction_item.bid_pool %> USD</strong> Bid Pool
+        <strong>$<%= @auction_item.max_bid %> USD</strong> Max Bid
+        <strong><%= @auction_item.total_bids %> bids</strong> Total Bids
+      </div>
+    <% end %>
+
+    <% if @auction_item.closed? %>
+      <% if @auction_item.winning_bid.present? %>
+        <div class="auction-item-winning-bid">
+          <p>Winning Bidder:</p>
+          <p><strong><%= @auction_item.winning_bid.buyer.first_name %> <%= @auction_item.winning_bid.buyer.last_name %></strong></p>
+          <p>Winning Bid Amount: $<%= @auction_item.winning_bid.amount %> USD</p>
+        </div>
+      <% else %>
+        <div class="auction-item-winning-bid">
+          <p>No bids were placed for this auction.</p>
+        </div>
+      <% end %>
+    <% end %>
+
+
+    <!-- Buyer View: Place Bid -->
+    <% if buyer? && @auction_item.active? %>
+      <div class="auction-item-bid-section">
+        <label for="bid_amount">Set Bid:</label>
+        <%= form_with(model: Bid.new, local: true, class: "auction-item-bid-form") do |form| %>
+          <%= form.hidden_field :auction_item_id, value: @auction_item.id %>
+          <%= form.number_field :amount, step: 0.01, min: @auction_item.max_bid + 0.01, required: true, class: "auction-item-bid-input" %>
+          <%= form.submit "Place Bid", class: "auction-item-bid-btn" %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Redirect Non-Buyer Users -->
+    <% if !buyer? && !seller? %>
+      <div class="auction-item-login-prompt">
+        <p>You must log in as a buyer to place a bid.</p>
+        <%= link_to "Log in", login_path(account_type: "buyer"), class: "login-btn" %>
+      </div>
+    <% end %>
+
+
+    <div class="auction-item-bid-history">
+      <h3>Bid History</h3>
+      <% @auction_item.latest_bids.each do |bid| %>
+        <div class="auction-item-bid-entry">
+          <p><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></p>
+          <p><%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %></p>
+          <p><strong>$<%= bid.amount %> USD</strong></p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Seller Information -->
+    <div class="auction-item-seller-info">
+      <h3>Seller Information</h3>
+      <p><%= @auction_item.seller.first_name %> <%= @auction_item.seller.last_name %></p>
+      <p><%= @auction_item.seller.email %></p>
+    </div>
+
+    <!-- Edit/Delete for Seller -->
+    <% if seller? && current_user == @auction_item.seller %>
+      <div class="auction-item-seller-actions">
+        <%= link_to "Edit", edit_auction_item_path(@auction_item), class: "auction-item-edit-btn" %>
+        <%= link_to "Delete", auction_item_path(@auction_item), method: :delete, data: { confirm: "Are you sure?" }, class: "auction-item-delete-btn" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Expandable Sections -->
+<div class="auction-item-details">
+  <button class="auction-item-details-toggle" onclick="toggleDetails('auction-item-product-details')">Product Details</button>
+  <div id="auction-item-product-details" class="auction-item-details-content">
+    <p><%= @auction_item.description %></p>
+  </div>
+
+  <button class="auction-item-details-toggle" onclick="toggleDetails('auction-item-shipping-info')">Payment & Shipping</button>
+  <div id="auction-item-shipping-info" class="auction-item-details-content">
+    <p>Shipping and payment information goes here.</p>
+  </div>
+
+  <button class="auction-item-details-toggle" onclick="toggleDetails('auction-item-terms-conditions')">Terms & Conditions</button>
+  <div id="auction-item-terms-conditions" class="auction-item-details-content">
+    <p>Terms and conditions information goes here.</p>
+  </div>
+</div>
+
+
+<script>
+  function toggleDetails(id) {
+    var content = document.getElementById(id);
+    content.style.display = (content.style.display === "none" || content.style.display === "") ? "block" : "none";
+ }
+</script>
