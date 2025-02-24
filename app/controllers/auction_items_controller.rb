@@ -26,7 +26,7 @@ class AuctionItemsController < ApplicationController
     @auction_item = current_user.auction_items.build(auction_item_params)
 
     if @auction_item.save
-      redirect_to @auction_item, notice: t("notices.auction_item_created")
+      redirect_to seller_dashboard_path, notice: t("notices.auction_item_created")
     else
       render :new
     end
@@ -43,9 +43,7 @@ class AuctionItemsController < ApplicationController
   def destroy
     if current_user == @auction_item.seller
       @auction_item.destroy
-
-      redirect_path = request.referer&.include?(seller_dashboard_path) ? seller_dashboard_path : auction_items_path
-      redirect_to redirect_path, notice: t("notices.auction_item_deleted")
+      redirect_to seller_dashboard_path, notice: t("notices.auction_item_deleted")
     else
       redirect_to auction_items_path, alert: t("errors.unauthorized_delete")
     end
@@ -71,5 +69,13 @@ class AuctionItemsController < ApplicationController
     return if current_user == @auction_item.seller
 
     redirect_to auction_items_path, alert: t("errors.unauthorized_edit_delete")
+  end
+
+  def ensure_non_seller_access
+    if logged_in? && seller?
+      nil
+    elsif !logged_in? || (!seller? && !buyer?)
+      redirect_to login_path(account_type: "buyer"), alert: I18n.t("alerts.login_required_buyer")
+    end
   end
 end

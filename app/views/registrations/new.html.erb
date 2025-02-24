@@ -1,30 +1,67 @@
-<%= form_with url: signup_path(account_type: @account_type), method: :post, scope: :user do |f| %>
-  <p>Signing up as a <%= @account_type.present? ? @account_type.capitalize : "User" %></p>
+<div class="onboarding-container"> 
+  <div class="onboarding-card">
 
-  <div>
-    <%= f.label :first_name, "First Name" %>
-    <%= f.text_field :first_name %>
+    <%# Title %>
+    <h2 class="login-title">Get Started</h2>
+
+    <%# Account Selection (Buyer / Seller) %>
+    <div class="account-selection">
+      <%= link_to "Buyer", signup_path(account_type: "buyer"), class: "account-btn #{params[:account_type].blank? || params[:account_type] == 'buyer' ? 'active' : ''}" %>
+      <%= link_to "Seller", signup_path(account_type: "seller"), class: "account-btn #{params[:account_type] == 'seller' ? 'active' : ''}" %>
+    </div>
+
+    <%# Registration Form %>
+    <%= form_with url: signup_path(account_type: params[:account_type] || "buyer"), method: :post, class: "login-form", scope: :user do |f| %>  
+      
+      <%# Hidden field to retain account type %>
+      <%= hidden_field_tag :account_type, params[:account_type].blank? ? "buyer" : params[:account_type] %>
+
+      <%# First & Last Name Fields %>
+      <div class="form-group-grouped">
+        <div class="form-group">
+          <%= f.text_field :first_name, placeholder: "First Name", class: "input-field" %>
+        </div>
+        <div class="form-group">
+          <%= f.text_field :last_name, placeholder: "Last Name", class: "input-field" %>
+        </div>
+      </div>
+
+      <%# Email Field %>
+      <div class="form-group">
+        <%= f.email_field :email, placeholder: "Email", class: "input-field" %>
+      </div>
+
+      <%# Password Fields %>
+      <div class="form-group">
+        <%= f.password_field :password, placeholder: "Password", class: "input-field" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.password_field :password_confirmation, placeholder: "Confirm Password", class: "input-field" %>
+      </div>
+
+      <%# Submit Button %>
+      <%= f.submit "Continue", class: "login-btn" %>
+    <% end %>
+
+    <%# Divider with OR %>
+    <div class="divider">
+      <span>OR</span>
+    </div>
+
+    <%# Google Signup Button %>
+    <div class="google-login">
+      <button class="google-btn temp">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
+          Continue with Google
+      </button>
+    </div>
+
+    <%# Already have an account? %>
+    <div class="signup-switch"> 
+      Already have an account? <%= link_to "Sign in", login_path(account_type: params[:account_type] || "buyer") %>
+    </div>
+
+
   </div>
-
-  <div>
-    <%= f.label :last_name, "Last Name" %>
-    <%= f.text_field :last_name %>
-  </div>
-
-  <div>
-    <%= f.label :email, "Email" %>
-    <%= f.email_field :email %>
-  </div>
-
-  <div>
-    <%= f.label :password, "Password" %>
-    <%= f.password_field :password %>
-  </div>
-
-  <div>
-    <%= f.label :password_confirmation, "Confirm Password" %>
-    <%= f.password_field :password_confirmation %>
-  </div>
-
-  <%= f.submit "Sign Up" %>
-<% end %>
+</div>

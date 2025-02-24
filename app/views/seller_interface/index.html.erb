@@ -1,24 +1,178 @@
-<h1>Welcome to Seller's Interface!</h1>
+<% if @active_or_upcoming_auction %>
+  <% is_active = @active_or_upcoming_auction.opening_date <= Time.zone.now && @active_or_upcoming_auction.closing_date >= Time.zone.now %>
+  
+  <div class="active-auction">
+    <%= link_to auction_item_path(@active_or_upcoming_auction), class: "auction-card-link" do %>
+      <div class="auction-card">
+        <%# Image and Countdown %>
+        <div class="auction-card-image">
+          <%= image_tag(@active_or_upcoming_auction.image.present? && @active_or_upcoming_auction.image.start_with?("http") ? @active_or_upcoming_auction.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
+          <div class="countdown-container">
+            <% if is_active %>
+              <p>Closing in&nbsp;
+                <strong><span id="countdown" data-end-time="<%= @active_or_upcoming_auction.closing_date.iso8601 %>"></span></strong>
+              </p>
+            <% end %>
+          </div>
+        </div>
 
-<ul>
-  <li><%= link_to "Create New Auction Item", new_auction_item_path %></li>
-</ul>
+        <%# Info %>
+        <div class="auction-card-info">
+          <div class="main-info">
+            <div class="card-title"><%= @active_or_upcoming_auction.name %></div>
 
-<h2>Your Auction Items</h2>
-<% if seller? %>
-  <% current_user.auction_items.each do |item| %>
-    <div>
-      <h3><%= link_to item.name, auction_item_path(item) %></h3>
-      <p><%= item.description %></p>
-      <p>Max Bid: $<%= item.max_bid %></p>
-      <p>Closing Date: <%= item.closing_date.strftime('%Y-%m-%d') %></p>
-      <%= image_tag(item.image.present? && item.image.start_with?("http") ? item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
-      <br>
-      <%= link_to "Edit", edit_auction_item_path(item) %> |
-      <%= link_to "Delete", auction_item_path(item), method: :delete, data: { confirm: "Are you sure?" } %>
-    </div>
-    <hr>
-  <% end %>
+            <%# Estimated Value %>
+            <div class="card-subtitle">
+              Est: N/A
+            </div>
+
+            <%# Bidding Info %>
+            <div class="bid-info">
+              <div class="bid-item">
+                <span class="bid-value">$<%= @active_or_upcoming_auction.bid_pool %> USD</span>
+                <span class="bid-label">Bid Pool</span>
+              </div>
+
+              <div class="bid-item">
+                <span class="bid-value">$<%= @active_or_upcoming_auction.max_bid %> USD</span>
+                <span class="bid-label">Max Bid</span>
+              </div>
+
+              <div class="bid-item">
+                <span class="bid-value"><%= @active_or_upcoming_auction.total_bids %> bids</span>
+                <span class="bid-label">Total Bids</span>
+              </div>
+            </div>            
+          </div>
+
+          <%# Latest Bid/Upcoming Auction Start Date %>
+          <% if is_active %>
+            <div class="latest-bids-title">Latest Bids</div>
+
+            <% if @active_or_upcoming_auction.latest_bids(4).any? %>
+              <ul class="latest-bids">
+                <% @active_or_upcoming_auction.latest_bids(4).each do |bid| %>
+                  <li class="bidder-item">
+                    <div class="bidder-info">
+                      <div class="bidder-details">
+                        <%= bid.buyer.first_name %> <%= bid.buyer.last_name %>
+                        <span class="bidder-time"><%= bid.created_at.strftime("%B %d, %Y at %I:%M%p") %></span>
+                      </div>
+                    </div>
+                    <div class="bidder-amount">
+                      $<%= bid.amount %> USD
+                    </div>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <p class="no-bids-message">No bids have been placed yet.</p>
+            <% end %>
+          <% else %>
+            <div class="upcoming-auction">
+              <p>This auction will begin on</p>
+              <div class="upcoming-date"><%= @active_or_upcoming_auction.opening_date.strftime('%B %d, %Y %I:%M %p') %></div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    
+    <%= link_to auction_item_path(@active_or_upcoming_auction), class: "view-auction-btn" do %>
+      <i class="fa-solid fa-eye"></i> View Listing
+    <% end %>
+  </div>
 <% else %>
-  <p>You are not a seller.</p>
+  <div class="create-auction-container">
+    <div class="create-auction">
+      <p>You have no active auction. Click to create an auction.</p>
+      <%= link_to new_auction_item_path, class: "create-auction-btn" do %>
+        <i class="fa-solid fa-plus"></i>
+      <% end %>
+    </div>
+  </div>
 <% end %>
+
+
+<div class="past-auctions-container">
+  <div class="past-auctions-title">Past Auctions</div>
+    <div class="past-auctions-grid">
+      <% @past_auctions.each do |auction| %>
+        <%= link_to auction_item_path(auction), class: "past-auction-card-link" do %>
+          <div class="past-auction-card">
+            <div class="past-auction-image-container">
+              <%= image_tag(auction.image.present? && auction.image.start_with?("http") ? auction.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg", class: "past-auction-image") %>
+            </div>
+            
+            <div class="past-auction-details">
+              <div class="past-auction-closed-badge">Closed <%= auction.closing_date.strftime('%B %d, %Y') %></div>
+
+              <h3 class="past-auction-title"><%= auction.name %></h3>
+              <p class="past-auction-seller"><%= auction.seller.first_name %> <%= auction.seller.last_name %></p>
+
+              <div class="past-auction-bid-info">
+                <div class="past-auction-bid-item">
+                  <span class="past-auction-bid-value">$<%= auction.bid_pool %> USD</span>
+                  <span class="past-auction-bid-label">Bid Pool</span>
+                </div>
+                <div class="past-auction-bid-item">
+                  <span class="past-auction-bid-value">$<%= auction.max_bid %> USD</span>
+                  <span class="past-auction-bid-label">Max Bid</span>
+                </div>
+                <div class="past-auction-bid-item">
+                  <span class="past-auction-bid-value"><%= auction.total_bids %> bids</span>
+                  <span class="past-auction-bid-label">Total Bids</span>
+                </div>
+              </div>
+
+              <% if auction.bids.any? %>
+              <div class="past-auction-winner-container">
+                <p class="past-auction-winner-title">Winning Bidder</p>
+                <div class="past-auction-winner">
+                  <% winning_bid = auction.bids.order(amount: :desc).first %>
+                  <div class="past-auction-bidder-info">
+                    <strong><%= winning_bid.buyer.first_name %></strong>
+                    <span class="past-auction-bidder-email"><%= winning_bid.buyer.email %></span>
+                  </div>
+                  <div class="past-auction-winning-amount">$<%= winning_bid.amount %> USD</div>
+                </div>
+              </div>
+              <% end %>
+
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+</div>
+
+
+<div class="bottom-padding"></div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const countdownElement = document.getElementById("countdown");
+      if (!countdownElement) return;
+
+      const endTime = new Date(countdownElement.dataset.endTime).getTime();
+
+      function updateCountdown() {
+          const now = new Date().getTime();
+          const timeRemaining = endTime - now;
+
+          if (timeRemaining <= 0) {
+              countdownElement.innerHTML = "Auction Closed";
+              return;
+          }
+
+          const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+
+          countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m`;
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 60000); // Update every minute
+  });
+</script>

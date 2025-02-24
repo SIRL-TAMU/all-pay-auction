@@ -30,5 +30,10 @@ Rails.application.routes.draw do
   # Auction Items
   resources :auction_items
 
+  # Bids
   resources :bids, only: %i[create index show update] # update bid incase of repeat bids, CAN ONLY INCREASE.
+
+  # Static Page
+  get "/sell", to: "static_pages#sell"
+  get "/about", to: "static_pages#about"
 end

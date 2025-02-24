@@ -1,50 +1,128 @@
-<h1>Edit Auction Item</h1>
-
-<%= form_with(model: @auction_item, local: true) do |form| %>
-  <% if @auction_item.errors.any? %>
-    <div>
-      <h2><%= pluralize(@auction_item.errors.count, "error") %> prohibited this auction item from being saved:</h2>
-      <ul>
-        <% @auction_item.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div>
-    <label for="name">Item Name:</label>
-    <%= form.text_field :name, required: true %>
-  </div>
-
-  <div>
-    <label for="description">Description:</label>
-    <%= form.text_area :description, required: true %>
-  </div>
-
-  <div>
-    <label for="max_bid">Max Bid:</label>
-    <%= form.number_field :max_bid, step: 0.01, required: true %>
-  </div>
-
-  <div>
-    <label for="opening_date">Opening Date:</label>
-    <%= form.datetime_local_field :opening_date, required: true %>
-  </div>
-
-  <div>
-    <label for="closing_date">Closing Date:</label>
-    <%= form.datetime_local_field :closing_date, required: true %>
-  </div>
-
-  <div>
-    <label for="image">Image URL:</label>
-    <%= form.text_field :image, placeholder: "https://example.com/image.jpg" %>
-  </div>
-
-  <div>
-    <%= form.submit "Update Auction Item" %>
-  </div>
+<%= link_to auction_item_path(@auction_item), class: "back-link" do %>
+  <i class="fa-solid fa-chevron-left"></i> Back
 <% end %>
 
-<%= link_to "Back to Auction Items", auction_items_path %>
+
+<%= form_with(model: @auction_item, local: true, class: "auction-form") do |form| %>
+  <div class="auction-container">
+    <div class="create-auction-title-container">
+      <div class="create-auction-title"><i class="fa-solid fa-gavel"></i> Edit Auction Item</div>
+    </div>
+
+    <div class="auction-form-container">
+      <!-- Left Side: General Information -->
+      <div class="auction-left">
+        <div class="auction-left-general"> 
+          <p>General Information</p>
+          <div class="input-group">
+            <p>Product Name</p>
+            <%= form.text_field :name, required: true, class: "input-field" %>
+          </div>
+
+          <div class="input-group">
+            <p class="input-group-product">Product Description</p>
+            <%= form.text_area :description, required: true, class: "input-field textarea" %>
+          </div>
+        </div>
+
+        <div class="auction-left-general">
+          <p>Bid Details</p>
+          <div class="bid-details-grid">
+            <div class="input-group">
+              <p>Max Bid</p>
+              <%= form.number_field :max_bid, step: 0.01, required: true, class: "input-field" %>
+            </div>
+
+            <div class="input-group temp">
+              <p>Product Base Price</p>
+              <input type="text" class="input-field" readonly>
+            </div>
+
+            <div class="input-group">
+              <p>Open Date</p>
+              <%= form.datetime_local_field :opening_date, required: true, class: "input-field" %>
+            </div>
+
+            <div class="input-group">
+              <p>Close Date</p>
+              <%= form.datetime_local_field :closing_date, required: true, class: "input-field" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side: Image Upload -->
+      <div class="auction-right">
+        <p>Product Image</p>
+
+        <div class="product-image-container">
+          <% if @auction_item.image.present? %>
+            <%= image_tag(@auction_item.image, id: "preview-image", class: "product-image") %>
+          <% else %>
+            <div class="image-placeholder" onclick="openImageModal()">
+              <i class="fa-solid fa-plus"></i>
+            </div>
+          <% end %>
+        </div>
+
+        <%= form.hidden_field :image, id: "image-url-hidden" %>
+
+        <div class="image-thumbnails">
+          <% if @auction_item.image.present? %>
+            <div class="thumbnail">
+              <%= image_tag(@auction_item.image) %>
+            </div>
+          <% end %>
+          <div class="thumbnail add-image-btn" onclick="openImageModal()">
+            <i class="fa-solid fa-plus"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit "Update Auction Item", class: "primary-btn" %>
+  </div>
+
+<% end %>
+
+<!-- Modal for Adding Image URL -->
+<div id="imageModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeImageModal()">&times;</span>
+    <p>Enter Image URL:</p>
+    <input type="text" id="imageUrlInput" class="input-field" placeholder="https://example.com/image.jpg">
+    <button onclick="updateImage()">Update Image</button>
+  </div>
+</div>
+
+<div class="bottom-padding"></div>
+
+<script>
+  function openImageModal() {
+    document.getElementById("imageModal").style.display = "flex";
+  }
+
+  function closeImageModal() {
+    document.getElementById("imageModal").style.display = "none";
+  }
+
+  function updateImage() {
+    let imageUrl = document.getElementById("imageUrlInput").value;
+    if (imageUrl.trim() !== "") {
+        let previewContainer = document.querySelector(".product-image-container");
+        previewContainer.innerHTML = `<img src="${imageUrl}" id="preview-image" class="product-image">`;
+
+        document.getElementById("image-url-hidden").value = imageUrl;
+
+        let thumbnailContainer = document.querySelector(".image-thumbnails");
+        let newThumbnail = document.createElement("div");
+        newThumbnail.classList.add("thumbnail");
+        newThumbnail.innerHTML = `<img src="${imageUrl}">`;
+        thumbnailContainer.insertBefore(newThumbnail, document.querySelector(".add-image-btn"));
+
+        closeImageModal();
+    }
+}
+</script>

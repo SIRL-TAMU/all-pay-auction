@@ -1,0 +1,36 @@
+.static-page {
+    max-width: 800px;
+    margin: 3rem auto;
+    text-align: center;
+    font-family: "Inter", sans-serif;
+}
+
+.static-page h1 {
+    font-size: 2.2rem;
+    color: #1E3A8A;
+    margin-bottom: 1rem;
+}
+
+.static-page h2 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+}
+
+.static-page p, .static-page li {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.static-page img {
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 2rem;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.static-page ol, .static-page ul {
+    text-align: left;
+    max-width: 600px;
+    margin: 1rem auto;
+}

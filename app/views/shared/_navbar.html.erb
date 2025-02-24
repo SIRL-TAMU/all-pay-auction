@@ -1,53 +1,50 @@
 <header>
     <div class="navbar">
-        <div class="logo">
-            <%= link_to "All Pay Auction", root_path %>
-        </div>
+        <div class="navbar-container">  
+            <div class="logo">
+                <%= link_to "All Pay Auction", root_path %>
+            </div>
 
-        <ul class="links">
-            <li><%= link_to "Home", root_path %></li>
-            <li><%= link_to "Buy", buyer_dashboard_path %></li>
-            <li><%= link_to "Sell", seller_dashboard_path %></li>
-            <li><%= link_to "Auction Items", auction_items_path %></li>
-        </ul>
+            <div class="links">
+                <li><%= link_to "Auction Block", auction_items_path %></li>
+                <%= link_to "Sell", "/sell" %>
+                <%= link_to "About Us", "/about" %>
+            </div>
 
-       <% if logged_in? %>
-            <span>
-                Logged in as <%= current_user.first_name %> 
-                (<%= session[:account_type].capitalize %>)
-                Balance: $<%= number_to_currency(current_user.amount, unit: "", precision: 2) %>
-            </span>
-            <%= link_to "Logout", logout_path, method: :delete, class: "logout-btn" %>
-        <% else %>
-            <%= link_to "Login", login_path, class: "login-btn" %>
-        <% end %>
+            <div class="user-links">
+                <% if logged_in? %>
+                    <div class="profile-btn">
+                        <div class="user-name">
+                            <%= current_user.first_name %> <%= current_user.last_name %>
+                        </div>
+                        <i class="fa-solid fa-chevron-down"></i>
 
-        <div class="toggle-btn">
-            <i class="fa-solid fa-bars"></i>
+                        <div class="profile-dropdown-menu">
+                            <% if seller? %>
+                                <%= link_to "Seller Dashboard", seller_dashboard_path %>
+                            <% end %>
+                            <%= link_to "Settings", "#", class: "temp" %>
+                            <%= link_to "Logout", logout_path, method: :delete %>
+                        </div>
+                    </div>
+                <% else %>
+                    <%= link_to "Log in", login_path(account_type: params[:account_type] || "buyer"), class: "login-btn" %>
+                    <%= link_to "Sign up", signup_path(account_type: params[:account_type] || "buyer"), class: "signup-btn" %>
+                <% end %>
+            </div>
         </div>
     </div>
 
-    <div class="dropdown-menu">
-        <li><%= link_to "Home", root_path %></li>
-        <li><%= link_to "Buy", buyer_dashboard_path %></li>
-        <li><%= link_to "Sell", seller_dashboard_path %></li>
-        
-        <% if logged_in? %>
-            <%= link_to "Logout", logout_path, method: :delete, class: "logout-btn" %>
-        <% else %>
-            <%= link_to "Login", login_path, class: "login-btn" %>
-        <% end %>
-    </div>
 
     <script>
-        const toggleBtn = document.querySelector('.toggle-btn');
-        const toggleBtnIcon = document.querySelector('.toggle-btn i');
-        const dropDownMenu = document.querySelector('.dropdown-menu');
+        const profileBtn = document.querySelector('.profile-btn');
+        const profileBtnIcon = profileBtn.querySelector('i');
+        const profileDropDownMenu = document.querySelector('.profile-dropdown-menu');
 
-        toggleBtn.onclick = function () {
-            dropDownMenu.classList.toggle('open');
-            const isOpen = dropDownMenu.classList.contains('open');
-            toggleBtnIcon.classList = isOpen ? "fa-solid fa-xmark" : "fa-solid fa-bars";
-        }
+        profileBtn.onclick = function () {
+            const isOpen = profileDropDownMenu.classList.toggle('open');
+            profileBtn.classList.toggle('active', isOpen);
+            profileBtnIcon.classList = isOpen ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
+        };
     </script>
 </header>

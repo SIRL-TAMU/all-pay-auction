@@ -1,16 +1,170 @@
-<h1><%= @auction_item.name %></h1>
-<p><%= @auction_item.description %></p>
-<p>Max Bid: $<%= @auction_item.max_bid %></p>
-<p>Opening Date: <%= @auction_item.opening_date.strftime('%Y-%m-%d') %></p>
-<p>Closing Date: <%= @auction_item.closing_date.strftime('%Y-%m-%d') %></p>
-
-<p>Created by: <%= @auction_item.seller.first_name %> <%= @auction_item.seller.last_name %></p>
-
- <%= image_tag(@auction_item.image.present? && @auction_item.image.start_with?("http") ? @auction_item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
-
-<% if seller? && current_user == @auction_item.seller %>
-  <%= link_to "Edit", edit_auction_item_path(@auction_item) %> |
-  <%= link_to "Delete", auction_item_path(@auction_item), method: :delete, data: { confirm: "Are you sure?" } %>
+<%= link_to auction_items_path, class: "back-link" do %>
+  <i class="fa-solid fa-chevron-left"></i> Back
 <% end %>
 
-<%= link_to "Back to Listings", auction_items_path %>
+<div class="auction-item-container">
+  <div class="auction-item-info-left">
+    <div class="auction-item-image-container">
+      <%= image_tag(@auction_item.image.present? && @auction_item.image.start_with?("http") ? @auction_item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", class: "auction-item-image") %>
+    </div>
+
+    <div class="auction-item-details">
+      <div class="auction-item-details-section">
+        <button class="auction-item-details-toggle" onclick="toggleDetails(this, 'auction-item-product-details')">
+          Product Details <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div id="auction-item-product-details" class="auction-item-details-content">
+          <p><%= @auction_item.description %></p>
+        </div>
+      </div>
+
+      <div class="auction-item-details-section">
+        <button class="auction-item-details-toggle" onclick="toggleDetails(this, 'auction-item-shipping-info')">
+          Payment & Shipping <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div id="auction-item-shipping-info" class="auction-item-details-content">
+          <p>Lorem ipsum odor amet, consectetuer adipiscing elit. Lacus aliquam id convallis class scelerisque, conubia taciti mi. Arcu bibendum placerat aliquam non nisi nostra. Adipiscing rutrum tempus at id in arcu. Accumsan nulla nisl magna ridiculus mattis per. Elementum leo himenaeos convallis volutpat auctor ultrices pretium.
+
+Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesuada suscipit quam integer dictumst, litora montes. Arcu semper et cubilia; semper ultricies pretium. Nisi feugiat justo vulputate massa tellus eget metus. Litora porta lectus lectus eros libero auctor. Sociosqu feugiat eget magnis sagittis natoque felis. Dui vivamus rhoncus lacus; conubia est erat. Hac tellus ac auctor vivamus massa nisl erat vitae! Lacinia vitae per arcu odio hac nisl elementum primis.</p>
+        </div>
+      </div>
+
+      <div class="auction-item-details-section">
+        <button class="auction-item-details-toggle" onclick="toggleDetails(this, 'auction-item-terms-conditions')">
+          Terms & Conditions <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div id="auction-item-terms-conditions" class="auction-item-details-content">
+          <p>Lorem ipsum odor amet, consectetuer adipiscing elit. Lacus aliquam id convallis class scelerisque, conubia taciti mi. Arcu bibendum placerat aliquam non nisi nostra. Adipiscing rutrum tempus at id in arcu. Accumsan nulla nisl magna ridiculus mattis per. Elementum leo himenaeos convallis volutpat auctor ultrices pretium.
+
+Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesuada suscipit quam integer dictumst, litora montes. Arcu semper et cubilia; semper ultricies pretium. Nisi feugiat justo vulputate massa tellus eget metus. Litora porta lectus lectus eros libero auctor. Sociosqu feugiat eget magnis sagittis natoque felis. Dui vivamus rhoncus lacus; conubia est erat. Hac tellus ac auctor vivamus massa nisl erat vitae! Lacinia vitae per arcu odio hac nisl elementum primis.</p>
+        </div>
+      </div>
+    </div>
+
+    
+  </div>
+
+  <div class="auction-item-info">
+    <% if seller? && current_user == @auction_item.seller %>
+      <div class="auction-item-seller-actions">
+        <% if @auction_item.active? || @auction_item.closed? %>
+          <a class="auction-item-edit-btn disabled" title="Cannot edit an active or closed auction" onclick="showDisabledAlert()">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </a>
+          <a class="auction-item-delete-btn disabled" title="Cannot delete an active or closed auction" onclick="showDisabledAlert()">
+            <i class="fa-solid fa-trash"></i>
+          </a>
+        <% else %>
+          <%= link_to edit_auction_item_path(@auction_item), class: "auction-item-edit-btn", title: "Edit Auction" do %>
+            <i class="fa-solid fa-pen-to-square"></i>
+          <% end %>
+
+          <%= link_to auction_item_path(@auction_item), method: :delete, data: { confirm: "Are you sure?" }, class: "auction-item-delete-btn", title: "Delete Auction" do %>
+            <i class="fa-solid fa-trash"></i>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+
+
+
+    <% if !@auction_item.closed? && !buyer? && !seller? %>
+      <div class="auction-item-login-prompt">
+        <p>You must log in as a buyer to place a bid.</p>
+        <%= link_to "Log in", login_path(account_type: "buyer"), class: "auction-item-login-btn" %>
+      </div>
+    <% end %>
+
+    <div class="auction-item-bid-section">
+      <div class="auction-item-status">
+        <%= @auction_item.status_text %>
+      </div>
+
+      <div class="auction-item-bid-info-container">
+        <div class="auction-item-estimate-value">Est: N/A</div>
+        <div class="auction-item-bid-info-text">
+          <strong>$<%= @auction_item.max_bid %> USD</strong> •
+          <span class="info-text-subtext"><strong><%= @auction_item.total_bids %> bids</strong></span>
+        </div>
+
+        <% if buyer? && @auction_item.active? %>
+          <strong><label for="bid_amount">Set Bid:</label></strong>
+          <%= form_with(model: Bid.new, local: true, class: "auction-item-bid-form") do |form| %>
+            <%= form.hidden_field :auction_item_id, value: @auction_item.id %>
+            <%= form.number_field :amount, step: 0.01, min: @auction_item.max_bid + 0.01, required: true, class: "auction-item-bid-input" %>
+            <%= form.submit "Place Bid", class: "auction-item-bid-btn" %>
+          <% end %>
+        <% end %>
+      </div>
+
+
+    <% if @auction_item.closed? %>
+      <% if @auction_item.winning_bid.present? %>
+        <div class="auction-item-winning-bid">
+          <p class="auction-item-winning-bid-title">Winning Bidder</p>
+          <p class="auction-item-winning-bid-name"><%= @auction_item.winning_bid.buyer.first_name %> <%= @auction_item.winning_bid.buyer.last_name %></p>
+          <p class="auction-item-winning-bid-amount">$<%= @auction_item.winning_bid.amount %> USD</p>
+        </div>
+      <% else %>
+        <div class="auction-item-winning-bid">
+          <p>No bids were placed for this auction.</p>
+        </div>
+      <% end %>
+    <% end %>
+    </div>
+
+    <% if @auction_item.latest_bids.any? %>
+      <div class="auction-item-bid-history">
+        <p class="auction-item-user-card-title">Bid History</p>
+        <% @auction_item.latest_bids.each do |bid| %>
+          <div class="auction-item-bid-entry">
+            <div class="auction-item-user-card">
+              <p><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></p>
+              <p class="auction-item-user-card-subtext"><%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %></p>
+            </div>
+            <p class="auction-item-user-card-amount"><strong>$<%= bid.amount %> USD</strong></p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+
+    <div class="auction-item-seller-info">
+      <div class="auction-item-user-card-title">Seller Information</div>
+      <p class="auction-item-user-card-name"><%= @auction_item.seller.first_name %> <%= @auction_item.seller.last_name %></p>
+      <p class="auction-item-user-card-subtext"><%= @auction_item.seller.email %></p>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-padding"></div>
+<div class="bottom-padding"></div>
+
+
+
+<script>
+  function toggleDetails(button, contentId) {
+    const content = document.getElementById(contentId);
+    const icon = button.querySelector("i");
+
+    if (content.style.maxHeight) {
+      content.style.maxHeight = null;
+      icon.classList.remove("rotate");
+    } else {
+      document.querySelectorAll(".auction-item-details-content").forEach((el) => {
+        el.style.maxHeight = null;
+      });
+      document.querySelectorAll(".auction-item-details-toggle i").forEach((el) => {
+        el.classList.remove("rotate");
+      });
+
+      content.style.maxHeight = content.scrollHeight + "px";
+      icon.classList.add("rotate");
+    }
+  }
+
+  function showDisabledAlert() {
+    alert("Edit and deleting has been disabled for active or closed auctions.");
+  }
+</script>
