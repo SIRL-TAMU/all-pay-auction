@@ -48,7 +48,7 @@ class AuctionItemsController < ApplicationController
       redirect_to auction_items_path, alert: t("errors.unauthorized_delete")
     end
   end
-  
+
   private
 
   def set_auction_item
@@ -73,9 +73,9 @@ class AuctionItemsController < ApplicationController
 
   def ensure_non_seller_access
     if logged_in? && seller?
-      return
+      nil
     elsif !logged_in? || (!seller? && !buyer?)
-      redirect_to login_path(account_type: "buyer"), alert: "You must log in as a buyer to place a bid."
+      redirect_to login_path(account_type: "buyer"), alert: I18n.t("alerts.login_required_buyer")
     end
   end
 end

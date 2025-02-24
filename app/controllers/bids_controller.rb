@@ -3,12 +3,12 @@
 # app/controllers/bids_controller.rb
 class BidsController < ApplicationController
     before_action :ensure_buyer
-  
+
     def create
       @bid = current_user.bids.new(bid_params)
       @auction_item = AuctionItem.find(params[:bid][:auction_item_id])
       highest_previous_bid = current_user.bids.where(auction_item: @auction_item).maximum(:amount) || 0
-  
+
       if @bid.amount.present?
         if current_user.sufficient_funds?(@bid.amount, @auction_item) # Ensure user has enough funds for bid
           if @bid.save
@@ -26,17 +26,16 @@ class BidsController < ApplicationController
         redirect_to auction_item_path(@auction_item), alert: I18n.t("bids.create.missing_amount")
       end
     end
-  
-    private
-  
+
+  private
+
     def bid_params
       params.require(:bid).permit(:amount, :auction_item_id)
     end
-  
+
     def ensure_buyer
       return if logged_in? && buyer?
-  
+
       redirect_to root_path, alert: I18n.t("alerts.access_denied")
     end
-  end
-  
+end

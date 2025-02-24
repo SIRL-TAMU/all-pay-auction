@@ -24,10 +24,9 @@ class AuctionItem < ApplicationRecord
 
   def winning_bid
     return nil unless closed?
-  
+
     bids.includes(:buyer).order(amount: :desc).first
   end
-  
 
   def status_text
     now = Time.zone.now
