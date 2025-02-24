@@ -64,8 +64,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_13_020006) do
     t.bigint "buyer_id", null: false
     t.bigint "seller_id", null: false
     t.decimal "amount"
-    t.boolean "is_credit"
-    t.boolean "is_buyer"
+    t.boolean "is_credit", default: false, null: false
+    t.boolean "is_buyer", default: false, null: false
     t.datetime "created_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
