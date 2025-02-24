@@ -71,10 +71,13 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    filterAuctionItems("active");
+    let savedTab = localStorage.getItem("selectedAuctionTab") || "active";
+    filterAuctionItems(savedTab);
   });
 
   function filterAuctionItems(status) {
+    localStorage.setItem("selectedAuctionTab", status);
+
     document.querySelectorAll(".auction-items-tab-button").forEach((btn) => {
       btn.classList.remove("active");
     });
