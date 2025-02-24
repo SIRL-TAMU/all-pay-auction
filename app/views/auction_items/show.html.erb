@@ -1,4 +1,16 @@
-<%= link_to auction_items_path, class: "back-link" do %>
+<% back_path =
+  if seller?
+    if request.referer.present? && request.referer.include?(seller_dashboard_path)
+      seller_dashboard_path
+    else
+      auction_items_path
+    end
+  else
+    request.referer.present? ? request.referer : auction_items_path
+  end
+%>
+
+<%= link_to back_path, class: "back-link" do %>
   <i class="fa-solid fa-chevron-left"></i> Back
 <% end %>
 
