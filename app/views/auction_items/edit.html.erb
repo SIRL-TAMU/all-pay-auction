@@ -81,7 +81,6 @@
     </div>
   </div>
 
-  <!-- Submit Button -->
   <div class="form-actions">
     <%= form.submit "Update Auction Item", class: "primary-btn" %>
   </div>
@@ -112,14 +111,11 @@
   function updateImage() {
     let imageUrl = document.getElementById("imageUrlInput").value;
     if (imageUrl.trim() !== "") {
-        // Replace placeholder with actual image
         let previewContainer = document.querySelector(".product-image-container");
         previewContainer.innerHTML = `<img src="${imageUrl}" id="preview-image" class="product-image">`;
 
-        // Update the hidden input field
         document.getElementById("image-url-hidden").value = imageUrl;
 
-        // Add a new thumbnail
         let thumbnailContainer = document.querySelector(".image-thumbnails");
         let newThumbnail = document.createElement("div");
         newThumbnail.classList.add("thumbnail");

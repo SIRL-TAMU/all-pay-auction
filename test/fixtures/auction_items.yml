@@ -7,7 +7,7 @@ one:
   max_bid: 9.99
   opening_date: 2025-02-12 17:58:52
   closing_date: 2025-02-12 17:58:52
-  image: MyString
+  image: https://sample.com
 
 two:
   seller: jane
@@ -16,4 +16,4 @@ two:
   max_bid: 9.99
   opening_date: 2025-02-12 17:58:52
   closing_date: 2025-02-12 17:58:52
-  image: MyString
+  image: https://sample.com
