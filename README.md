@@ -10,15 +10,26 @@ Deploy to heroku: https://all-pay-auction-6236fe9c4614.herokuapp.com/
 # Code Quality and Test Coverage Reports
 Code climate: https://codeclimate.com/github/SIRL-TAMU/all-pay-auction
 
-TDD tests?
+# Test Coverage Status
 
-BDD tests? 
+| Test                      | Status            |                 
+| -----------               | -----------       |
+| BDD (`cucumber`)          | Work in progress (adding more tests)  |           
+| TDD (`rspec`)             | Work in progress (adding more tests) |           
+| Code style (`rubocop`)    | 100%              |           
+| Coverage report           | 100%              |           
 
-Test coverage run command in docker container app-1: rails test 
+**Update (2/24):** Cucumber rspec bugs fixed. Currently working on adding more tests.
 
-Coverage report generated in coverage/index.html in all-pay-auction repository.
+- TDD tests: run `bundle exec cucumber` in docker container app-1
 
-Code style Rubocop run command in docker container app-1: rubocop
+- BDD tests: run `bundle exec rspec` in docker container app-1
+
+- Test coverage run `rails test` in docker container app-1
+
+- Coverage report generated in `coverage/index.html` in all-pay-auction repository.
+
+- Code style Rubocop: run `rubocop` in docker container app-1
 
 
 
