@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Given('I am on the Registration page') do
   visit signup_path(account_type: 'buyer')
   expect(current_path).to eq('/signup')
