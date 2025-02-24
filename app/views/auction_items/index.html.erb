@@ -57,6 +57,12 @@
           </div>
         <% end %>
       </div>
+
+      <!-- Empty Category Message -->
+      <div id="no-auction-items-message" class="auction-items-empty-message" style="display: none;">
+        <p>No <span id="auction-status-text"></span> auction items available.</p>
+      </div>
+      
     </div>
   </div>
 </div>
@@ -75,13 +81,24 @@
 
     document.querySelector(`[onclick="filterAuctionItems('${status}')"]`).classList.add("active");
 
+    let auctionCards = document.querySelectorAll(`.auction-items-${status}`);
+    let noItemsMessage = document.getElementById("no-auction-items-message");
+    let statusText = status.charAt(0).toUpperCase() + status.slice(1); 
+
     document.querySelectorAll(".auction-items-card").forEach((card) => {
       card.style.display = "none";
     });
 
-    document.querySelectorAll(`.auction-items-${status}`).forEach((card) => {
-      card.style.display = "block";
-    });
+    if (auctionCards.length > 0) {
+      auctionCards.forEach((card) => {
+        card.style.display = "block";
+      });
+
+      noItemsMessage.style.display = "none";
+    } else {
+      noItemsMessage.style.display = "block";
+      document.getElementById("auction-status-text").textContent = statusText.toLowerCase();
+    }
   }
 
 </script>
