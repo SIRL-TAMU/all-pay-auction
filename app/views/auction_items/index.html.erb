@@ -1,4 +1,8 @@
-<div class="auction-items-page">
+<div id="auction-loader" class="auction-loader">
+  <div class="spinner"></div>
+</div>
+
+<div id="auction-items-page" class="auction-items-page" style="display: none;">
   <!-- Sidebar for Filtering -->
   <div class="auction-items-sidebar">
     <h3>Category</h3>
@@ -72,7 +76,13 @@
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     let savedTab = localStorage.getItem("selectedAuctionTab") || "active";
-    filterAuctionItems(savedTab);
+    document.getElementById("auction-loader").style.display = "flex";
+
+    setTimeout(() => {
+      filterAuctionItems(savedTab);
+      document.getElementById("auction-loader").style.display = "none";
+      document.getElementById("auction-items-page").style.display = "flex";
+    }, 500);
   });
 
   function filterAuctionItems(status) {
