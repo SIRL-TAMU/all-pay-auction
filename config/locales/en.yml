@@ -31,6 +31,7 @@ en:
   alerts:
     access_denied: "Access denied!"
     invalid_account_type: "Invalid account type"
+    login_required_buyer: "You must log in as a buyer to place a bid."
   notices:
     hi_buyer: "Hi Buyer!"
     hi_seller: "Hi Seller!"

@@ -1,25 +1,87 @@
-<h1>All Auction Items</h1>
+<div class="auction-items-page">
+  <!-- Sidebar for Filtering -->
+  <div class="auction-items-sidebar">
+    <h3>Category</h3>
+    <button class="auction-items-clear-filter">Clear</button>
+    <div class="auction-items-category-filters">
+    </div>
+  </div>
 
-<% @auction_items.each do |item| %>
-  <div>
-    <h2><%= link_to item.name, auction_item_path(item) %></h2>
-    <p><%= item.description %></p>
-    <p>Max Bid: $<%= item.max_bid %></p>
-    <p>Closing Date: <%= item.closing_date.strftime('%Y-%m-%d') %></p>
-    <%= image_tag(item.image.present? && item.image.start_with?("http") ? item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
-
-    <% if buyer? %>
-      <%= form_with(model: Bid.new, local: true) do |form| %>
-        <%= form.hidden_field :auction_item_id, value: item.id %>
-        <%= form.label :amount, "Your Bid:" %>
-        <%= form.number_field :amount, step: 0.01, min: (item.max_bid + 0.01) %>
-        <%= form.submit "Place Bid" %>
-      <% end %>
-    <% end %>
+  <div class="auction-items-content">
+    <!-- Tabs for Filtering -->
+    <div class="auction-items-tabs">
+      <button class="auction-items-tab-button active" onclick="filterAuctionItems('active')">Active</button>
+      <button class="auction-items-tab-button" onclick="filterAuctionItems('upcoming')">Upcoming</button>
+      <button class="auction-items-tab-button" onclick="filterAuctionItems('closed')">Closed</button>
+    </div>
     
-  </div>    
-<% end %>
+    <!-- Auction Items Grid -->
+    <div class="auction-items-container">
+      <div class="auction-items-grid">
+        <% @auction_items.each do |item| %>
+          <% status_class, status_text = auction_status(item) %>
+          <div class="auction-items-card auction-items-<%= status_class %>">
+            <div class="auction-items-image">
+                  <%= image_tag(item.image.present? && item.image.start_with?("http") ? item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
+            </div>
+            <div class="auction-items-info">
+              <div class="auction-items-status"><%= status_text %></div>
+              
+              <h2 class="auction-items-title">
+                <%= link_to item.name, auction_item_path(item) %>
+              </h2>
+              
+              <p class="auction-items-creator"><%= item.seller.first_name %> <%= item.seller.last_name %></p>
 
-<% if seller? %>
-  <%= link_to "Create New Auction", new_auction_item_path %>
-<% end %>
+              
+              <div class="auction-items-bid-container">
+                <div class="auction-items-bid-info">
+                  <p class="bid-info-card">
+                    <strong class="bid-value">$<%= item.max_bid %> USD</strong>
+                    <span class="bid-label">Max Bid</span>
+                  </p>
+                  <p class="bid-info-card">
+                    <strong class="bid-value"><%= item.total_bids %> bids</strong>
+                    <span class="bid-label">Total Bids</span>
+                  </p>
+                </div>
+              </div>
+
+              <div class="auction-items-action-container">
+                  <div class="auction-items-view">
+                    <%= link_to "View Auction", auction_item_path(item), class: "auction-items-view-btn" %>
+                  </div>
+              </div>
+            </div>
+
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    filterAuctionItems("active");
+  });
+
+  function filterAuctionItems(status) {
+    document.querySelectorAll(".auction-items-tab-button").forEach((btn) => {
+      btn.classList.remove("active");
+    });
+
+    document.querySelector(`[onclick="filterAuctionItems('${status}')"]`).classList.add("active");
+
+    document.querySelectorAll(".auction-items-card").forEach((card) => {
+      card.style.display = "none";
+    });
+
+    document.querySelectorAll(`.auction-items-${status}`).forEach((card) => {
+      card.style.display = "block";
+    });
+  }
+
+</script>

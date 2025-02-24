@@ -13,3 +13,106 @@
  *= require_tree .
  *= require_self
  */
+
+
+ @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+ 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+body {
+    height: 100vh;
+    background-color: #fff;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+    font-size: 1rem;
+}
+
+a:hover {
+    color: #0c243c;
+}
+
+
+header {
+    position: relative;
+}
+.flash-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.flash-message {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 300px;
+    max-width: 500px;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    font-weight: normal;
+    opacity: 0;
+    animation: fadeIn 0.25s ease-in forwards, fadeOut 0.25s ease-out 5s forwards;
+}
+
+.flash-success {
+    background: rgba(72, 187, 120, 0.9);
+    color: white;
+}
+
+.flash-danger {
+    background: rgba(232, 65, 65, 0.9);
+    color: white;
+}
+
+.close-flash {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: normal;
+    cursor: pointer;
+    color: white;
+    margin-left: 1rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}

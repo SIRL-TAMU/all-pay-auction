@@ -77,3 +77,7 @@ group :production do
 end
 
 gem "rubocop-rails", "~> 2.30"
+
+gem "rubocop-performance", "~> 1.23"
+
+gem "rubocop-minitest", "~> 0.37.1"
