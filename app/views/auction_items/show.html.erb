@@ -15,7 +15,7 @@
     </div>
 
     <% if seller? && current_user == @auction_item.seller %>
-      <p class="auction-item-estimate">Est: $<%= @auction_item.starting_price || 'N/A' %> USD</p>
+      <p class="auction-item-estimate">Est: USD</p>
       <div class="auction-item-bid-info">
         <strong>$<%= @auction_item.bid_pool %> USD</strong> Bid Pool
         <strong>$<%= @auction_item.max_bid %> USD</strong> Max Bid
