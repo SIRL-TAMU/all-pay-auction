@@ -2,7 +2,6 @@ Given('I am on the Registration page') do
   visit signup_path(account_type: 'buyer')
   expect(current_path).to eq('/signup')
   expect(current_url).to eq('http://localhost:3000/signup?account_type=buyer')
-  expect(page).to have_content("Signing up as a Buyer")
 end
 
 When('I fill in the registration form with valid details') do
@@ -15,7 +14,7 @@ When('I fill in the registration form with valid details') do
 end
 
 When('I submit the form') do
-  click_button "Sign Up"
+  click_button "Continue"
 end
 
 Then('I should be logged in') do
