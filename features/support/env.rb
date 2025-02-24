@@ -4,7 +4,6 @@
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
 
-
 require 'cucumber/rails'
 
 # By default, any exception happening in your Rails application will bubble up
@@ -51,3 +50,7 @@ end
 # The :transaction strategy is faster, but might give you threading problems.
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
+
+Before do |scenario|
+  Capybara.app_host = 'http://localhost:3000'
+end
