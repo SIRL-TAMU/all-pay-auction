@@ -11,7 +11,6 @@ done
 
 # Create and migrate database
 bundle install
-bundle exec rails db:rollback STEP=1
 bundle exec rails db:prepare
 
 exec "$@"
