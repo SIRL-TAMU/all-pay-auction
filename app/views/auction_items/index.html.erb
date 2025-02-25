@@ -1,4 +1,8 @@
-<div class="auction-items-page">
+<div id="auction-loader" class="auction-loader">
+  <div class="spinner"></div>
+</div>
+
+<div id="auction-items-page" class="auction-items-page" style="display: none;">
   <!-- Sidebar for Filtering -->
   <div class="auction-items-sidebar">
     <h3>Category</h3>
@@ -57,6 +61,12 @@
           </div>
         <% end %>
       </div>
+
+      <!-- Empty Category Message -->
+      <div id="no-auction-items-message" class="auction-items-empty-message" style="display: none;">
+        <p>No <span id="auction-status-text"></span> auction items available.</p>
+      </div>
+      
     </div>
   </div>
 </div>
@@ -65,23 +75,43 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    filterAuctionItems("active");
+    let savedTab = localStorage.getItem("selectedAuctionTab") || "active";
+    document.getElementById("auction-loader").style.display = "flex";
+
+    setTimeout(() => {
+      filterAuctionItems(savedTab);
+      document.getElementById("auction-loader").style.display = "none";
+      document.getElementById("auction-items-page").style.display = "flex";
+    }, 500);
   });
 
   function filterAuctionItems(status) {
+    localStorage.setItem("selectedAuctionTab", status);
+
     document.querySelectorAll(".auction-items-tab-button").forEach((btn) => {
       btn.classList.remove("active");
     });
 
     document.querySelector(`[onclick="filterAuctionItems('${status}')"]`).classList.add("active");
 
+    let auctionCards = document.querySelectorAll(`.auction-items-${status}`);
+    let noItemsMessage = document.getElementById("no-auction-items-message");
+    let statusText = status.charAt(0).toUpperCase() + status.slice(1); 
+
     document.querySelectorAll(".auction-items-card").forEach((card) => {
       card.style.display = "none";
     });
 
-    document.querySelectorAll(`.auction-items-${status}`).forEach((card) => {
-      card.style.display = "block";
-    });
+    if (auctionCards.length > 0) {
+      auctionCards.forEach((card) => {
+        card.style.display = "block";
+      });
+
+      noItemsMessage.style.display = "none";
+    } else {
+      noItemsMessage.style.display = "block";
+      document.getElementById("auction-status-text").textContent = statusText.toLowerCase();
+    }
   }
 
 </script>

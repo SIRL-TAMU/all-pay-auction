@@ -93,10 +93,11 @@
   </div>
 <% end %>
 
-
 <div class="past-auctions-container">
-  <div class="past-auctions-title">Past Auctions</div>
-    <div class="past-auctions-grid">
+  <div class="past-auctions-title">My Past Auctions</div>
+  
+  <div class="past-auctions-grid">
+    <% if @past_auctions.any? %>
       <% @past_auctions.each do |auction| %>
         <%= link_to auction_item_path(auction), class: "past-auction-card-link" do %>
           <div class="past-auction-card">
@@ -126,24 +127,27 @@
               </div>
 
               <% if auction.bids.any? %>
-              <div class="past-auction-winner-container">
-                <p class="past-auction-winner-title">Winning Bidder</p>
-                <div class="past-auction-winner">
-                  <% winning_bid = auction.bids.order(amount: :desc).first %>
-                  <div class="past-auction-bidder-info">
-                    <strong><%= winning_bid.buyer.first_name %></strong>
-                    <span class="past-auction-bidder-email"><%= winning_bid.buyer.email %></span>
+                <div class="past-auction-winner-container">
+                  <p class="past-auction-winner-title">Winning Bidder</p>
+                  <div class="past-auction-winner">
+                    <% winning_bid = auction.bids.order(amount: :desc).first %>
+                    <div class="past-auction-bidder-info">
+                      <strong><%= winning_bid.buyer.first_name %></strong>
+                      <span class="past-auction-bidder-email"><%= winning_bid.buyer.email %></span>
+                    </div>
+                    <div class="past-auction-winning-amount">$<%= winning_bid.amount %> USD</div>
                   </div>
-                  <div class="past-auction-winning-amount">$<%= winning_bid.amount %> USD</div>
                 </div>
-              </div>
               <% end %>
 
             </div>
           </div>
         <% end %>
       <% end %>
-    </div>
+    <% else %>
+      <p class="no-past-auctions-message">You have no past auction items.</p>
+    <% end %>
+  </div>
 </div>
 
 

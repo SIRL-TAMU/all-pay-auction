@@ -1,9 +1,25 @@
-<%= link_to auction_items_path, class: "back-link" do %>
+<% back_path =
+  if seller?
+    if request.referer.present? && request.referer.include?(seller_dashboard_path)
+      seller_dashboard_path
+    else
+      auction_items_path
+    end
+  else
+    request.referer.present? ? request.referer : auction_items_path
+  end
+%>
+
+<%= link_to back_path, class: "back-link" do %>
   <i class="fa-solid fa-chevron-left"></i> Back
 <% end %>
 
 <div class="auction-item-container">
   <div class="auction-item-info-left">
+    <div class="auction-item-title">
+      <%= @auction_item.name %>
+    </div>
+
     <div class="auction-item-image-container">
       <%= image_tag(@auction_item.image.present? && @auction_item.image.start_with?("http") ? @auction_item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", class: "auction-item-image") %>
     </div>
@@ -54,6 +70,14 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
           <a class="auction-item-delete-btn disabled" title="Cannot delete an active or closed auction" onclick="showDisabledAlert()">
             <i class="fa-solid fa-trash"></i>
           </a>
+
+          <%= link_to edit_auction_item_path(@auction_item), title: "Edit Auction" do %>
+            Edit (for testing)
+          <% end %>
+
+          <%= link_to auction_item_path(@auction_item), method: :delete, data: { confirm: "Are you sure?" }, title: "Delete Auction" do %>
+            Delete (for testing)
+          <% end %>
         <% else %>
           <%= link_to edit_auction_item_path(@auction_item), class: "auction-item-edit-btn", title: "Edit Auction" do %>
             <i class="fa-solid fa-pen-to-square"></i>

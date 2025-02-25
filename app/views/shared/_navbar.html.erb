@@ -34,17 +34,17 @@
             </div>
         </div>
     </div>
-
-
-    <script>
-        const profileBtn = document.querySelector('.profile-btn');
-        const profileBtnIcon = profileBtn.querySelector('i');
-        const profileDropDownMenu = document.querySelector('.profile-dropdown-menu');
-
-        profileBtn.onclick = function () {
-            const isOpen = profileDropDownMenu.classList.toggle('open');
-            profileBtn.classList.toggle('active', isOpen);
-            profileBtnIcon.classList = isOpen ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
-        };
-    </script>
 </header>
+
+
+<script>
+    const profileBtn = document.querySelector('.profile-btn');
+    const profileBtnIcon = profileBtn.querySelector('i');
+    const profileDropDownMenu = document.querySelector('.profile-dropdown-menu');
+
+    profileBtn.onclick = function () {
+        const isOpen = profileDropDownMenu.classList.toggle('open');
+        profileBtn.classList.toggle('active', isOpen);
+        profileBtnIcon.classList = isOpen ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
+    };
+</script>
