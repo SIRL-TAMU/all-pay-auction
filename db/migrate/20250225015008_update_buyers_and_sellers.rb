@@ -10,3 +10,4 @@ class UpdateBuyersAndSellers < ActiveRecord::Migration[7.2]
     add_column :sellers, :asset_balance, :decimal, null: false, default: 0.0
     add_column :sellers, :liquid_balance, :decimal, null: false, default: 0.0
   end
+end
