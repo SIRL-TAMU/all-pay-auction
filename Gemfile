@@ -68,7 +68,7 @@ group :test do
   # Add SimpleCov for test coverage reporting
   gem "simplecov", require: false
 
-  gem "database_cleaner-active_record", "~> 2.0.1"
+  gem "database_cleaner-active_record", "~> 2.2.0"
 end
 
 group :production do
