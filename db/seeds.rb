@@ -19,7 +19,8 @@ if Rails.env.development?
                              email: "buyer1@example.com",
                              password: "password123",
                              password_confirmation: "password123",
-                             amount: 1000.00
+                             liquid_balance: 1000.00,
+                             asset_balance: 1000.00
                            },
                            {
                              first_name: "Jane",
@@ -27,7 +28,8 @@ if Rails.env.development?
                              email: "buyer2@example.com",
                              password: "securepass456",
                              password_confirmation: "securepass456",
-                             amount: 1500.00
+                             liquid_balance: 1500.00,
+                             asset_balance: 1500.00
                            },
                            {
                              first_name: "Bob",
@@ -35,7 +37,8 @@ if Rails.env.development?
                              email: "buyer3@example.com",
                              password: "testing",
                              password_confirmation: "testing",
-                             amount: 150_000.00
+                             liquid_balance: 150_000.00,
+                             asset_balance: 150_000.00
                            }
                          ])
 
@@ -47,7 +50,8 @@ if Rails.env.development?
                                email: "seller1@example.com",
                                password: "sellerpass123",
                                password_confirmation: "sellerpass123",
-                               amount: 2000.00
+                               liquid_balance: 1000.00,
+                               asset_balance: 1000.00
                              },
                              {
                                first_name: "Bob",
@@ -55,7 +59,8 @@ if Rails.env.development?
                                email: "seller2@example.com",
                                password: "bobspassword789",
                                password_confirmation: "bobspassword789",
-                               amount: 2500.00
+                               liquid_balance: 1500.00,
+                               asset_balance: 1500.00
                              }
                            ])
 
@@ -65,7 +70,9 @@ if Rails.env.development?
                                           seller: sellers.first,
                                           name: "Antique Vase",
                                           description: "A beautiful antique vase from the 18th century.",
-                                          max_bid: 500.00,
+                                          curr_max_bid: 500.00,
+                                          min_increment: 5.00,
+                                          innate_value: 10_000.00,
                                           opening_date: Time.zone.now,
                                           closing_date: 7.days.from_now,
                                           image: "vase.jpg"
@@ -74,7 +81,9 @@ if Rails.env.development?
                                           seller: sellers.last,
                                           name: "Vintage Watch",
                                           description: "A rare vintage watch in excellent condition.",
-                                          max_bid: 1000.00,
+                                          curr_max_bid: 1000.00,
+                                          innate_value: 50_000.00,
+                                          min_increment: 10.00,
                                           opening_date: Time.zone.now,
                                           closing_date: 5.days.from_now,
                                           image: "watch.jpg"
@@ -116,10 +125,9 @@ if Rails.env.development?
                           created_date: Time.zone.now
                         }
                       ])
-                      Rails.logger.debug do
-                        "Created #{Buyer.count} buyers, #{Seller.count} sellers, " \
-                          "#{AuctionItem.count} auction items, #{Bid.count} bids, " \
-                          "and #{Transaction.count} transactions!"
-                      end
-
+  Rails.logger.debug do
+    "Created #{Buyer.count} buyers, #{Seller.count} sellers, " \
+      "#{AuctionItem.count} auction items, #{Bid.count} bids, " \
+      "and #{Transaction.count} transactions!"
+  end
 end

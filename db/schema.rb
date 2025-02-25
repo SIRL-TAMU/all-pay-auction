@@ -10,20 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_13_020006) do
+ActiveRecord::Schema[7.2].define(version: 2025_02_25_015824) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "admins", force: :cascade do |t|
+    t.string "email", null: false
+    t.decimal "asset_balance", null: false
+    t.decimal "liquid_balance", null: false
+    t.string "password_digest", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "auction_items", force: :cascade do |t|
     t.bigint "seller_id", null: false
     t.string "name"
     t.text "description"
-    t.decimal "max_bid"
     t.datetime "opening_date"
     t.datetime "closing_date"
     t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "innate_value", null: false
+    t.decimal "min_increment", null: false
+    t.boolean "is_archived", default: false, null: false
+    t.decimal "curr_max_bid", null: false
     t.index ["seller_id"], name: "index_auction_items_on_seller_id"
   end
 
@@ -45,7 +57,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_13_020006) do
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "amount"
+    t.decimal "asset_balance", default: "0.0", null: false
+    t.decimal "liquid_balance", default: "0.0", null: false
     t.index ["email"], name: "index_buyers_on_email", unique: true
   end
 
@@ -56,7 +69,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_13_020006) do
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "amount"
+    t.decimal "asset_balance", default: "0.0", null: false
+    t.decimal "liquid_balance", default: "0.0", null: false
     t.index ["email"], name: "index_sellers_on_email", unique: true
   end
 
