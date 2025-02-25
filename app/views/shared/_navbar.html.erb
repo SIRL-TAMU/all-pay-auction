@@ -38,25 +38,13 @@
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const profileBtn = document.querySelector('.profile-btn');
-        const profileBtnIcon = profileBtn.querySelector('i');
-        const profileDropDownMenu = document.querySelector('.profile-dropdown-menu');
+    const profileBtn = document.querySelector('.profile-btn');
+    const profileBtnIcon = profileBtn.querySelector('i');
+    const profileDropDownMenu = document.querySelector('.profile-dropdown-menu');
 
-        profileBtn.addEventListener("click", function (event) {
-            event.stopPropagation();
-            const isOpen = profileDropDownMenu.classList.toggle('open');
-            profileBtn.classList.toggle('active', isOpen);
-            profileBtnIcon.classList = isOpen ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener("click", function (event) {
-            if (!profileBtn.contains(event.target) && !profileDropDownMenu.contains(event.target)) {
-                profileDropDownMenu.classList.remove('open');
-                profileBtn.classList.remove('active');
-                profileBtnIcon.classList = "fa-solid fa-chevron-down";
-            }
-        });
-    });
+    profileBtn.onclick = function () {
+        const isOpen = profileDropDownMenu.classList.toggle('open');
+        profileBtn.classList.toggle('active', isOpen);
+        profileBtnIcon.classList = isOpen ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
+    };
 </script>
