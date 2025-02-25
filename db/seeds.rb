@@ -65,7 +65,8 @@ if Rails.env.development?
                                           seller: sellers.first,
                                           name: "Antique Vase",
                                           description: "A beautiful antique vase from the 18th century.",
-                                          max_bid: 500.00,
+                                          curr_max_bid: 500.00,
+                                          min_increment: 5.00,
                                           opening_date: Time.zone.now,
                                           closing_date: 7.days.from_now,
                                           image: "vase.jpg"
@@ -74,7 +75,8 @@ if Rails.env.development?
                                           seller: sellers.last,
                                           name: "Vintage Watch",
                                           description: "A rare vintage watch in excellent condition.",
-                                          max_bid: 1000.00,
+                                          curr_max_bid: 1000.00,
+                                          max_bid: 10.00,
                                           opening_date: Time.zone.now,
                                           closing_date: 5.days.from_now,
                                           image: "watch.jpg"

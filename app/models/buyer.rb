@@ -16,8 +16,8 @@ class Buyer < ApplicationRecord
     amount >= amount_to_deduct
   end
 
-# after buyer places bid, subtract from their balance.
-def deduct_funds(bid_amount)
-  update(amount: amount - bid_amount)
-end
+  # after buyer places bid, subtract from their balance.
+  def deduct_funds(bid_amount)
+    update(amount: amount - bid_amount)
+  end
 end
