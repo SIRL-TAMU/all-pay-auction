@@ -32,7 +32,7 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 gem "bootsnap", require: false
 
 gem "rack", "~> 3.1.8"
-gem "rubocop", "~> 1.72.2"
+gem "rubocop", "~> 1.73.0"
 gem "sassc-rails"
 
 #########
