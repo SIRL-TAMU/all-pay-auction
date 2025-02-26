@@ -1,5 +1,4 @@
 Feature: Buyer Registration 
-
     As a new buyer,
     I want to create a buyer account,
     So that I can log in and view auction items available for purchase.

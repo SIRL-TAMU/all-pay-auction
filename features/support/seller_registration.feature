@@ -1,5 +1,4 @@
 Feature: Seller Registration 
-
     As a new seller,
     I want to create a seller account,
     So that I can log in and sell items.

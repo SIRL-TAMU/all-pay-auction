@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+Given('I am on the Seller login page') do
+  visit login_path(account_type: 'seller')
+end
+
+When('I fill in the Seller login form with valid details') do
+  # existing account
+  fill_in 'email', with: 's@gmail.com'
+  fill_in 'password', with: 's'
+end
+
+When('I submit the Seller login form') do
+  click_button "Log in"
+end
+
+Then('I should be logged in and landed in the Seller dashboard') do
+  expect(current_path).to eq(seller_dashboard_path)
+end
