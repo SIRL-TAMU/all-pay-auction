@@ -6,8 +6,8 @@ end
 
 When('I fill in the Seller login form with valid details') do
   # existing account
-  fill_in 'email', with: 's@gmail.com'
-  fill_in 'password', with: 's'
+  fill_in 'email', with: 'seller1@example.com'
+  fill_in 'password', with: 'sellerpass123'
 end
 
 When('I submit the Seller login form') do
