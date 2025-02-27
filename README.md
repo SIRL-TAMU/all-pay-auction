@@ -5,7 +5,7 @@ All_Pay_Auction implements an all-pay auction where every bidder pays their bid,
 [Team Working Agreement](/documentation/TWA.md)
 
 # Web Application Link
-Deploy to heroku: https://all-pay-auction-6236fe9c4614.herokuapp.com/
+Deploy to heroku: https://all-pay-auction-v2-695fea476c71.herokuapp.com/
 
 # Code Quality and Test Coverage Reports
 Code climate: https://codeclimate.com/github/SIRL-TAMU/all-pay-auction
