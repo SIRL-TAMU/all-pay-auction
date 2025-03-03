@@ -29,14 +29,23 @@
           <p>Bid Details</p>
           <div class="bid-details-grid">
             <div class="input-group">
-              <p>Max Bid</p>
+              <p>Starting Bid</p>
               <%= form.number_field :curr_max_bid, step: 0.01, required: true, class: "input-field" %>
             </div>
 
-            <div class="input-group temp">
-              <p>Product Base Price</p>
-              <input type="text" class="input-field" readonly>
+            <div class="input-group">
+              <p>Minimum Increment</p>
+              <%= form.number_field :min_increment, step: 0.01, required: true, class: "input-field" %>
             </div>
+
+
+            <div class="input-group">
+              <p>Product Estimated Value</p>
+              <%= form.number_field :innate_value, step: 0.01, required: true, class: "input-field" %>
+            </div>
+            
+            <div> </div>
+
 
             <div class="input-group">
               <p>Open Date</p>
