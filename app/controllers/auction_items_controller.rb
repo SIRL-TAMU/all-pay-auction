@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Controller for managing auction items, including CRUD operations
+# Controller for managing auction_item items, including CRUD operations
 class AuctionItemsController < ApplicationController
   before_action :set_auction_item, only: %i[show edit update destroy]
   before_action :require_seller_login, only: %i[new create edit update destroy]
@@ -85,4 +85,17 @@ class AuctionItemsController < ApplicationController
       redirect_to login_path(account_type: "buyer"), alert: I18n.t("alerts.login_required_buyer")
     end
   end
+
+  def close
+    @auction_item = AuctionItem.find(params[:id])
+
+    if @auction_item.close_auction!
+      redirect_to @auction_item, notice: 'Auction closed successfully.'
+    else
+      redirect_to @auction_item, alert: 'Failed to close the auction.'
+    end
+  rescue => e
+    redirect_to @auction_item, alert: "An error occurred: #{e.message}"
+  end
+
 end

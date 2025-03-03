@@ -3,7 +3,8 @@
 # Represents an auction item listed by a seller
 class AuctionItem < ApplicationRecord
   belongs_to :seller
-  has_many :bids, dependent: :destroy
+  has_many :bids 
+  belongs_to :winning_buyer, class_name: 'Buyer', optional: true
 
   def max_bid
     bids.maximum(:amount) || self[:max_bid] || 0 # here max_bid could be starting price
@@ -14,8 +15,10 @@ class AuctionItem < ApplicationRecord
   end
 
   # Calculate bid pool by summing each user's highest bid
+  # Arkan: I think here the bid pool is the sum of all bids
   def bid_pool
-    bids.group(:buyer_id).maximum(:amount).values.sum || 0
+    # bids.group(:buyer_id).maximum(:amount).values.sum || 0
+    bids.sum(:amount) || 0
   end
 
   def latest_bids(limit = 4)
@@ -55,14 +58,28 @@ class AuctionItem < ApplicationRecord
   end
 
   def active?
+    return false if closed?
     Time.zone.now.between?(opening_date, closing_date)
   end
 
   def closed?
-    Time.zone.now > closing_date
+    is_archived 
+  end
+
+  def close_auction!
+    return if is_archived?
+
+    winning_bid = bids.order(amount: :desc).first
+    if winning_bid
+      auction_item.update!(winning_buyer: winning_bid.buyer)
+    end
+
+    update!(is_archived: true)
+    is_archived
   end
 
   def upcoming?
+    return false if closed?
     Time.zone.now < opening_date
   end
 end
