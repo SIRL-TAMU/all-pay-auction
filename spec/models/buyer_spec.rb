@@ -53,12 +53,12 @@ RSpec.describe Buyer, type: :model do
     describe "#sufficient_funds?" do
       it "returns true if buyer has sufficient funds" do
         buyer = Buyer.create(first_name: "John", last_name: "Doe", email: "buyer1@gmail.com", password: "test1", liquid_balance: 100)
-        auction_item = AuctionItem.create(name: "item1", max_bid: "10")
+        auction_item = AuctionItem.create(name: "item1", curr_max_bid: "10")
         expect(buyer.sufficient_funds?(20, auction_item)).to be(true)
       end
       it "returns false if buyer does not have sufficient funds" do
         buyer = Buyer.create(first_name: "John", last_name: "Doe", email: "buyer1@gmail.com", password: "test1", liquid_balance: 100)
-        auction_item = AuctionItem.create(name: "item1", max_bid: "100")
+        auction_item = AuctionItem.create(name: "item1", curr_max_bid: "100")
         expect(buyer.sufficient_funds?(120, auction_item)).to be(false)
       end
     end

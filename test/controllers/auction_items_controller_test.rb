@@ -28,7 +28,7 @@ class AuctionItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create auction item" do
-    post auction_items_path, params: { auction_item: { name: "Item", description: "Description", max_bid: 100 } }
+    post auction_items_path, params: { auction_item: { name: "Item", description: "Description", curr_max_bid: 100 } }
 
     assert_response :redirect
   end
