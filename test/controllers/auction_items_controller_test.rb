@@ -39,10 +39,9 @@ class AuctionItemsControllerTest < ActionDispatch::IntegrationTest
         closing_date: 7.days.from_now
       }
     }
-  
+
     assert_response :redirect
   end
-  
 
   test "should get edit" do
     get edit_auction_item_path(@auction_item)
