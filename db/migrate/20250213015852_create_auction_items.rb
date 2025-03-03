@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable all
 
 # Migration to create auction items
 class CreateAuctionItems < ActiveRecord::Migration[7.2]
@@ -16,3 +17,5 @@ class CreateAuctionItems < ActiveRecord::Migration[7.2]
     end
   end
 end
+
+# rubocop:enable all

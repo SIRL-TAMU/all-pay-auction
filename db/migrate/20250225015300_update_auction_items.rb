@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable all
 
 # Migration to update auction items table
 class UpdateAuctionItems < ActiveRecord::Migration[7.2]
@@ -11,3 +12,5 @@ class UpdateAuctionItems < ActiveRecord::Migration[7.2]
     add_column :auction_items, :curr_max_bid, :decimal, null: false
   end
 end
+
+# rubocop:enable all

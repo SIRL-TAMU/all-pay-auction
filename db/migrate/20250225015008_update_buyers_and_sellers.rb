@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable all
 
 # Migration update amount to asset_balance and liquid_balance for buyers and sellers
 class UpdateBuyersAndSellers < ActiveRecord::Migration[7.2]
@@ -14,3 +15,5 @@ class UpdateBuyersAndSellers < ActiveRecord::Migration[7.2]
     add_column :sellers, :liquid_balance, :decimal, null: false, default: 0.0
   end
 end
+
+# rubocop:enable all
