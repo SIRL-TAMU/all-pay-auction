@@ -56,6 +56,22 @@ class AuctionItemsController < ApplicationController
     end
   end
 
+  def remove_image
+    @auction_item = AuctionItem.find(params[:id])
+    image = @auction_item.images.find_by(blob_id: params[:image_id])
+  
+    if image
+      image.purge
+      flash[:success] = "Image removed successfully."
+    else
+      flash[:error] = "Image not found."
+    end
+  
+    redirect_to edit_auction_item_path(@auction_item)
+  end
+  
+  
+
   private
 
   def set_auction_item
@@ -63,8 +79,10 @@ class AuctionItemsController < ApplicationController
   end
 
   def auction_item_params
-    params.require(:auction_item).permit(:name, :description, :curr_max_bid, :min_increment, :innate_value,
-                                         :opening_date, :closing_date, :image)
+    params.require(:auction_item).permit(
+      :name, :description, :curr_max_bid, :min_increment, :innate_value,
+      :opening_date, :closing_date, images: []
+    )
   end
 
   def require_seller_login

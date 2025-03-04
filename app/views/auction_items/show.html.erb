@@ -21,7 +21,11 @@
     </div>
 
     <div class="auction-item-image-container">
-      <%= image_tag(@auction_item.image.present? && @auction_item.image.start_with?("http") ? @auction_item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", class: "auction-item-image") %>
+      <% if @auction_item.images.attached? %>
+        <%= image_tag @auction_item.images.first, class: "auction-item-image" %>
+      <% else %>
+        <%= image_tag "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", class: "auction-item-image" %>
+      <% end %>
     </div>
 
     <div class="auction-item-details">
