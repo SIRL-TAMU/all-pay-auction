@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_25_015824) do
+ActiveRecord::Schema[7.2].define(version: 2025_03_04_220927) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -36,6 +36,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_25_015824) do
     t.decimal "min_increment", null: false
     t.boolean "is_archived", default: false, null: false
     t.decimal "curr_max_bid", null: false
+    t.bigint "winning_buyer_id"
     t.index ["seller_id"], name: "index_auction_items_on_seller_id"
   end
 
@@ -87,6 +88,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_25_015824) do
     t.index ["seller_id"], name: "index_transactions_on_seller_id"
   end
 
+  add_foreign_key "auction_items", "buyers", column: "winning_buyer_id"
   add_foreign_key "auction_items", "sellers"
   add_foreign_key "bids", "auction_items"
   add_foreign_key "bids", "buyers"
