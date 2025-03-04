@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
-
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
@@ -93,4 +91,3 @@ Rails.application.configure do
 
   config.assets.compile = true
 end
-# rubocop:enable Metrics/BlockLength

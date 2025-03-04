@@ -106,7 +106,7 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
       </div>
 
       <div class="auction-item-bid-info-container">
-        <div class="auction-item-estimate-value">Est: N/A</div>
+        <div class="auction-item-estimate-value">Est: $<%= @auction_item.innate_value  %></div>
         <div class="auction-item-bid-info-text">
           <strong>$<%= @auction_item.max_bid %> USD</strong> •
           <span class="info-text-subtext"><strong><%= @auction_item.total_bids %> bids</strong></span>

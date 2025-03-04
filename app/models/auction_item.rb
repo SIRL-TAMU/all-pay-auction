@@ -6,7 +6,7 @@ class AuctionItem < ApplicationRecord
   has_many :bids, dependent: :destroy
 
   def max_bid
-    bids.maximum(:amount) || self[:max_bid] || 0 # here max_bid could be starting price
+    bids.maximum(:amount) || self[:curr_max_bid] || 0 # here max_bid could be starting price
   end
 
   def total_bids

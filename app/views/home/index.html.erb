@@ -5,7 +5,9 @@
             <p><strong>Account Type:</strong> <%= buyer? ? "Buyer" : "Seller" %></p>
             <p><strong>Name:</strong> <%= current_user.first_name %> <%= current_user.last_name %></p>
             <p><strong>Email:</strong> <%= current_user.email %></p>
-            <p><strong>Balance:</strong> $<%= number_to_currency(current_user.amount, unit: "", precision: 2) %></p>
+            <p><strong>Liquid Balance:</strong> $<%= number_to_currency(current_user.liquid_balance, unit: "", precision: 2) %></p>
+            <p><strong>Asset Balance:</strong> $<%= number_to_currency(current_user.asset_balance, unit: "", precision: 2) %></p>
+
         </div>
     <% end %>
 </main>

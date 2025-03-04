@@ -1,10 +1,10 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
   seller: john
   name: MyString
   description: MyText
-  max_bid: 9.99
+  curr_max_bid: 9.99
+  min_increment: 1.00
+  innate_value: 100.00
   opening_date: 2025-02-12 17:58:52
   closing_date: 2025-02-12 17:58:52
   image: https://sample.com
@@ -13,7 +13,9 @@ two:
   seller: jane
   name: MyString
   description: MyText
-  max_bid: 9.99
+  curr_max_bid: 9.99
+  min_increment: 1.00
+  innate_value: 150.00
   opening_date: 2025-02-12 17:58:52
   closing_date: 2025-02-12 17:58:52
   image: https://sample.com

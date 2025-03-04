@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable all
 
 # This migration creates the sellers table in the database.
 class CreateSellers < ActiveRecord::Migration[7.2]
@@ -16,3 +17,5 @@ class CreateSellers < ActiveRecord::Migration[7.2]
     end
   end
 end
+
+# rubocop:enable all

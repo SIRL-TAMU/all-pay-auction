@@ -35,9 +35,9 @@ gem "rack", "~> 3.1.8"
 gem "rubocop", "~> 1.72.2"
 gem "sassc-rails"
 
-gem "rubocop-rails", "~> 2.30"
-gem "rubocop-performance", "~> 1.24"
 gem "rubocop-minitest", "~> 0.37.1"
+gem "rubocop-performance", "~> 1.24"
+gem "rubocop-rails", "~> 2.30"
 
 #########
 
