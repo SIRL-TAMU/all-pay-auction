@@ -4,6 +4,7 @@
 class AuctionItem < ApplicationRecord
   belongs_to :seller
   has_many :bids, dependent: :destroy
+  has_many_attached :images
 
   def max_bid
     bids.maximum(:amount) || self[:curr_max_bid] || 0 # here max_bid could be starting price
