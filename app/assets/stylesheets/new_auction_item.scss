@@ -110,26 +110,6 @@
     margin-bottom: 1rem;
 }
 
-
-.product-image-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 200px;
-    background-color: #e0e0e0;
-    border-radius: 10px;
-    position: relative;
-    overflow: hidden;
-}
-
-.product-image {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    border-radius: 10px;
-}
-
 .image-placeholder {
     width: 100%;
     height: 100%;
@@ -147,23 +127,6 @@
     display: flex;
     gap: 10px;
     margin-top: 10px;
-}
-
-.thumbnail {
-    width: 50px;
-    height: 50px;
-    border: 2px dashed #ddd;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    overflow: hidden;
-}
-
-.thumbnail img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: cover;
 }
 
 .modal {
@@ -242,4 +205,39 @@
 
 .back-link:hover {
     color: #142766;
+}
+
+
+.product-image-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.image-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.product-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.remove-btn {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: red;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+}
+
+.upload-input {
+    margin-top: 10px;
 }

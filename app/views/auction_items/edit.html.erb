@@ -61,12 +61,15 @@
       <div class="auction-right">
         <p>Product Images</p>
 
-        <div class="product-image-container">
+        <div class="image-container" id="image-preview-container">
           <% if @auction_item.images.attached? %>
             <% @auction_item.images.each do |image| %>
-              <div class="thumbnail">
+              <div class="image-wrapper">
                 <%= image_tag image, class: "product-image" %>
-                <%= link_to "Remove", remove_image_auction_item_path(@auction_item, image.blob.id), method: :delete, class: "remove-btn" %>
+                <%= link_to "Remove", remove_image_auction_item_path(@auction_item, image.blob.id),
+                            method: :delete,
+                            data: { confirm: "Are you sure you want to delete this image?" },
+                            class: "remove-btn" %>
               </div>
             <% end %>
           <% else %>
@@ -74,8 +77,10 @@
           <% end %>
         </div>
 
-        <%= form.file_field :images, multiple: true, direct_upload: true, class: "input-field" %>
+        <!-- Multiple Image Upload Field -->
+        <%= form.file_field :images, multiple: true, direct_upload: true, class: "input-field", id: "image-upload-input" %>
       </div>
+
     </div>
   </div>
 
@@ -84,3 +89,34 @@
   </div>
 
 <% end %>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+  let imageInput = document.getElementById("image-upload-input");
+  let imagePreviewContainer = document.getElementById("image-preview-container");
+
+  if (!imageInput || !imagePreviewContainer) return;
+
+  imageInput.addEventListener("change", function (event) {
+    let files = event.target.files;
+
+    for (let i = 0; i < files.length; i++) {
+      let reader = new FileReader();
+      reader.onload = function (e) {
+        let imageWrapper = document.createElement("div");
+        imageWrapper.classList.add("image-wrapper");
+
+        let img = document.createElement("img");
+        img.src = e.target.result;
+        img.classList.add("product-image");
+
+        imageWrapper.appendChild(img);
+        imagePreviewContainer.appendChild(imageWrapper);
+      };
+      reader.readAsDataURL(files[i]);
+    }
+  });
+});
+
+</script>

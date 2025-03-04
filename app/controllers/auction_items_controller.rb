@@ -23,22 +23,37 @@ class AuctionItemsController < ApplicationController
   end
 
   def create
-    @auction_item = current_user.auction_items.build(auction_item_params)
-
+    @auction_item = current_user.auction_items.build(auction_item_params.except(:images))
+  
     if @auction_item.save
+      if params[:auction_item][:images]
+        @auction_item.images.attach(params[:auction_item][:images])
+      end
+  
       redirect_to seller_dashboard_path, notice: t("notices.auction_item_created")
     else
       render :new
     end
   end
+  
+  
 
   def update
-    if current_user == @auction_item.seller && @auction_item.update(auction_item_params)
-      redirect_to @auction_item, notice: t("notices.auction_item_updated")
+    if current_user == @auction_item.seller
+      if params[:auction_item][:images]
+        @auction_item.images.attach(params[:auction_item][:images])
+      end
+  
+      if @auction_item.update(auction_item_params.except(:images))
+        redirect_to @auction_item, notice: t("notices.auction_item_updated")
+      else
+        render :edit
+      end
     else
-      render :edit
+      redirect_to auction_items_path, alert: t("errors.unauthorized_edit")
     end
   end
+  
 
   def destroy
     if current_user == @auction_item.seller
