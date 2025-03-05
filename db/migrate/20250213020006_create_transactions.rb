@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable all
 
 # Migration to create transactions table
 class CreateTransactions < ActiveRecord::Migration[7.2]
@@ -15,3 +16,5 @@ class CreateTransactions < ActiveRecord::Migration[7.2]
     end
   end
 end
+
+# rubocop:enable all

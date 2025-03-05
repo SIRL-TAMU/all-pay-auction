@@ -28,7 +28,17 @@ class AuctionItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create auction item" do
-    post auction_items_path, params: { auction_item: { name: "Item", description: "Description", max_bid: 100 } }
+    post auction_items_path, params: {
+      auction_item: {
+        name: "Item",
+        description: "Description",
+        curr_max_bid: 100,
+        min_increment: 5,
+        innate_value: 500,
+        opening_date: Time.zone.now,
+        closing_date: 7.days.from_now
+      }
+    }
 
     assert_response :redirect
   end

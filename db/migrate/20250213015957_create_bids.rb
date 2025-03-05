@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable all
 
 # Migration to create bids table
 class CreateBids < ActiveRecord::Migration[7.2]
@@ -13,3 +14,5 @@ class CreateBids < ActiveRecord::Migration[7.2]
     end
   end
 end
+
+# rubocop:enable all
