@@ -26,8 +26,10 @@ class AuctionItemsController < ApplicationController
     @auction_item = current_user.auction_items.build(auction_item_params.except(:images))
   
     if @auction_item.save
-      if params[:auction_item][:images]
-        @auction_item.images.attach(params[:auction_item][:images])
+      if params[:auction_item][:images].present?
+        params[:auction_item][:images].each do |image|
+          @auction_item.images.attach(image)
+        end
       end
   
       redirect_to seller_dashboard_path, notice: t("notices.auction_item_created")
@@ -36,13 +38,13 @@ class AuctionItemsController < ApplicationController
     end
   end
   
-  
 
   def update
     if current_user == @auction_item.seller
-      if params[:auction_item][:images]
-        @auction_item.images.purge # Remove existing images before attaching new ones
-        @auction_item.images.attach(params[:auction_item][:images])
+      if params[:auction_item][:images].present?
+        params[:auction_item][:images].each do |image|
+          @auction_item.images.attach(image)
+        end
       end
   
       if @auction_item.update(auction_item_params.except(:images))
@@ -54,8 +56,7 @@ class AuctionItemsController < ApplicationController
       redirect_to auction_items_path, alert: t("errors.unauthorized_edit")
     end
   end
-  
-  
+
 
   def destroy
     if current_user == @auction_item.seller

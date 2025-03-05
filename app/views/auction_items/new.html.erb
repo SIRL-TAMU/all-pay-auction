@@ -62,14 +62,12 @@
         <p>Product Images</p>
 
         <div class="image-container" id="image-preview-container">
-          <!-- This is where previews will be shown -->
+          <p>No images uploaded</p>
         </div>
 
         <!-- Multiple Image Upload Field -->
-        <%= form.file_field :images, multiple: true, direct_upload: true, class: "input-field", id: "image-upload-input" %>
+        <%= form.file_field :images, multiple: true, class: "input-field", id: "image-upload-input" %>
       </div>
-
-
     </div>
   </div>
 
@@ -83,39 +81,57 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    let imageInput = document.getElementById("image-upload-input");
-    let imagePreviewContainer = document.getElementById("image-preview-container");
+      let imageInput = document.getElementById("image-upload-input");
+      let imagePreviewContainer = document.getElementById("image-preview-container");
+      let fileList = new DataTransfer();
 
-    if (!imageInput || !imagePreviewContainer) return;
+      if (!imageInput || !imagePreviewContainer) return;
 
-    imageInput.addEventListener("change", function (event) {
-      // Clear previous image previews
-      imagePreviewContainer.innerHTML = "";
+      imageInput.addEventListener("change", function (event) {
+          let files = Array.from(event.target.files);
 
-      let files = event.target.files;
+          if (files.length === 0) return;
 
-      if (files.length === 0) {
-        let noImagesText = document.createElement("p");
-        noImagesText.textContent = "No images uploaded";
-        imagePreviewContainer.appendChild(noImagesText);
-      }
+          let placeholderText = imagePreviewContainer.querySelector("p");
+          if (placeholderText) {
+              placeholderText.remove();
+          }
 
-      for (let i = 0; i < files.length; i++) {
-        let reader = new FileReader();
-        reader.onload = function (e) {
-          let imageWrapper = document.createElement("div");
-          imageWrapper.classList.add("image-wrapper");
+          files.forEach((file) => {
+              let reader = new FileReader();
+              reader.onload = function (e) {
+                  let imageWrapper = document.createElement("div");
+                  imageWrapper.classList.add("image-wrapper");
 
-          let img = document.createElement("img");
-          img.src = e.target.result;
-          img.classList.add("product-image");
+                  let img = document.createElement("img");
+                  img.src = e.target.result;
+                  img.classList.add("product-image");
 
-          imageWrapper.appendChild(img);
-          imagePreviewContainer.appendChild(imageWrapper);
-        };
-        reader.readAsDataURL(files[i]);
-      }
-    });
+                  let removeBtn = document.createElement("button");
+                  removeBtn.textContent = "Remove";
+                  removeBtn.classList.add("remove-btn");
+                  removeBtn.addEventListener("click", function () {
+                      imageWrapper.remove();
+
+                      fileList.items.remove([...fileList.files].findIndex(f => f.name === file.name));
+
+                      if (imagePreviewContainer.children.length === 0) {
+                          let noImagesText = document.createElement("p");
+                          noImagesText.textContent = "No images uploaded";
+                          imagePreviewContainer.appendChild(noImagesText);
+                      }
+                  });
+
+                  imageWrapper.appendChild(img);
+                  imageWrapper.appendChild(removeBtn);
+                  imagePreviewContainer.appendChild(imageWrapper);
+              };
+              reader.readAsDataURL(file);
+
+              fileList.items.add(file);
+          });
+
+          imageInput.files = fileList.files;
+      });
   });
-
 </script>
