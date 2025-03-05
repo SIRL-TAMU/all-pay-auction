@@ -2,10 +2,11 @@
     <div class="navbar">
         <div class="navbar-container">  
             <div class="logo">
-                <%= link_to "All Pay Auction", root_path %>
+                <%= link_to "All Pay Auction", login_path(account_type: params[:account_type] || "buyer") %>
             </div>
 
             <div class="links">
+                <%= link_to "Home", root_path %>
                 <li><%= link_to "Auction Block", auction_items_path %></li>
                 <%= link_to "Sell", "/sell" %>
                 <%= link_to "About Us", "/about" %>
