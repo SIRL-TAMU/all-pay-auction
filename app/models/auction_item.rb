@@ -66,4 +66,13 @@ class AuctionItem < ApplicationRecord
   def upcoming?
     Time.zone.now < opening_date
   end
+
+  def test_cron_job
+    auction_items = AuctionItem.all
+    File.write("test_cron.txt", "#{Time.zone.now}\n", mode: "a")
+    auction_items.each do |auction_item|
+      File.write("test_cron.txt", "#{auction_item.name}\n", mode: "a")
+    end
+    File.write("test_cron.txt", "\n", mode: "a")
+  end
 end

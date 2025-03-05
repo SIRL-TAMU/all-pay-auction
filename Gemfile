@@ -39,6 +39,8 @@ gem "rubocop-minitest", "~> 0.37.1"
 gem "rubocop-performance", "~> 1.24"
 gem "rubocop-rails", "~> 2.30"
 
+gem "whenever", "~> 1.0.0"
+
 #########
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
