@@ -139,21 +139,42 @@ document.addEventListener("DOMContentLoaded", function () {
   let fileList = new DataTransfer(); // To manage multiple file uploads
 
   // Function to create a new thumbnail
-  function createThumbnail(imageSrc) {
+  function createThumbnail(imageSrc, file = null) {
     let newThumbnail = document.createElement("div");
     newThumbnail.classList.add("thumbnail-wrapper");
-    newThumbnail.innerHTML = `
-      <img src="${imageSrc}" class="thumbnail-image">
-      <button class="remove-btn">Remove</button>
-    `;
+
+    let img = document.createElement("img");
+    img.src = imageSrc;
+    img.classList.add("thumbnail-image");
+
+    let removeBtn = document.createElement("button");
+    removeBtn.textContent = "Remove";
+    removeBtn.classList.add("remove-btn");
+
+    // Remove the image when clicking 'Remove'
+    removeBtn.addEventListener("click", function (event) {
+      event.stopPropagation();
+      newThumbnail.remove();
+
+      // Remove from fileList if it's a new image
+      if (file) {
+        let fileIndex = [...fileList.files].findIndex(f => f.name === file.name && f.lastModified === file.lastModified);
+        if (fileIndex !== -1) {
+          fileList.items.remove(fileIndex);
+          imageInput.files = fileList.files;
+        }
+      }
+    });
 
     // Handle thumbnail click to update main image
     newThumbnail.addEventListener("click", function () {
       mainImage.src = imageSrc;
-      document.querySelectorAll(".thumbnail-wrapper").forEach((t) => t.classList.remove("selected"));
+      document.querySelectorAll(".thumbnail-wrapper").forEach(t => t.classList.remove("selected"));
       newThumbnail.classList.add("selected");
     });
 
+    newThumbnail.appendChild(img);
+    newThumbnail.appendChild(removeBtn);
     thumbnailContainer.insertBefore(newThumbnail, thumbnailContainer.lastElementChild);
   }
 
@@ -165,7 +186,7 @@ document.addEventListener("DOMContentLoaded", function () {
     files.forEach((file) => {
       let reader = new FileReader();
       reader.onload = function (e) {
-        createThumbnail(e.target.result);
+        createThumbnail(e.target.result, file);
 
         // If this is the first uploaded image, set it as the main image
         if (!mainImage.src || mainImage.src.includes("default_item.png")) {
