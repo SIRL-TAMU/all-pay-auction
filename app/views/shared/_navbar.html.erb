@@ -16,6 +16,7 @@
                     <div class="profile-btn">
                         <div class="user-name">
                             <%= current_user.first_name %> <%= current_user.last_name %>
+                            <span class="balance">($<%= current_user.amount %>)</span>
                         </div>
                         <i class="fa-solid fa-chevron-down"></i>
 
@@ -23,7 +24,11 @@
                             <% if seller? %>
                                 <%= link_to "Seller Dashboard", seller_dashboard_path %>
                             <% end %>
+                            <% if buyer? %>
+                                <%= link_to "Buyer Dashboard", buyer_dashboard_path %>
+                            <% end %>
                             <%= link_to "Settings", "#", class: "temp" %>
+                            <%= link_to "Manage Funds", "#", class: "temp" %>
                             <%= link_to "Logout", logout_path, method: :delete %>
                         </div>
                     </div>

@@ -27,6 +27,9 @@ Rails.application.routes.draw do
   # Seller Dashboard
   get "/seller/dashboard", to: "seller_interface#index", as: :seller_dashboard
 
+  # Manage Funds
+  get '/manage_funds', to: 'accounts#manage_funds', as: :manage_funds
+
   # Auction Items
   resources :auction_items
 
