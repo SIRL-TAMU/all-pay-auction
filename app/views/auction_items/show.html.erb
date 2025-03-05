@@ -20,13 +20,37 @@
       <%= @auction_item.name %>
     </div>
 
-    <div class="auction-item-image-container">
-      <% if @auction_item.images.attached? %>
-        <%= image_tag @auction_item.images.first, class: "auction-item-image" %>
-      <% else %>
-        <%= image_tag "default_item.png", width: 200 %>
-      <% end %>
+    <div class="auction-gallery">
+      <!-- Thumbnail Navigation -->
+      <div class="auction-thumbnails-container">
+        <button class="scroll-btn up-btn" id="scroll-up">
+          <i class="fa-solid fa-chevron-up"></i>
+        </button>
+
+        <div class="auction-thumbnails" id="thumbnails">
+          <% @auction_item.images.each_with_index do |image, index| %>
+            <div class="thumbnail-wrapper <%= 'selected' if index == 0 %>"
+                data-image-url="<%= url_for(image) %>">
+              <%= image_tag image, class: "auction-thumbnail" %>
+            </div>
+          <% end %>
+        </div>
+
+        <button class="scroll-btn down-btn" id="scroll-down">
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+      </div>
+
+      <!-- Main Image Display -->
+      <div class="auction-item-image-container">
+        <% if @auction_item.images.attached? %>
+          <%= image_tag @auction_item.images.first, class: "auction-item-image", id: "main-image" %>
+        <% else %>
+          <%= image_tag "default_item.png", class: "auction-item-image", id: "main-image" %>
+        <% end %>
+      </div>
     </div>
+
 
     <div class="auction-item-details">
       <div class="auction-item-details-section">
@@ -175,8 +199,6 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
 <div class="bottom-padding"></div>
 <div class="bottom-padding"></div>
 
-
-
 <script>
   function toggleDetails(button, contentId) {
     const content = document.getElementById(contentId);
@@ -201,4 +223,63 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
   function showDisabledAlert() {
     alert("Edit and deleting has been disabled for active or closed auctions.");
   }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const thumbnails = document.querySelectorAll(".thumbnail-wrapper");
+    const mainImage = document.getElementById("main-image");
+
+    thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener("click", function () {
+            mainImage.src = this.getAttribute("data-image-url");
+
+            thumbnails.forEach(thumb => thumb.classList.remove("selected"));
+            this.classList.add("selected");
+        });
+    });
+});
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const thumbnailsContainer = document.getElementById("thumbnails");
+    const scrollUpBtn = document.getElementById("scroll-up");
+    const scrollDownBtn = document.getElementById("scroll-down");
+    const thumbnails = document.querySelectorAll(".thumbnail-wrapper");
+    const mainImage = document.getElementById("main-image");
+
+    function updateScrollButtons() {
+        if (thumbnailsContainer.scrollTop > 0) {
+            scrollUpBtn.classList.add("visible");
+        } else {
+            scrollUpBtn.classList.remove("visible");
+        }
+
+        if (thumbnailsContainer.scrollHeight > thumbnailsContainer.clientHeight + thumbnailsContainer.scrollTop) {
+            scrollDownBtn.classList.add("visible");
+        } else {
+            scrollDownBtn.classList.remove("visible");
+        }
+    }
+
+    scrollUpBtn.addEventListener("click", function () {
+        thumbnailsContainer.scrollBy({ top: -100, behavior: "smooth" });
+    });
+
+    scrollDownBtn.addEventListener("click", function () {
+        thumbnailsContainer.scrollBy({ top: 100, behavior: "smooth" });
+    });
+
+    thumbnailsContainer.addEventListener("scroll", updateScrollButtons);
+    updateScrollButtons();
+    
+    thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener("click", function () {
+            mainImage.src = this.getAttribute("data-image-url");
+
+            thumbnails.forEach(thumb => thumb.classList.remove("selected"));
+            this.classList.add("selected");
+        });
+    });
+  });
+
+
 </script>
