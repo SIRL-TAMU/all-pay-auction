@@ -110,9 +110,11 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
       </div>
 
       <div class="auction-item-bid-info-container">
-        <div class="auction-item-estimate-value">Est: $<%= @auction_item.innate_value  %></div>
+        <div class="auction-item-estimate-value">
+          Est: <%= number_to_currency(@auction_item.innate_value, unit: "$", precision: 2) %>
+        </div>
         <div class="auction-item-bid-info-text">
-          <strong>$<%= @auction_item.max_bid %> USD</strong> •
+          <strong><%= number_to_currency(@auction_item.max_bid, unit: "$", precision: 2) %> USD</strong> •
           <span class="info-text-subtext"><strong><%= @auction_item.total_bids %> bids</strong></span>
         </div>
 
@@ -132,7 +134,9 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
         <div class="auction-item-winning-bid">
           <p class="auction-item-winning-bid-title">Winning Bidder</p>
           <p class="auction-item-winning-bid-name"><%= @auction_item.winning_bid.buyer.first_name %> <%= @auction_item.winning_bid.buyer.last_name %></p>
-          <p class="auction-item-winning-bid-amount">$<%= @auction_item.winning_bid.amount %> USD</p>
+          <p class="auction-item-winning-bid-amount">
+            <%= number_to_currency(@auction_item.winning_bid.amount, unit: "$", precision: 2) %> USD
+          </p>
         </div>
       <% else %>
         <div class="auction-item-winning-bid">
@@ -151,7 +155,9 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
               <p><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></p>
               <p class="auction-item-user-card-subtext"><%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %></p>
             </div>
-            <p class="auction-item-user-card-amount"><strong>$<%= bid.amount %> USD</strong></p>
+            <p class="auction-item-user-card-amount">
+              <strong><%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD</strong>
+            </p>
           </div>
         <% end %>
       </div>

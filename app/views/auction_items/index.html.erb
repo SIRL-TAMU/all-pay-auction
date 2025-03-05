@@ -45,7 +45,7 @@
               <div class="auction-items-bid-container">
                 <div class="auction-items-bid-info">
                   <p class="bid-info-card">
-                    <strong class="bid-value">$<%= item.max_bid %> USD</strong>
+                    <strong class="bid-value"><%= number_to_currency(item.max_bid, unit: "$", precision: 2) %> USD</strong>
                     <span class="bid-label">Max Bid</span>
                   </p>
                   <p class="bid-info-card">
