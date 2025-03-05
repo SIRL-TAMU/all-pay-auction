@@ -9,7 +9,7 @@
           <% if @active_or_upcoming_auction.images.attached? %>
             <%= image_tag @active_or_upcoming_auction.images.first, width: 200 %>
           <% else %>
-            <%= image_tag "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200 %>
+            <%= image_tag "default_item.png", width: 200 %>
           <% end %>
 
           <div class="countdown-container">
@@ -110,7 +110,7 @@
               <% if auction.images.attached? %>
                 <%= image_tag auction.images.first, class: "past-auction-image" %>
               <% else %>
-                <%= image_tag "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg", class: "past-auction-image" %>
+                <%= image_tag "default_item.png", width: 200 %>
               <% end %>
             </div>
             
