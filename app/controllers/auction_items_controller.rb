@@ -41,6 +41,7 @@ class AuctionItemsController < ApplicationController
   def update
     if current_user == @auction_item.seller
       if params[:auction_item][:images]
+        @auction_item.images.purge # Remove existing images before attaching new ones
         @auction_item.images.attach(params[:auction_item][:images])
       end
   
@@ -53,6 +54,7 @@ class AuctionItemsController < ApplicationController
       redirect_to auction_items_path, alert: t("errors.unauthorized_edit")
     end
   end
+  
   
 
   def destroy

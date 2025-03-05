@@ -86,8 +86,19 @@
     let imageInput = document.getElementById("image-upload-input");
     let imagePreviewContainer = document.getElementById("image-preview-container");
 
+    if (!imageInput || !imagePreviewContainer) return;
+
     imageInput.addEventListener("change", function (event) {
+      // Clear previous image previews
+      imagePreviewContainer.innerHTML = "";
+
       let files = event.target.files;
+
+      if (files.length === 0) {
+        let noImagesText = document.createElement("p");
+        noImagesText.textContent = "No images uploaded";
+        imagePreviewContainer.appendChild(noImagesText);
+      }
 
       for (let i = 0; i < files.length; i++) {
         let reader = new FileReader();
@@ -106,4 +117,5 @@
       }
     });
   });
+
 </script>

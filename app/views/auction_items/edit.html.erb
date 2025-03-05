@@ -93,30 +93,40 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-  let imageInput = document.getElementById("image-upload-input");
-  let imagePreviewContainer = document.getElementById("image-preview-container");
+    let imageInput = document.getElementById("image-upload-input");
+    let imagePreviewContainer = document.getElementById("image-preview-container");
 
-  if (!imageInput || !imagePreviewContainer) return;
+    if (!imageInput || !imagePreviewContainer) return;
 
-  imageInput.addEventListener("change", function (event) {
-    let files = event.target.files;
+    imageInput.addEventListener("change", function (event) {
+      // Clear previous image previews
+      imagePreviewContainer.innerHTML = "";
 
-    for (let i = 0; i < files.length; i++) {
-      let reader = new FileReader();
-      reader.onload = function (e) {
-        let imageWrapper = document.createElement("div");
-        imageWrapper.classList.add("image-wrapper");
+      let files = event.target.files;
 
-        let img = document.createElement("img");
-        img.src = e.target.result;
-        img.classList.add("product-image");
+      if (files.length === 0) {
+        let noImagesText = document.createElement("p");
+        noImagesText.textContent = "No images uploaded";
+        imagePreviewContainer.appendChild(noImagesText);
+      }
 
-        imageWrapper.appendChild(img);
-        imagePreviewContainer.appendChild(imageWrapper);
-      };
-      reader.readAsDataURL(files[i]);
-    }
+      for (let i = 0; i < files.length; i++) {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+          let imageWrapper = document.createElement("div");
+          imageWrapper.classList.add("image-wrapper");
+
+          let img = document.createElement("img");
+          img.src = e.target.result;
+          img.classList.add("product-image");
+
+          imageWrapper.appendChild(img);
+          imagePreviewContainer.appendChild(imageWrapper);
+        };
+        reader.readAsDataURL(files[i]);
+      }
+    });
   });
-});
+
 
 </script>
