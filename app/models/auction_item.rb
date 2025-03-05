@@ -6,6 +6,9 @@ class AuctionItem < ApplicationRecord
   has_many :bids, dependent: :destroy
   has_many_attached :images
 
+  # validates :opening_date, presence: true, comparison: { greater_than_or_equal_to: -> { Time.zone.now } }
+  # validates :closing_date, presence: true, comparison: { greater_than: :opening_date }
+
   def max_bid
     bids.maximum(:amount) || self[:curr_max_bid] || 0 # here max_bid could be starting price
   end

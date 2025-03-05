@@ -46,13 +46,21 @@
 
             <div class="input-group">
               <p>Open Date</p>
-              <%= form.datetime_local_field :opening_date, required: true, class: "input-field" %>
+              <%= form.datetime_local_field :opening_date, required: true, class: "input-field",
+                  min: Time.zone.now.strftime("%Y-%m-%dT%H:%M"),
+                  value: (form.object.opening_date || Time.zone.now).strftime("%Y-%m-%dT%H:%M"),
+                  id: "opening_date" %>
             </div>
 
             <div class="input-group">
               <p>Close Date</p>
-              <%= form.datetime_local_field :closing_date, required: true, class: "input-field" %>
+              <%= form.datetime_local_field :closing_date, required: true, class: "input-field",
+                  min: Time.zone.now.strftime("%Y-%m-%dT%H:%M"),
+                  value: (form.object.closing_date || (Time.zone.now + 1.week)).strftime("%Y-%m-%dT%H:%M"),
+                  id: "closing_date" %>
             </div>
+
+
           </div>
         </div>
       </div>
@@ -133,5 +141,22 @@
 
           imageInput.files = fileList.files;
       });
+  });
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const openingDateInput = document.getElementById("opening_date");
+    const closingDateInput = document.getElementById("closing_date");
+
+    function updateClosingDateMin() {
+      const openDate = new Date(openingDateInput.value);
+      if (!isNaN(openDate)) {
+        closingDateInput.min = openDate.toISOString().slice(0, 16);
+        if (new Date(closingDateInput.value) < openDate) {
+          closingDateInput.value = openDate.toISOString().slice(0, 16);
+        }
+      }
+    }
+
+    openingDateInput.addEventListener("change", updateClosingDateMin);
   });
 </script>
