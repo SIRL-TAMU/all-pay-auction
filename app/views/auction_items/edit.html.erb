@@ -101,19 +101,18 @@
             <div class="thumbnail-wrapper" data-image-url="<%= url_for(image) %>">
               <%= image_tag image, class: "thumbnail-image" %>
               <%= link_to "Remove", remove_image_auction_item_path(@auction_item, image.blob.id),
-                          method: :delete,
-                          data: { confirm: "Are you sure you want to delete this image?" },
-                          class: "remove-btn" %>
+              method: :delete,
+              class: "remove-btn" %>
+
             </div>
           <% end %>
 
-          <!-- Upload Button -->
-          <div class="upload-btn">
-            <label for="image-upload-input">
-              <i class="fa-solid fa-plus"></i>
-            </label>
-          </div>
+          <!-- Upload Button (Now Part of Grid) -->
+          <label for="image-upload-input" class="upload-btn">
+            <i class="fa-solid fa-plus"></i>
+          </label>
         </div>
+
 
         <!-- Hidden File Input -->
         <%= form.file_field :images, multiple: true, class: "input-field", id: "image-upload-input", style: "display: none;" %>

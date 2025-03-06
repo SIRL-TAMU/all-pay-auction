@@ -64,16 +64,15 @@
   object-fit: contain;
 }
 
-/* Thumbnails */
 .thumbnail-container {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  justify-content: center;
-  align-items: center;
-  padding: 5px 0;
-}
-
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+  }
+  
 .thumbnail-wrapper {
   display: flex;
   flex-direction: column;
@@ -85,8 +84,8 @@
 }
 
 .thumbnail-image {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   object-fit: cover;
   border-radius: 5px;
   border: 1px solid #ddd;
@@ -98,20 +97,24 @@
 
 .upload-btn {
   display: flex;
-  justify-content: center;
   align-items: center;
-  width: 60px;
-  height: 60px;
-  min-height: 60px;
-  min-width: 60px;
-  border: 2px dashed #ccc;
-  border-radius: 5px;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  background: #e0e0e0;
+  border-radius: 10px;
   cursor: pointer;
+  transition: #e0e0e0 0.2s ease-in-out;
+}
+
+.upload-btn:hover {
+  background: #d6d6d6;
 }
 
 .upload-btn i {
   font-size: 24px;
-  color: #777;
+  color: #555;
+  cursor: pointer;
 }
 
 .remove-btn {
@@ -122,7 +125,6 @@
   text-align: center;
   cursor: pointer;
 }
-
 
 .auction-left {
     width: 60%;
