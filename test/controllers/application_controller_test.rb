@@ -13,7 +13,7 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
     post login_path, params: {
       account_type: "buyer",
       email: @buyer.email,
-      password: "password123"
+      password: "password123#"
     }
 
     assert_equal "buyer", session[:account_type], "Session account_type not set correctly"
@@ -26,7 +26,7 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
     post login_path, params: {
       account_type: "seller",
       email: @seller.email,
-      password: "sellerpass123"
+      password: "sellerpass123#"
     }
 
     assert_equal "seller", session[:account_type], "Session account_type not set correctly"
@@ -38,7 +38,7 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
         post login_path, params: {
           account_type: "buyer",
           email: @buyer.email,
-          password: "password123"
+          password: "password123#"
         }
         get root_path
 
@@ -48,7 +48,7 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
         post login_path, params: {
           account_type: "seller",
           email: @seller.email,
-          password: "sellerpass123"
+          password: "sellerpass123#"
         }
         get root_path
 
@@ -58,7 +58,7 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
         post login_path, params: {
           account_type: "buyer",
           email: @buyer.email,
-          password: "password123"
+          password: "password123#"
         }
         get root_path
 

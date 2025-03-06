@@ -17,8 +17,8 @@ if Rails.env.development?
                              first_name: "John",
                              last_name: "Doe",
                              email: "buyer1@example.com",
-                             password: "password123",
-                             password_confirmation: "password123",
+                             password: "password123#",
+                             password_confirmation: "password123#",
                              liquid_balance: 1000.00,
                              asset_balance: 1000.00
                            },
@@ -26,8 +26,8 @@ if Rails.env.development?
                              first_name: "Jane",
                              last_name: "Smith",
                              email: "buyer2@example.com",
-                             password: "securepass456",
-                             password_confirmation: "securepass456",
+                             password: "securepass456#",
+                             password_confirmation: "securepass456#",
                              liquid_balance: 1500.00,
                              asset_balance: 1500.00
                            },
@@ -35,8 +35,8 @@ if Rails.env.development?
                              first_name: "Bob",
                              last_name: "Boo",
                              email: "buyer3@example.com",
-                             password: "testing",
-                             password_confirmation: "testing",
+                             password: "testing#",
+                             password_confirmation: "testing#",
                              liquid_balance: 150_000.00,
                              asset_balance: 150_000.00
                            }
@@ -48,8 +48,8 @@ if Rails.env.development?
                                first_name: "Alice",
                                last_name: "Johnson",
                                email: "seller1@example.com",
-                               password: "sellerpass123",
-                               password_confirmation: "sellerpass123",
+                               password: "sellerpass123#",
+                               password_confirmation: "sellerpass123#",
                                liquid_balance: 1000.00,
                                asset_balance: 1000.00
                              },
@@ -57,8 +57,8 @@ if Rails.env.development?
                                first_name: "Bob",
                                last_name: "Williams",
                                email: "seller2@example.com",
-                               password: "bobspassword789",
-                               password_confirmation: "bobspassword789",
+                               password: "bobspassword789#",
+                               password_confirmation: "bobspassword789#",
                                liquid_balance: 1500.00,
                                asset_balance: 1500.00
                              }
