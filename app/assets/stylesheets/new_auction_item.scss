@@ -87,9 +87,10 @@
 .thumbnail-image {
     width: 60px;
     height: 60px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 5px;
     border: 1px solid #ddd;
+    background-color: white;
 }
   
 .thumbnail-wrapper.selected {
@@ -324,9 +325,10 @@
 .product-image {
     width: 100px;
     height: 100px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 5px;
     border: 1px solid #ddd;
+    background-color: white;
 }
 
 
