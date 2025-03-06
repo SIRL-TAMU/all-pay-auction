@@ -100,10 +100,13 @@
           <% @auction_item.images.each do |image| %>
             <div class="thumbnail-wrapper" data-image-url="<%= url_for(image) %>">
               <%= image_tag image, class: "thumbnail-image" %>
-              <%= link_to "Remove", remove_image_auction_item_path(@auction_item, image.blob.id),
-              method: :delete,
-              class: "remove-btn" %>
 
+              <%= link_to remove_image_auction_item_path(@auction_item, image.blob.id),
+                  method: :delete,
+                  class: "remove-btn",
+                  title: "Remove Image" do %>
+                <i class="fa-solid fa-xmark"></i>
+              <% end %>
             </div>
           <% end %>
 
