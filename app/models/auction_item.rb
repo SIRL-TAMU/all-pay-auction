@@ -4,7 +4,7 @@
 class AuctionItem < ApplicationRecord
   belongs_to :seller
   has_many :bids, dependent: :destroy
-  belongs_to :winning_buyer, class_name 'Buyer', optional: true
+  belongs_to :winning_buyer, class_name: 'Buyer', optional: true
 
   def max_bid
     bids.maximum(:amount) || self[:curr_max_bid] || 0 # here max_bid could be starting price
@@ -67,7 +67,7 @@ class AuctionItem < ApplicationRecord
     Time.zone.now < opening_date
   end
 
-  def test_cron_job
+  def self.test_cron_job
     auction_items = AuctionItem.all
     File.write("test_cron.txt", "#{Time.zone.now}\n", mode: "a")
     auction_items.each do |auction_item|

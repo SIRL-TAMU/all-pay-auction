@@ -12,6 +12,5 @@ done
 # Create and migrate database
 bundle install
 bundle exec rails db:prepare
-bundle exec whenever --update-crontab
 
 exec "$@"
