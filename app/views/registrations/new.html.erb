@@ -33,7 +33,9 @@
 
       <%# Password Fields %>
       <div class="form-group">
-        <%= f.password_field :password, placeholder: "Password", class: "input-field" %>
+        <%= f.password_field :password, name: "user[password]", placeholder: "Password", class: "input-field", 
+            pattern: "^(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$", 
+            title: "Password must be at least 8 characters long and include at least 1 special character." %>
       </div>
 
       <div class="form-group">
@@ -65,3 +67,24 @@
 
   </div>
 </div>
+
+<script> 
+  document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(() => {
+      const passwordField = document.querySelector("input[name='user[password]']");
+      
+      if (passwordField) {
+        passwordField.addEventListener("input", function () {
+          const value = passwordField.value;
+          const regex = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+
+          if (!regex.test(value)) {
+            passwordField.setCustomValidity("Password must be at least 8 characters long and include at least 1 special character.");
+          } else {
+            passwordField.setCustomValidity("");  
+          }
+        });
+      }
+    }, 200);
+  });
+</script>

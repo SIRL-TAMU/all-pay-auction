@@ -2,7 +2,8 @@
     <div class="navbar">
         <div class="navbar-container">  
             <div class="logo">
-                <%= link_to "All Pay Auction", login_path(account_type: params[:account_type] || "buyer") %>
+                <%= link_to "All Pay Auction", logged_in? ? root_path : login_path(account_type: params[:account_type] || "buyer") %>
+    
             </div>
 
             <div class="links">
