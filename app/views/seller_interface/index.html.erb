@@ -44,7 +44,7 @@
                 <span class="bid-value">
                   <%= number_to_currency(@active_or_upcoming_auction.max_bid, unit: "$", precision: 2) %> USD
                 </span>
-                <span class="bid-label">Max Bid</span>
+                <span class="bid-label">Highest Bid</span>
               </div>
 
               <div class="bid-item">
@@ -135,7 +135,7 @@
                   <span class="past-auction-bid-value">
                     <%= number_to_currency(auction.max_bid, unit: "$", precision: 2) %> USD
                   </span>
-                  <span class="past-auction-bid-label">Max Bid</span>
+                  <span class="past-auction-bid-label">Highest Bid</span>
                 </div>
                 <div class="past-auction-bid-item">
                   <span class="past-auction-bid-value"><%= auction.total_bids %> bids</span>
