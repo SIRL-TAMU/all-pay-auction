@@ -16,8 +16,8 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
           first_name: "Test",
           last_name: "Buyer",
           email: "testbuyer@example.com",
-          password: "testpassword",
-          password_confirmation: "testpassword"
+          password: "testpassword#",
+          password_confirmation: "testpassword#"
         }
       }
     end
@@ -31,8 +31,8 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
           first_name: "Test",
           last_name: "Seller",
           email: "testseller@example.com",
-          password: "testpassword",
-          password_confirmation: "testpassword"
+          password: "testpassword#",
+          password_confirmation: "testpassword#"
         }
       }
     end

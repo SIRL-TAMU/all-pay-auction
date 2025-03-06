@@ -20,6 +20,6 @@ module ActiveSupport
 end
 
 def log_in_as_seller(seller)
-  post login_path, params: { account_type: "seller", email: seller.email, password: "password456" }
+  post login_path, params: { account_type: "seller", email: seller.email, password: "password456#" }
   follow_redirect!
 end
