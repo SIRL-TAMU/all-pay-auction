@@ -24,20 +24,19 @@ class AuctionItemsController < ApplicationController
 
   def create
     @auction_item = current_user.auction_items.build(auction_item_params.except(:images))
-  
+
     if @auction_item.save
       if params[:auction_item][:images].present?
         params[:auction_item][:images].each do |image|
           @auction_item.images.attach(image)
         end
       end
-  
+
       redirect_to seller_dashboard_path, notice: t("notices.auction_item_created")
     else
       render :new
     end
   end
-  
 
   def update
     if current_user == @auction_item.seller
@@ -46,7 +45,7 @@ class AuctionItemsController < ApplicationController
           @auction_item.images.attach(image)
         end
       end
-  
+
       if @auction_item.update(auction_item_params.except(:images))
         redirect_to @auction_item, notice: t("notices.auction_item_updated")
       else
@@ -56,7 +55,6 @@ class AuctionItemsController < ApplicationController
       redirect_to auction_items_path, alert: t("errors.unauthorized_edit")
     end
   end
-
 
   def destroy
     if current_user == @auction_item.seller
@@ -77,18 +75,16 @@ class AuctionItemsController < ApplicationController
   def remove_image
     @auction_item = AuctionItem.find(params[:id])
     image = @auction_item.images.find_by(blob_id: params[:image_id])
-  
+
     if image
       image.purge
-      flash[:success] = "Image removed successfully."
+      flash[:success] = t("notices.image_removed")
     else
-      flash[:error] = "Image not found."
+      flash[:error] = t("errors.image_not_found")
     end
-  
+
     redirect_to edit_auction_item_path(@auction_item)
   end
-  
-  
 
   private
 
