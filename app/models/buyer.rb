@@ -4,6 +4,10 @@
 class Buyer < ApplicationRecord
   has_secure_password # Automatically handles password hashing
   validates :email, presence: true, uniqueness: true
+  validates :password, presence: true, length: { minimum: 8 },
+                       format: { with: /\A(?=.*[\p{P}\p{S}]).{8,}\z/,
+                                 message: "must be at least 8 characters long and include at least 1 special character." }
+
   has_many :bids, dependent: :destroy
   has_many :transactions, dependent: :destroy
   validates :liquid_balance, numericality: { greater_than_or_equal_to: 0 }
