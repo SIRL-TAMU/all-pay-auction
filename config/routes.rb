@@ -30,6 +30,12 @@ Rails.application.routes.draw do
   # Manage Funds
   get '/manage_funds', to: 'accounts#manage_funds', as: :manage_funds
 
+  # Adding Funds
+  post '/add_funds', to: 'accounts#add_funds', as: :add_funds
+
+  # Webhook for stripe transactions
+  post '/stripe/webhook', to: 'webhooks#stripe'
+
   # Auction Items
   resources :auction_items
 
