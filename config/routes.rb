@@ -40,4 +40,9 @@ Rails.application.routes.draw do
   # Static Page
   get "/sell", to: "static_pages#sell"
   get "/about", to: "static_pages#about"
+
+  # Omniauth Routes
+  get "/auth/failure", to: redirect("/")
+  get "/auth/:provider/callback", to: "sessions#omniauth"
+  post "/auth/google_oauth2_setup", to: "sessions#google_oauth2_setup", as: :google_oauth2_setup
 end

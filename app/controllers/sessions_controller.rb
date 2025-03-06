@@ -40,4 +40,35 @@ class SessionsController < ApplicationController
     session[:account_type] = nil
     redirect_to root_path, notice: I18n.t("notices.logged_out")
   end
+
+  def google_oauth2_setup
+    session[:account_type] = params[:account_type] || "buyer"
+    redirect_to "/auth/google_oauth2"
+  end
+
+  def omniauth
+    auth = request.env["omniauth.auth"]
+    account_type = session[:account_type] || "buyer"
+    user_class = account_type == "buyer" ? Buyer : Seller
+
+    @user = user_class.find_or_initialize_by(uid: auth.uid, provider: auth.provider)
+
+    if @user.new_record?
+      @user.assign_attributes(
+        first_name: auth.info.first_name,
+        last_name: auth.info.last_name,
+        email: auth.info.email,
+        password: SecureRandom.base64(16) + "#",
+        liquid_balance: 0,
+        asset_balance: 0
+      )
+      @user.save!
+    end
+
+    session[:user_id] = @user.id
+    session[:account_type] = account_type
+
+    redirect_to account_type == "buyer" ? buyer_dashboard_path : seller_dashboard_path,
+                notice: "Successfully logged in with Google!"
+  end
 end
