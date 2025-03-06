@@ -39,9 +39,9 @@
 
     <%# Google Login Button %>
     <div class="google-login">
-      <%= button_to google_oauth2_setup_path(account_type: params[:account_type]), method: :post, class: "google-btn" do %>
+      <%= button_to google_oauth2_setup_login_path(account_type: params[:account_type]), method: :post, class: "google-btn" do %>
         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
-        Continue with Google
+        Login with Google
       <% end %>
     </div>
 
