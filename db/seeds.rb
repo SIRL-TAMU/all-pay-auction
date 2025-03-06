@@ -74,8 +74,7 @@ if Rails.env.development?
                                           min_increment: 5.00,
                                           innate_value: 10_000.00,
                                           opening_date: Time.zone.now,
-                                          closing_date: 7.days.from_now,
-                                          image: "vase.jpg"
+                                          closing_date: 7.days.from_now
                                         },
                                         {
                                           seller: sellers.last,
@@ -85,8 +84,7 @@ if Rails.env.development?
                                           innate_value: 50_000.00,
                                           min_increment: 10.00,
                                           opening_date: Time.zone.now,
-                                          closing_date: 5.days.from_now,
-                                          image: "watch.jpg"
+                                          closing_date: 5.days.from_now
                                         }
                                       ])
 

@@ -23,9 +23,15 @@ class AuctionItemsController < ApplicationController
   end
 
   def create
-    @auction_item = current_user.auction_items.build(auction_item_params)
+    @auction_item = current_user.auction_items.build(auction_item_params.except(:images))
 
     if @auction_item.save
+      if params[:auction_item][:images].present?
+        params[:auction_item][:images].each do |image|
+          @auction_item.images.attach(image)
+        end
+      end
+
       redirect_to seller_dashboard_path, notice: t("notices.auction_item_created")
     else
       render :new
@@ -33,10 +39,20 @@ class AuctionItemsController < ApplicationController
   end
 
   def update
-    if current_user == @auction_item.seller && @auction_item.update(auction_item_params)
-      redirect_to @auction_item, notice: t("notices.auction_item_updated")
+    if current_user == @auction_item.seller
+      if params[:auction_item][:images].present?
+        params[:auction_item][:images].each do |image|
+          @auction_item.images.attach(image)
+        end
+      end
+
+      if @auction_item.update(auction_item_params.except(:images))
+        redirect_to @auction_item, notice: t("notices.auction_item_updated")
+      else
+        render :edit
+      end
     else
-      render :edit
+      redirect_to auction_items_path, alert: t("errors.unauthorized_edit")
     end
   end
 
@@ -56,6 +72,20 @@ class AuctionItemsController < ApplicationController
     end
   end
 
+  def remove_image
+    @auction_item = AuctionItem.find(params[:id])
+    image = @auction_item.images.find_by(blob_id: params[:image_id])
+
+    if image
+      image.purge
+      flash[:success] = t("notices.image_removed")
+    else
+      flash[:error] = t("errors.image_not_found")
+    end
+
+    redirect_to edit_auction_item_path(@auction_item)
+  end
+
   private
 
   def set_auction_item
@@ -63,8 +93,10 @@ class AuctionItemsController < ApplicationController
   end
 
   def auction_item_params
-    params.require(:auction_item).permit(:name, :description, :curr_max_bid, :min_increment, :innate_value,
-                                         :opening_date, :closing_date, :image)
+    params.require(:auction_item).permit(
+      :name, :description, :curr_max_bid, :min_increment, :innate_value,
+      :opening_date, :closing_date, images: []
+    )
   end
 
   def require_seller_login

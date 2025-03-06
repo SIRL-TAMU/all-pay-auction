@@ -28,7 +28,11 @@ Rails.application.routes.draw do
   get "/seller/dashboard", to: "seller_interface#index", as: :seller_dashboard
 
   # Auction Items
-  resources :auction_items
+  resources :auction_items do
+    member do
+      delete "remove_image/:image_id", to: "auction_items#remove_image", as: "remove_image"
+    end
+  end
 
   # Bids
   resources :bids, only: %i[create index show update] # update bid incase of repeat bids, CAN ONLY INCREASE.

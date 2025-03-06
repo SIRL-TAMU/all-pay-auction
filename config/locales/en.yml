@@ -39,12 +39,14 @@ en:
     auction_item_created: "Auction item was successfully created."
     auction_item_updated: "Auction item was successfully updated."
     auction_item_deleted: "Auction item was successfully deleted."
+    image_removed: "Image removed successfully."
   errors:
     invalid_credentials: "Invalid email or password"
     unauthorized_edit: "You are not authorized to edit this auction item."
     unauthorized_delete: "You are not authorized to delete this auction item."
     only_sellers: "Only sellers can perform this action."
     unauthorized_edit_delete: "You are not authorized to edit or delete this auction item."
+    image_not_found: "Image not found."
   bids:
     create:
       success: "Bid placed successfully!"
