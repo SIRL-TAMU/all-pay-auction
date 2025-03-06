@@ -11,6 +11,7 @@ class Bid < ApplicationRecord
   def bid_must_be_higher_than_current_max
     min_valid_bid = BigDecimal(auction_item.max_bid + auction_item.min_increment, 10)
     return if BigDecimal(amount, 10) >= min_valid_bid
+
     errors.add(:amount, "must be at least #{min_valid_bid.to_f.round(2)}")
   end
 end
