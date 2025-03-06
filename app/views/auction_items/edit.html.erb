@@ -110,14 +110,11 @@
             </div>
           <% end %>
 
-          <!-- Upload Button (Now Part of Grid) -->
           <label for="image-upload-input" class="upload-btn">
             <i class="fa-solid fa-plus"></i>
           </label>
         </div>
 
-
-        <!-- Hidden File Input -->
         <%= form.file_field :images, multiple: true, class: "input-field", id: "image-upload-input", style: "display: none;" %>
       </div>
 
@@ -138,9 +135,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const mainImage = document.getElementById("main-image");
   const thumbnailContainer = document.querySelector(".thumbnail-container");
   const imageInput = document.getElementById("image-upload-input");
-  let fileList = new DataTransfer(); // To manage multiple file uploads
+  let fileList = new DataTransfer();
 
-  // Function to create a new thumbnail
   function createThumbnail(imageSrc, file = null) {
     let newThumbnail = document.createElement("div");
     newThumbnail.classList.add("thumbnail-wrapper");
@@ -153,12 +149,10 @@ document.addEventListener("DOMContentLoaded", function () {
     removeBtn.textContent = "Remove";
     removeBtn.classList.add("remove-btn");
 
-    // Remove the image when clicking 'Remove'
     removeBtn.addEventListener("click", function (event) {
       event.stopPropagation();
       newThumbnail.remove();
 
-      // Remove from fileList if it's a new image
       if (file) {
         let fileIndex = [...fileList.files].findIndex(f => f.name === file.name && f.lastModified === file.lastModified);
         if (fileIndex !== -1) {
@@ -168,7 +162,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    // Handle thumbnail click to update main image
     newThumbnail.addEventListener("click", function () {
       mainImage.src = imageSrc;
       document.querySelectorAll(".thumbnail-wrapper").forEach(t => t.classList.remove("selected"));
@@ -180,7 +173,6 @@ document.addEventListener("DOMContentLoaded", function () {
     thumbnailContainer.insertBefore(newThumbnail, thumbnailContainer.lastElementChild);
   }
 
-  // Handle file uploads
   imageInput.addEventListener("change", function (event) {
     let files = Array.from(event.target.files);
     if (files.length === 0) return;
@@ -190,17 +182,16 @@ document.addEventListener("DOMContentLoaded", function () {
       reader.onload = function (e) {
         createThumbnail(e.target.result, file);
 
-        // If this is the first uploaded image, set it as the main image
         if (!mainImage.src || mainImage.src.includes("default_item.png")) {
           mainImage.src = e.target.result;
         }
       };
       reader.readAsDataURL(file);
 
-      fileList.items.add(file); // Add files to DataTransfer object
+      fileList.items.add(file);
     });
 
-    imageInput.files = fileList.files; // Assign updated file list back to input field
+    imageInput.files = fileList.files;
   });
 });
 

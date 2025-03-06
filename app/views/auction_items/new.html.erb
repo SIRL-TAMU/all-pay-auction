@@ -67,14 +67,20 @@
     
       <!-- Right Side: Image Upload -->
       <div class="auction-right">
-        <p>Product Images</p>
-
-        <div class="image-container" id="image-preview-container">
-          <p>No images uploaded</p>
+        <p class="section-title">Product Images</p>
+        <div class="main-image-container">
+          <%= image_tag "default_item.png", class: "main-product-image", id: "main-image" %>
         </div>
 
-        <!-- Multiple Image Upload Field -->
-        <%= form.file_field :images, multiple: true, class: "input-field", id: "image-upload-input" %>
+        <div class="thumbnail-container" id="image-preview-container">
+          <!-- The uploaded images will appear here dynamically -->
+        </div>
+
+        <label for="image-upload-input" class="upload-btn">
+          <i class="fa-solid fa-plus"></i>
+        </label>
+
+        <%= form.file_field :images, multiple: true, class: "input-field", id: "image-upload-input", style: "display: none;" %>
       </div>
     </div>
   </div>
@@ -89,58 +95,67 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-      let imageInput = document.getElementById("image-upload-input");
-      let imagePreviewContainer = document.getElementById("image-preview-container");
-      let fileList = new DataTransfer();
+    const mainImage = document.getElementById("main-image");
+    const thumbnailContainer = document.getElementById("image-preview-container");
+    const imageInput = document.getElementById("image-upload-input");
+    let fileList = new DataTransfer();
 
-      if (!imageInput || !imagePreviewContainer) return;
+    function createThumbnail(imageSrc, file = null) {
+      let newThumbnail = document.createElement("div");
+      newThumbnail.classList.add("thumbnail-wrapper");
 
-      imageInput.addEventListener("change", function (event) {
-          let files = Array.from(event.target.files);
+      let img = document.createElement("img");
+      img.src = imageSrc;
+      img.classList.add("thumbnail-image");
 
-          if (files.length === 0) return;
+      let removeBtn = document.createElement("button");
+      removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+      removeBtn.classList.add("remove-btn");
 
-          let placeholderText = imagePreviewContainer.querySelector("p");
-          if (placeholderText) {
-              placeholderText.remove();
+      removeBtn.addEventListener("click", function (event) {
+        event.stopPropagation();
+        newThumbnail.remove();
+
+        if (file) {
+          let fileIndex = [...fileList.files].findIndex(f => f.name === file.name && f.lastModified === file.lastModified);
+          if (fileIndex !== -1) {
+            fileList.items.remove(fileIndex);
+            imageInput.files = fileList.files;
           }
-
-          files.forEach((file) => {
-              let reader = new FileReader();
-              reader.onload = function (e) {
-                  let imageWrapper = document.createElement("div");
-                  imageWrapper.classList.add("image-wrapper");
-
-                  let img = document.createElement("img");
-                  img.src = e.target.result;
-                  img.classList.add("product-image");
-
-                  let removeBtn = document.createElement("button");
-                  removeBtn.textContent = "Remove";
-                  removeBtn.classList.add("remove-btn");
-                  removeBtn.addEventListener("click", function () {
-                      imageWrapper.remove();
-
-                      fileList.items.remove([...fileList.files].findIndex(f => f.name === file.name));
-
-                      if (imagePreviewContainer.children.length === 0) {
-                          let noImagesText = document.createElement("p");
-                          noImagesText.textContent = "No images uploaded";
-                          imagePreviewContainer.appendChild(noImagesText);
-                      }
-                  });
-
-                  imageWrapper.appendChild(img);
-                  imageWrapper.appendChild(removeBtn);
-                  imagePreviewContainer.appendChild(imageWrapper);
-              };
-              reader.readAsDataURL(file);
-
-              fileList.items.add(file);
-          });
-
-          imageInput.files = fileList.files;
+        }
       });
+
+      newThumbnail.addEventListener("click", function () {
+        mainImage.src = imageSrc;
+        document.querySelectorAll(".thumbnail-wrapper").forEach(t => t.classList.remove("selected"));
+        newThumbnail.classList.add("selected");
+      });
+
+      newThumbnail.appendChild(img);
+      newThumbnail.appendChild(removeBtn);
+      thumbnailContainer.appendChild(newThumbnail);
+    }
+
+    imageInput.addEventListener("change", function (event) {
+      let files = Array.from(event.target.files);
+      if (files.length === 0) return;
+
+      files.forEach((file) => {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+          createThumbnail(e.target.result, file);
+
+          if (!mainImage.src || mainImage.src.includes("default_item.png")) {
+            mainImage.src = e.target.result;
+          }
+        };
+        reader.readAsDataURL(file);
+
+        fileList.items.add(file);
+      });
+
+      imageInput.files = fileList.files;
+    });
   });
 
   document.addEventListener("DOMContentLoaded", function() {

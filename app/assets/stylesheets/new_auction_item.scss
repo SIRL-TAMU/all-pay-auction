@@ -71,9 +71,9 @@
     justify-content: flex-start;
     align-items: center;
     padding: 10px;
-  }
+}
   
-  .thumbnail-wrapper {
+.thumbnail-wrapper {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -82,21 +82,21 @@
     padding: 5px;
     border-radius: 5px;
     transition: border 0.2s;
-  }
+}
   
-  .thumbnail-image {
+.thumbnail-image {
     width: 60px;
     height: 60px;
     object-fit: cover;
     border-radius: 5px;
     border: 1px solid #ddd;
-  }
+}
   
-  .thumbnail-wrapper.selected {
+.thumbnail-wrapper.selected {
     border: 2px solid #1E3A8A;
-  }
+}
   
-  .remove-btn {
+.remove-btn {
     position: absolute;
     top: -5px;
     right: 0px;
@@ -111,16 +111,16 @@
     transition: rgba(211, 211, 211, 0.8) 0.2s ease-in-out;
     cursor: pointer;
     border: none;
-  }
+}
   
-  .remove-btn:hover {
+.remove-btn:hover {
     background: rgba(200, 200, 200, 1);
-  }
+}
   
-  .remove-btn i {
-    font-size: 12px; /* Reduce slightly */
+.remove-btn i {
+    font-size: 12px;
     color: red;
-    line-height: 1; /* Fix vertical alignment */
+    line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
