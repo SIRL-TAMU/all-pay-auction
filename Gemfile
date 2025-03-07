@@ -84,3 +84,5 @@ group :production do
   # Use postgresql as the database for Active Record
   gem "pg", "~> 1.1"
 end
+
+gem "letter_opener", "~> 1.10", :group => :development

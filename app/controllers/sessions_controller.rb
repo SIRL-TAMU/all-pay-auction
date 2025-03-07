@@ -7,27 +7,25 @@ class SessionsController < ApplicationController
   end
 
   def create
-    account_type = params[:account_type] # "buyer" or "seller"
+    account_type = params[:account_type]
     email = params[:email]
     password = params[:password]
-    # takes information from login page
-    user =
-      case account_type
-      # TODO, check database items (currently buyer and seller are not tables in db)
-      when "buyer" then Buyer.find_by(email: email) # query buyers table in database
-      when "seller" then Seller.find_by(email: email) # query sellers table
-      end
-    if user&.authenticate(password)
-      session[:user_id] = user.id # unique id
-      session[:account_type] = account_type # cause error if table not in database
 
-      # Redirect based on user type
-      if account_type == "buyer"
-        redirect_to buyer_dashboard_path, notice: I18n.t("notices.hi_buyer")
-        Rails.logger.debug "Debug: Hi Buyer!"
-      elsif account_type == "seller"
-        redirect_to seller_dashboard_path, notice: I18n.t("notices.hi_seller")
-        Rails.logger.debug "Debug: Hi Seller!"
+    user = case account_type
+    when "buyer" then Buyer.find_by(email: email)
+    when "seller" then Seller.find_by(email: email)
+    end
+
+    if user&.authenticate(password)
+      if user.verified?
+        session[:user_id] = user.id
+        session[:account_type] = account_type
+
+        redirect_to account_type == "buyer" ? buyer_dashboard_path : seller_dashboard_path,
+                    notice: I18n.t("notices.hi_#{account_type}")
+      else
+        flash[:alert] = "Please verify your email before logging in."
+        redirect_to login_path(account_type: account_type)
       end
     else
       flash[:alert] = I18n.t("errors.invalid_credentials")

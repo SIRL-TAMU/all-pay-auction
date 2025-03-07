@@ -2,6 +2,7 @@
 
 # Represents a buyer in the system.
 class Buyer < ApplicationRecord
+  before_create :generate_verification_token
   has_secure_password # Automatically handles password hashing
   validates :email, presence: true, uniqueness: true
   validates :password, presence: true, length: { minimum: 8 },
@@ -24,5 +25,11 @@ class Buyer < ApplicationRecord
   # after buyer places bid, subtract from their balance.
   def deduct_funds(bid_amount)
     update(liquid_balance: liquid_balance - bid_amount)
+  end
+
+  private
+
+  def generate_verification_token
+    self.verification_token = SecureRandom.hex(16)
   end
 end

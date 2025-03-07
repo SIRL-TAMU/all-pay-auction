@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   # User registration
   get "/signup", to: "registrations#new", as: :signup
   post "/signup", to: "registrations#create"
+  get "/verify_email", to: "email_verifications#verify", as: :verify_user
 
   # Buyer Dashboard
   get "/buyer/dashboard", to: "buyer_interface#index", as: :buyer_dashboard

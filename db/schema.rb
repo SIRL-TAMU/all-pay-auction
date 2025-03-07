@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_06_200216) do
+ActiveRecord::Schema[7.2].define(version: 2025_03_06_232659) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -88,6 +88,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_06_200216) do
     t.decimal "liquid_balance", default: "0.0", null: false
     t.string "provider"
     t.string "uid"
+    t.boolean "verified", default: false
+    t.string "verification_token"
     t.index ["email"], name: "index_buyers_on_email", unique: true
   end
 
@@ -102,6 +104,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_06_200216) do
     t.decimal "liquid_balance", default: "0.0", null: false
     t.string "provider"
     t.string "uid"
+    t.boolean "verified", default: false
+    t.string "verification_token"
     t.index ["email"], name: "index_sellers_on_email", unique: true
   end
 

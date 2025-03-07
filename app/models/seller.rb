@@ -2,6 +2,7 @@
 
 # Represents a seller in the system.
 class Seller < ApplicationRecord
+  before_create :generate_verification_token
   has_secure_password
 
   validates :email, presence: true, uniqueness: true
@@ -12,4 +13,10 @@ class Seller < ApplicationRecord
 
   has_many :transactions, dependent: :destroy
   has_many :auction_items, dependent: :destroy
+
+  private
+
+  def generate_verification_token
+    self.verification_token = SecureRandom.hex(16)
+  end
 end
