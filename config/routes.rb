@@ -20,7 +20,13 @@ Rails.application.routes.draw do
   # User registration
   get "/signup", to: "registrations#new", as: :signup
   post "/signup", to: "registrations#create"
+
   get "/verify_email", to: "email_verifications#verify", as: :verify_user
+
+  get "/password_resets/new", to: "password_resets#new", as: :new_password_reset
+  post "/password_resets", to: "password_resets#create", as: :password_resets
+  get "/password_resets/edit", to: "password_resets#edit", as: :edit_password_reset
+  patch "/password_resets/update", to: "password_resets#update", as: :update_password_reset
 
   # Buyer Dashboard
   get "/buyer/dashboard", to: "buyer_interface#index", as: :buyer_dashboard

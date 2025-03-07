@@ -27,6 +27,20 @@ class Buyer < ApplicationRecord
     update(liquid_balance: liquid_balance - bid_amount)
   end
 
+  def generate_password_reset_token
+    self.reset_password_token = SecureRandom.urlsafe_base64(24)
+    self.reset_password_sent_at = Time.current
+    save(validate: false)
+  end
+
+  def password_reset_token_valid?
+    reset_password_sent_at > 2.hours.ago
+  end
+
+  def clear_password_reset_token
+    update_columns(reset_password_token: nil, reset_password_sent_at: nil)
+  end
+
   private
 
   def generate_verification_token

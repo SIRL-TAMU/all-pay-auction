@@ -8,4 +8,11 @@ class UserMailer < ApplicationMailer
     @verification_link = verify_user_url(token: @user.verification_token, account_type: account_type)
     mail(to: @user.email, subject: "Verify Your Account")
   end
+
+  def password_reset_email(user, account_type)
+    @user = user
+    @account_type = account_type
+    @reset_link = edit_password_reset_url(token: @user.reset_password_token, account_type: account_type)
+    mail(to: @user.email, subject: "Password Reset Instructions")
+  end
 end
