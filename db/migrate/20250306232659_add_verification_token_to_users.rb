@@ -6,3 +6,5 @@ class AddVerificationTokenToUsers < ActiveRecord::Migration[7.2]
     add_column :sellers, :verification_token, :string
   end
 end
+
+# rubocop:enable all
