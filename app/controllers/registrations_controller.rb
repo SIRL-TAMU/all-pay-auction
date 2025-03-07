@@ -20,10 +20,10 @@ class RegistrationsController < ApplicationController
     @user.asset_balance = 0
 
     if @user.save
-      session[:user_id] = @user.id
-      session[:account_type] = @account_type
-      redirect_to @account_type == "buyer" ? buyer_dashboard_path : seller_dashboard_path,
-                  notice: "Welcome, #{@account_type.capitalize}!"
+      UserMailer.verification_email(@user).deliver_now
+
+      flash[:notice] = "Please check your email to verify your account before logging in."
+      redirect_to login_path(account_type: @account_type)
     else
       flash[:alert] = @user.errors.full_messages.to_sentence
       render :new, status: :unprocessable_entity

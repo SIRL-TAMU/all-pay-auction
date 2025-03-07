@@ -3,16 +3,16 @@ john:
   first_name: Johnny
   last_name: Appleseed
   email: johnny@example.com
-  password_digest: <%= BCrypt::Password.create('password456') %>
+  password_digest: <%= BCrypt::Password.create('password456#') %>
 
 jane:
   first_name: Alice
   last_name: Jones
   email: alice@example.com
-  password_digest: <%= BCrypt::Password.create('secureword') %>
+  password_digest: <%= BCrypt::Password.create('secureword#') %>
 
 alice:
   first_name: Alice,
   last_name: Johnson,
   email: seller1@example.com
-  password_digest: <%= BCrypt::Password.create('sellerpass123') %>
+  password_digest: <%= BCrypt::Password.create('sellerpass123#') %>

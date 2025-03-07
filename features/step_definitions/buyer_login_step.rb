@@ -7,7 +7,7 @@ end
 When('I fill in the Buyer login form with valid details') do
   # existing account
   fill_in 'email', with: 'buyer1@example.com'
-  fill_in 'password', with: 'password123'
+  fill_in 'password', with: 'password123#'
 end
 
 When('I submit the Buyer login form') do

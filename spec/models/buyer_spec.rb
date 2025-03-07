@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Buyer, type: :model do
   describe "validations" do
     let(:valid_attributes) do
-      { first_name: "John", last_name: "Doe", email: "buyer1@gmail.com", password: "test123", liquid_balance: 0 }
+      { first_name: "John", last_name: "Doe", email: "buyer1@gmail.com", password: "test123#", liquid_balance: 0 }
     end
 
     it "is valid with valid attributes" do
@@ -52,13 +52,13 @@ RSpec.describe Buyer, type: :model do
   describe "custom methods" do
     describe "#sufficient_funds?" do
       it "returns true if buyer has sufficient funds" do
-        buyer = Buyer.create(first_name: "John", last_name: "Doe", email: "buyer1@gmail.com", password: "test1",
+        buyer = Buyer.create(first_name: "John", last_name: "Doe", email: "buyer1@gmail.com", password: "test123#",
                              liquid_balance: 100)
         auction_item = AuctionItem.create(name: "item1", curr_max_bid: "10", innate_value: 20)
         expect(buyer.sufficient_funds?(20, auction_item)).to be(true)
       end
       it "returns false if buyer does not have sufficient funds" do
-        buyer = Buyer.create(first_name: "John", last_name: "Doe", email: "buyer1@gmail.com", password: "test1",
+        buyer = Buyer.create(first_name: "John", last_name: "Doe", email: "buyer1@gmail.com", password: "test123#",
                              liquid_balance: 100)
         auction_item = AuctionItem.create(name: "item1", curr_max_bid: "100", innate_value: 120)
         expect(buyer.sufficient_funds?(120, auction_item)).to be(false)
@@ -67,7 +67,7 @@ RSpec.describe Buyer, type: :model do
 
     describe "#deduct_funds" do
       it "deduct funds from buyer account after places bid" do
-        buyer = Buyer.create(first_name: "John", last_name: "Doe", email: "buyer1@gmail.com", password: "test1",
+        buyer = Buyer.create(first_name: "John", last_name: "Doe", email: "buyer1@gmail.com", password: "test123#",
                              liquid_balance: 100)
         buyer.deduct_funds(10)
         expect(buyer.liquid_balance).to eq(90)

@@ -53,11 +53,14 @@
 
     <%# Google Signup Button %>
     <div class="google-login">
-      <button class="google-btn temp">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
-          Continue with Google
-      </button>
+      <%= button_to google_oauth2_setup_register_path(account_type: params[:account_type]), method: :post, class: "google-btn" do %>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
+        Register with Google
+      <% end %>
     </div>
+
+
+
 
     <%# Already have an account? %>
     <div class="signup-switch"> 
