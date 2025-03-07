@@ -1,3 +1,4 @@
+# rubocop:disable all
 class AddPasswordResetToUsers < ActiveRecord::Migration[7.2]
   def change
     add_column :buyers, :reset_password_token, :string
@@ -10,3 +11,5 @@ class AddPasswordResetToUsers < ActiveRecord::Migration[7.2]
     add_index :sellers, :reset_password_token, unique: true
   end
 end
+
+# rubocop:enable all

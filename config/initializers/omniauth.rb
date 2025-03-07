@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 OmniAuth.config.allowed_request_methods = %i[get post]
 
 Rails.application.config.middleware.use OmniAuth::Builder do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/mailers/user_mailer.rb
 class UserMailer < ApplicationMailer
   default from: "swirl.allpayauction@gmail.com"

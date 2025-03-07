@@ -73,7 +73,7 @@ class SessionsController < ApplicationController
           first_name: auth.info.first_name,
           last_name: auth.info.last_name,
           email: auth.info.email,
-          password: SecureRandom.base64(16) + "#",
+          password: "#{SecureRandom.base64(16)}#",
           liquid_balance: 0,
           asset_balance: 0
         )

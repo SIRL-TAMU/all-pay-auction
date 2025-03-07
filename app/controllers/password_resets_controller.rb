@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PasswordResetsController < ApplicationController
   def new; end
 
@@ -39,7 +41,7 @@ class PasswordResetsController < ApplicationController
     user_class = account_type == "buyer" ? Buyer : Seller
     @user = user_class.find_by(reset_password_token: token)
 
-    if @user && @user.password_reset_token_valid?
+    if @user&.password_reset_token_valid?
       if @user.update(password_params)
         @user.clear_password_reset_token
         redirect_to login_path(account_type: account_type), notice: "Your password was successfully updated."

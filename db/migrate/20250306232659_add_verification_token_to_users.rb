@@ -1,3 +1,5 @@
+# rubocop:disable all
+# 
 class AddVerificationTokenToUsers < ActiveRecord::Migration[7.2]
   def change
     add_column :buyers, :verification_token, :string

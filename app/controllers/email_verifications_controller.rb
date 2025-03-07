@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmailVerificationsController < ApplicationController
   def verify
     account_type = params[:account_type]
