@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Webhooks used to handle Stripe events for payment processing
+#Webhooks used to handle Stripe events for payment processing
 class WebhooksController < ApplicationController
     skip_before_action :verify_authenticity_token # Webhooks don’t require CSRF protection
 
