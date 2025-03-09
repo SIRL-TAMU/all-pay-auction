@@ -8,7 +8,7 @@ class Seller < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :password, presence: true, length: { minimum: 8 },
                        format: { with: /\A(?=.*[\p{P}\p{S}]).{8,}\z/,
-                                 message: "must be at least 8 characters long and include at least 1 special character." }
+                                 message: I18n.t("validation.password_format") }
   validates :uid, uniqueness: { scope: :provider }, allow_nil: true
 
   has_many :transactions, dependent: :destroy
@@ -25,7 +25,7 @@ class Seller < ApplicationRecord
   end
 
   def clear_password_reset_token
-    update_columns(reset_password_token: nil, reset_password_sent_at: nil)
+    update(reset_password_token: nil, reset_password_sent_at: nil)
   end
 
   private

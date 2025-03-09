@@ -22,7 +22,7 @@ class RegistrationsController < ApplicationController
     if @user.save
       UserMailer.verification_email(@user).deliver_now
 
-      flash[:notice] = "Please check your email to verify your account before logging in."
+      flash[:notice] = I18n.t("notices.verify_email")
       redirect_to login_path(account_type: @account_type)
     else
       flash[:alert] = @user.errors.full_messages.to_sentence

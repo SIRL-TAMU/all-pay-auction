@@ -24,7 +24,7 @@ class SessionsController < ApplicationController
         redirect_to account_type == "buyer" ? buyer_dashboard_path : seller_dashboard_path,
                     notice: I18n.t("notices.hi_#{account_type}")
       else
-        flash[:alert] = "Please verify your email before logging in."
+        flash[:alert] = I18n.t("notices.not_verified")
         redirect_to login_path(account_type: account_type)
       end
     else
@@ -63,7 +63,7 @@ class SessionsController < ApplicationController
     if oauth_action == "login"
       unless @user
         redirect_to login_path(account_type: account_type),
-                    alert: "No account found. Please register first." and return
+                    alert: I18n.t("notices.register_first") and return
       end
     elsif oauth_action == "register"
       @user ||= user_class.new(uid: auth.uid, provider: auth.provider)
@@ -89,6 +89,6 @@ class SessionsController < ApplicationController
     session[:account_type] = account_type
 
     redirect_to account_type == "buyer" ? buyer_dashboard_path : seller_dashboard_path,
-                notice: "Successfully logged in with Google!"
+                notice: I18n.t("notices.google_login_success")
   end
 end

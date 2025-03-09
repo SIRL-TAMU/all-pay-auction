@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_07_002528) do
+ActiveRecord::Schema[7.2].define(version: 2025_03_09_231230) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -94,6 +94,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_07_002528) do
     t.datetime "reset_password_sent_at"
     t.index ["email"], name: "index_buyers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_buyers_on_reset_password_token", unique: true
+    t.index ["uid", "provider"], name: "index_buyers_on_uid_and_provider", unique: true, where: "(uid IS NOT NULL)"
   end
 
   create_table "sellers", force: :cascade do |t|
@@ -113,6 +114,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_07_002528) do
     t.datetime "reset_password_sent_at"
     t.index ["email"], name: "index_sellers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_sellers_on_reset_password_token", unique: true
+    t.index ["uid", "provider"], name: "index_sellers_on_uid_and_provider", unique: true, where: "(uid IS NOT NULL)"
   end
 
   create_table "transactions", force: :cascade do |t|

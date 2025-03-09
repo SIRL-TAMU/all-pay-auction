@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# This controller handles the password reset process for both buyers and sellers.
 class PasswordResetsController < ApplicationController
   def new; end
 
@@ -11,7 +12,7 @@ class PasswordResetsController < ApplicationController
 
     return if @user&.password_reset_token_valid?
 
-      redirect_to login_path(account_type: account_type), alert: "Password reset link has expired or is invalid."
+      redirect_to login_path(account_type: account_type), alert: I18n.t("notices.password_reset_invalid")
   end
 
   def create
@@ -20,7 +21,7 @@ class PasswordResetsController < ApplicationController
     user_class = account_type == "buyer" ? Buyer : Seller
 
     if user_class.find_by(email: email, provider: nil).nil? && user_class.find_by(email: email).present?
-      flash[:alert] = "Your account uses Google to login. Please login via Google."
+      flash[:alert] = I18n.t("notices.errors.google_login_required")
       redirect_to login_path(account_type: account_type) and return
     end
 
@@ -31,7 +32,7 @@ class PasswordResetsController < ApplicationController
       UserMailer.password_reset_email(user, account_type).deliver_now
     end
 
-    flash[:notice] = "If your email exists, you'll receive password reset instructions shortly."
+    flash[:notice] = I18n.t("mailers.reset_password")
     redirect_to login_path(account_type: account_type)
   end
 
@@ -44,13 +45,14 @@ class PasswordResetsController < ApplicationController
     if @user&.password_reset_token_valid?
       if @user.update(password_params)
         @user.clear_password_reset_token
-        redirect_to login_path(account_type: account_type), notice: "Your password was successfully updated."
+        redirect_to login_path(account_type: account_type),
+                    notice: flash[:notice] = I18n.t("notices.password_reset_success")
       else
         flash.now[:alert] = @user.errors.full_messages.to_sentence
         render :edit, status: :unprocessable_entity
       end
     else
-      redirect_to login_path(account_type: account_type), alert: "Password reset link has expired or is invalid."
+      redirect_to login_path(account_type: account_type), alert: I18n.t("notices.password_reset_invalid")
     end
   end
 
