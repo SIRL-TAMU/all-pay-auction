@@ -21,7 +21,8 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
         }
       }
     end
-    assert_redirected_to buyer_dashboard_url
+    assert_redirected_to login_url(account_type: "buyer")
+    assert_equal "Please check your email to verify your account before logging in.", flash[:notice]
   end
 
   test "should create seller" do
@@ -36,7 +37,8 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
         }
       }
     end
-    assert_redirected_to seller_dashboard_url
+    assert_redirected_to login_url(account_type: "seller")
+    assert_equal "Please check your email to verify your account before logging in.", flash[:notice]
   end
 
   test "should redirect to root path with invalid account type for new action" do
