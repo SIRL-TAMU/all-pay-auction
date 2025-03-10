@@ -18,8 +18,3 @@ module ActiveSupport
     # Add more helper methods to be used by all tests here...
   end
 end
-
-def log_in_as_seller(seller)
-  post login_path, params: { account_type: "seller", email: seller.email, password: "password456" }
-  follow_redirect!
-end

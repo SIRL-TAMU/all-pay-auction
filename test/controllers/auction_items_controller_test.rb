@@ -3,10 +3,37 @@
 require "test_helper"
 
 class AuctionItemsControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @seller = sellers(:john)
-    @auction_item = auction_items(:one)
-    log_in_as_seller(@seller)
+  def setup
+    Seller.destroy_all
+    AuctionItem.destroy_all
+
+    @seller = Seller.create!(
+      first_name: "Alice",
+      last_name: "Johnson",
+      email: "seller1@example.com",
+      password: "sellerpass123#",
+      password_confirmation: "sellerpass123#",
+      verified: true
+    )
+
+    post login_path, params: {
+      account_type: "seller",
+      email: @seller.email,
+      password: "sellerpass123#"
+    }
+
+    follow_redirect!
+
+    @auction_item = AuctionItem.create!(
+      name: "Test Item",
+      description: "This is a test auction item.",
+      curr_max_bid: 100,
+      min_increment: 5,
+      innate_value: 500,
+      opening_date: Time.zone.now,
+      closing_date: 7.days.from_now,
+      seller: @seller
+    )
   end
 
   test "should get index" do
@@ -56,8 +83,6 @@ class AuctionItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy auction item" do
-    @auction_item = auction_items(:one)
-
     assert_difference("AuctionItem.count", -1) do
       delete auction_item_path(@auction_item), headers: { "HTTP_REFERER" => seller_dashboard_path }
     end
