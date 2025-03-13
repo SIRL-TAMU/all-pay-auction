@@ -35,6 +35,7 @@ Rails.application.routes.draw do
   get "/buyer/settings", to: "buyer_settings#edit", as: :buyer_setting
   patch "/buyer/settings", to: "buyer_settings#update", as: :update_profile_buyer_setting
   patch "/buyer/settings/password", to: "buyer_settings#update_password", as: :update_password_buyer_setting
+  delete "/buyer/settings", to: "buyer_settings#destroy", as: :delete_buyer_setting
 
   # Seller Settings
   get "/seller/settings", to: "seller_settings#edit", as: :seller_setting

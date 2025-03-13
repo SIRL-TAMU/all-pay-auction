@@ -4,6 +4,10 @@
   <p style="color: red;"><%= flash.now[:alert] %></p>
 <% end %>
 
+<% if flash.now[:notice] %>
+  <p style="color: green;"><%= flash.now[:notice] %></p>
+<% end %>
+
 <h2>Update Profile Information</h2>
 <%= form_with(model: @buyer, url: update_profile_buyer_setting_path, method: :patch, local: true) do |form| %>
   <div class="field">
@@ -42,3 +46,10 @@
     <%= form.submit "Update Password" %>
   </div>
 <% end %>
+
+<h2>Delete Account</h2>
+<p>
+  <strong>Warning:</strong> Deleting your account is permanent and cannot be undone.
+</p>
+
+<%= button_to "Delete Account", delete_buyer_setting_path, method: :delete, data: { confirm: "Are you sure you want to delete your account? This action cannot be undone." } %>

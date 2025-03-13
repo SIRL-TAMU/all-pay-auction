@@ -28,6 +28,24 @@ class BuyerSettingsController < ApplicationController
     end
   end
 
+  def destroy
+    if @buyer.bids.any? || @buyer.transactions.any?
+      flash.now[:alert] = "Cannot delete account with active bids or transactions."
+      render :edit
+      return
+    end
+
+    if @buyer.destroy
+      session[:user_id] = nil
+      session[:account_type] = nil
+      redirect_to root_path, notice: "Account deleted successfully."
+    else
+      flash.now[:alert] = "Failed to delete account."
+      render :edit
+    end
+  end
+
+
   private
 
   def authenticate_buyer!
