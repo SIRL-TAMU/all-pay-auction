@@ -41,6 +41,7 @@ Rails.application.routes.draw do
   get "/seller/settings", to: "seller_settings#edit", as: :seller_setting
   patch "/seller/settings", to: "seller_settings#update", as: :update_profile_seller_setting
   patch "/seller/settings/password", to: "seller_settings#update_password", as: :update_password_seller_setting
+  delete "/seller/settings", to: "seller_settings#destroy", as: :delete_seller_setting
 
   # Auction Items
   resources :auction_items do

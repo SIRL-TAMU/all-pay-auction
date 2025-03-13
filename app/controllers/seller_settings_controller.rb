@@ -28,6 +28,23 @@ class SellerSettingsController < ApplicationController
     end
   end
 
+  def destroy
+    if @seller.transactions.any? || @seller.auction_items.any?
+      flash.now[:alert] = "Cannot delete account with active transactions or auction items."
+      render :edit
+      return
+    end
+
+    if @seller.destroy
+      session[:user_id] = nil
+      session[:account_type] = nil
+      redirect_to root_path, notice: "Account deleted successfully."
+    else
+      flash.now[:alert] = "Failed to delete account."
+      render :edit
+    end
+  end
+
   private
 
   def authenticate_seller!
