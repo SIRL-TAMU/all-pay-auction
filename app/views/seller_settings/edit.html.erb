@@ -1,0 +1,55 @@
+<h1>Edit Your Settings</h1>
+
+<% if flash.now[:alert] %>
+  <p style="color: red;"><%= flash.now[:alert] %></p>
+<% end %>
+
+<% if flash.now[:notice] %>
+  <p style="color: green;"><%= flash.now[:notice] %></p>
+<% end %>
+
+<h2>Update Profile Information</h2>
+<%= form_with(model: @seller, url: update_profile_seller_setting_path, method: :patch, local: true) do |form| %>
+  <div class="field">
+    <%= form.label :first_name %>
+    <%= form.text_field :first_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :last_name %>
+    <%= form.text_field :last_name %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Update Profile" %>
+  </div>
+<% end %>
+
+<h2>Update Password</h2>
+<%= form_with(model: @seller, url: update_password_seller_setting_path, method: :patch, local: true) do |form| %>
+  <div class="field">
+    <%= form.label :current_password %>
+    <%= form.password_field :current_password %>
+  </div>
+
+  <div class="field">
+    <%= form.label :password %>
+    <%= form.password_field :password %>
+  </div>
+
+  <div class="field">
+    <%= form.label :password_confirmation %>
+    <%= form.password_field :password_confirmation %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Update Password" %>
+  </div>
+<% end %>
+
+<h2>Delete Account</h2>
+<p>
+  <strong>Warning:</strong> Deleting your account is permanent and cannot be undone.
+</p>
+
+<%= button_to "Delete Account", delete_seller_setting_path, method: :delete, data: { confirm: "Are you sure you want to delete your account? This action cannot be undone." } %>
