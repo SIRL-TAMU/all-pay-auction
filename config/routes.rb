@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get "buyer_settings/edit"
+  get "buyer_settings/update"
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 
@@ -26,6 +28,11 @@ Rails.application.routes.draw do
 
   # Seller Dashboard
   get "/seller/dashboard", to: "seller_interface#index", as: :seller_dashboard
+
+  # Buyer Settings
+  get "/buyer/settings", to: "buyer_settings#edit", as: :buyer_setting
+  patch "/buyer/settings", to: "buyer_settings#update", as: :update_profile_buyer_setting
+  patch "/buyer/settings/password", to: "buyer_settings#update_password", as: :update_password_buyer_setting
 
   # Auction Items
   resources :auction_items do

@@ -28,9 +28,10 @@
 
                             <% if buyer? %>
                                 <%= link_to "Buyer Dashboard", buyer_dashboard_path %>
+                                <%= link_to "Settings", buyer_setting_path %>
                             <% end %>
 
-                            <%= link_to "Settings", "#", class: "temp" %>
+                            <!--<%= link_to "Settings", "#", class: "temp" %>-->
                             <%= link_to "Logout", logout_path, method: :delete %>
                         </div>
                     </div>
