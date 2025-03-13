@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get "seller_settings/edit"
+  get "seller_settings/update"
   get "buyer_settings/edit"
   get "buyer_settings/update"
   # Health check
@@ -33,6 +35,11 @@ Rails.application.routes.draw do
   get "/buyer/settings", to: "buyer_settings#edit", as: :buyer_setting
   patch "/buyer/settings", to: "buyer_settings#update", as: :update_profile_buyer_setting
   patch "/buyer/settings/password", to: "buyer_settings#update_password", as: :update_password_buyer_setting
+
+  # Seller Settings
+  get "/seller/settings", to: "seller_settings#edit", as: :seller_setting
+  patch "/seller/settings", to: "seller_settings#update", as: :update_profile_seller_setting
+  patch "/seller/settings/password", to: "seller_settings#update_password", as: :update_password_seller_setting
 
   # Auction Items
   resources :auction_items do
