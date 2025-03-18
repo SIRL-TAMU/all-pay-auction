@@ -2,6 +2,8 @@
 
 # This controller handles the password reset process for both buyers and sellers.
 class PasswordResetsController < ApplicationController
+  skip_before_action :require_login, only: %i[new create edit update]
+
   def new; end
 
   def edit
@@ -12,7 +14,7 @@ class PasswordResetsController < ApplicationController
 
     return if @user&.password_reset_token_valid?
 
-      redirect_to login_path(account_type: account_type), alert: I18n.t("notices.password_reset_invalid")
+    redirect_to login_path(account_type: account_type), alert: I18n.t("notices.password_reset_invalid")
   end
 
   def create

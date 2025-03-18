@@ -2,6 +2,9 @@
 
 # This controller handles the email verification process for both buyers and sellers.
 class EmailVerificationsController < ApplicationController
+  skip_before_action :require_login, only: [ :verify ]
+  skip_before_action :verify_authenticity_token, only: [ :verify ]
+
   def verify
     account_type = params[:account_type]
     user_class = account_type == "buyer" ? Buyer : Seller
