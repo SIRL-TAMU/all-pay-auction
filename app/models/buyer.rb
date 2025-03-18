@@ -8,7 +8,8 @@ class Buyer < ApplicationRecord
   has_many :transactions, dependent: :destroy
   validates :liquid_balance, numericality: { greater_than_or_equal_to: 0 }
   has_many :auction_items, through: :bids
-  has_many :auction_items, foreign_key: :winning_buyer_id, dependent: :nullify
+  # Association for auction_items the buyer has won
+  has_many :won_auction_items, foreign_key: :winning_buyer_id, class_name: "AuctionItem", dependent: :nullify
 
   # ensure buyer has enough funds for placing bid
   def sufficient_funds?(bid_amount, auction_item)
