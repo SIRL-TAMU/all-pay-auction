@@ -50,21 +50,30 @@ class AuctionItem < ApplicationRecord
       "#{days}d #{hours}h #{minutes}m"
     elsif hours.positive?
       "#{hours}h #{minutes}m"
-    else
+    elsif minutes.positive?
       "#{minutes}m"
+    else
+      "0m"
     end
   end
 
+  def archived?
+    is_archived
+  end
+
   def active?
-    Time.zone.now.between?(opening_date, closing_date)
+    return Time.zone.now.between?(opening_date, closing_date) unless archived?
+    !archived?
   end
 
   def closed?
-    Time.zone.now > closing_date
+    return Time.zone.now > closing_date unless archived?
+    archived?
   end
 
   def upcoming?
-    Time.zone.now < opening_date
+    return Time.zone.now < opening_date unless is_archived
+    !archived?
   end
 
   def self.test_cron_job
@@ -74,5 +83,21 @@ class AuctionItem < ApplicationRecord
       File.write("test_cron.txt", "#{auction_item.name}\n", mode: "a")
     end
     File.write("test_cron.txt", "\n", mode: "a")
+  end
+
+  def close_auction!
+    return if archived? || closed?
+
+    winning_buyer = winning_bid.buyer
+    update!(winning_buyer_id: winning_buyer.id, is_archived: true)
+
+    # Add notification logic if we can
+  end
+
+  def self.cron_close_auctions!
+    auction_items = AuctionItem.all
+    auction_items.each do |auction_items|
+      auction.item.close_auction!
+    end
   end
 end
