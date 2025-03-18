@@ -87,7 +87,7 @@ class AuctionItem < ApplicationRecord
   end
 
   def close_auction!
-    return if archived? || closed?
+    return if archived? || ! closed?
 
     winning_buyer = winning_bid.buyer
     update!(winning_buyer_id: winning_buyer.id, is_archived: true)
@@ -97,8 +97,8 @@ class AuctionItem < ApplicationRecord
 
   def self.cron_close_auctions!
     auction_items = AuctionItem.all
-    auction_items.each do |auction_items|
-      auction.item.close_auction!
+    auction_items.each do |auction_item|
+      auction_item.close_auction!
     end
   end
 end

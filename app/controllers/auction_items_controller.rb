@@ -64,7 +64,7 @@ class AuctionItemsController < ApplicationController
 
   def auction_item_params
     params.require(:auction_item).permit(:name, :description, :curr_max_bid, :min_increment, :innate_value,
-                                         :opening_date, :closing_date, :image)
+                                         :opening_date, :closing_date, :image, :is_archived)
   end
 
   def require_seller_login

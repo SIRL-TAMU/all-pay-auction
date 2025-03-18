@@ -125,6 +125,114 @@ if Rails.env.development?
                           created_date: Time.zone.now
                         }
                       ])
+
+  # Auction closing 1
+  @seller = Seller.create!(
+    first_name: "John",
+    last_name: "Doe",
+    email: "seller123@example.com",
+    password_digest: "password123",
+    asset_balance: 1000.0,
+    liquid_balance: 500.0
+  )
+
+  # Create a buyer
+  @buyer = Buyer.create!(
+    first_name: "Jane",
+    last_name: "Doe",
+    email: "buyer123@example.com",
+    password_digest: "password123",
+    asset_balance: 1000.0,
+    liquid_balance: 500.0
+  )
+
+  # Create an auction item with a closing date in the past
+  @auction_item = AuctionItem.create!(
+    seller: @seller,
+    name: "Test Item",
+    description: "Test Description",
+    opening_date: Time.zone.now - 2.days, # Auction opened 2 days ago
+    closing_date: Time.zone.now - 1.day,  # Auction closed 1 day ago
+    innate_value: 100.0,
+    min_increment: 10.0,
+    is_archived: false,
+    curr_max_bid: 0.0
+  )
+
+  # Create a bid for the auction item
+  @bid = Bid.create!(
+    buyer: @buyer,
+    auction_item: @auction_item,
+    amount: 150.0,
+    created_date: Time.zone.now - 1.day
+  )
+
+  # Auction test 2
+  # Create a seller
+  @seller = Seller.create!(
+    first_name: "John",
+    last_name: "Doe",
+    email: "seller1234@example.com",
+    password_digest: "password123",
+    asset_balance: 1000.0,
+    liquid_balance: 500.0
+  )
+
+  # Create buyers
+  @buyer1 = Buyer.create!(
+    first_name: "Buyer1",
+    last_name: "Doe",
+    email: "buyer1234@example.com",
+    password_digest: "password123",
+    asset_balance: 1000.0,
+    liquid_balance: 500.0
+  )
+  @buyer2 = Buyer.create!(
+    first_name: "Buyer2",
+    last_name: "Doe",
+    email: "buyer2234@example.com",
+    password_digest: "password123",
+    asset_balance: 1000.0,
+    liquid_balance: 500.0
+  )
+
+  # Create auction items with closing dates in the past
+  @auction_item1 = AuctionItem.create!(
+    seller: @seller,
+    name: "Item 1",
+    description: "Description 1",
+    opening_date: Time.zone.now - 2.days, # Auction opened 2 days ago
+    closing_date: Time.zone.now - 1.day,  # Auction closed 1 day ago
+    innate_value: 100.0,
+    min_increment: 10.0,
+    is_archived: false,
+    curr_max_bid: 0.0
+  )
+  @auction_item2 = AuctionItem.create!(
+    seller: @seller,
+    name: "Item 2",
+    description: "Description 2",
+    opening_date: Time.zone.now - 2.days, # Auction opened 2 days ago
+    closing_date: Time.zone.now - 1.day,  # Auction closed 1 day ago
+    innate_value: 200.0,
+    min_increment: 20.0,
+    is_archived: false,
+    curr_max_bid: 0.0
+  )
+
+  # Create bids for the auction items
+  Bid.create!(
+    buyer: @buyer1,
+    auction_item: @auction_item1,
+    amount: 150.0,
+    created_date: Time.zone.now - 1.day
+  )
+  Bid.create!(
+    buyer: @buyer2,
+    auction_item: @auction_item2,
+    amount: 250.0,
+    created_date: Time.zone.now - 1.day
+  )
   Rails.logger.debug do
     "Created #{Buyer.count} buyers, #{Seller.count} sellers, " \
       "#{AuctionItem.count} auction items, #{Bid.count} bids, " \
