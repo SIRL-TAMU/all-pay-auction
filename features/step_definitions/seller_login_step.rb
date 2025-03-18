@@ -1,6 +1,15 @@
 # frozen_string_literal: true
 
 Given('I am on the Seller login page') do
+  Seller.where(email: "seller1@example.com").destroy_all
+  @seller = Seller.create!(
+    first_name: "Alice",
+    last_name: "Johnson",
+    email: "seller1@example.com",
+    password: "sellerpass123#",
+    password_confirmation: "sellerpass123#",
+    verified: true
+  )
   visit login_path(account_type: 'seller')
 end
 

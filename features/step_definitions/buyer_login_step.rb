@@ -1,6 +1,15 @@
 # frozen_string_literal: true
 
 Given('I am on the Buyer login page') do
+  Buyer.where(email: "buyer1@example.com").destroy_all
+  @buyer = Buyer.create!(
+    first_name: "John",
+    last_name: "Doe",
+    email: "buyer1@example.com",
+    password: "password123#",
+    password_confirmation: "password123#",
+    verified: true
+  )
   visit login_path
 end
 

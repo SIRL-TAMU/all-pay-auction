@@ -19,6 +19,7 @@ When('I submit the Buyer registration form') do
   click_button "Continue"
 end
 
-Then('I should be logged in and redirected to the Buyer dashboard') do
-  expect(current_path).to eq(buyer_dashboard_path)
+Then('I should see a verification email sent message for buyer') do
+  expect(page).to have_content(I18n.t("notices.verify_email"))
+  expect(current_path).to eq(login_path)
 end
