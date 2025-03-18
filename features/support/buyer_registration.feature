@@ -7,5 +7,4 @@ Scenario: Successful Buyer Registration
     Given I am on the Buyer registration page
     When I fill in the Buyer registration form with valid details
     And I submit the Buyer registration form
-    Then I should be logged in and redirected to the Buyer dashboard
-
+    Then I should see a verification email sent message for buyer
