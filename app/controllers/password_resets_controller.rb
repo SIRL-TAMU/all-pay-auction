@@ -2,8 +2,6 @@
 
 # This controller handles the password reset process for both buyers and sellers.
 class PasswordResetsController < ApplicationController
-  skip_before_action :require_login, only: %i[new create edit update]
-
   def new; end
 
   def edit
