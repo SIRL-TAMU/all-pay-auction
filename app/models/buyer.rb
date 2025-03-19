@@ -7,7 +7,8 @@ class Buyer < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :password, presence: true, length: { minimum: 8 },
                        format: { with: /\A(?=.*[\p{P}\p{S}]).{8,}\z/,
-                                 message: I18n.t("validation.password_format") }
+                                 message: I18n.t("validation.password_format") },
+                       if: :password_digest_changed? # Only validate password if it's being changed
   validates :uid, uniqueness: { scope: :provider }, allow_nil: true
 
   has_many :bids, dependent: :destroy
