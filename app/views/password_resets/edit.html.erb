@@ -1,0 +1,13 @@
+<h2>Reset Your Password</h2>
+
+<%= form_with url: update_password_reset_path(token: params[:token], account_type: params[:account_type]), method: :patch, scope: :user do |f| %>
+  <div>
+    <%= f.password_field :password, placeholder: "New Password", required: true %>
+  </div>
+
+  <div>
+    <%= f.password_field :password_confirmation, placeholder: "Confirm Password", required: true %>
+  </div>
+
+  <%= f.submit "Update Password" %>
+<% end %>

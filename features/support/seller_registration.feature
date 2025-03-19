@@ -7,4 +7,4 @@ Scenario: Successful Seller Registration
     Given I am on the Seller registration page
     When I fill in the Seller registration form with valid details
     And I submit the Seller registration form
-    Then I should be logged in and redirected to the Seller dashboard
+    Then I should see a verification email sent message for seller
