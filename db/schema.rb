@@ -63,6 +63,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_09_231230) do
     t.decimal "min_increment", null: false
     t.boolean "is_archived", default: false, null: false
     t.decimal "curr_max_bid", null: false
+    t.bigint "winning_buyer_id"
     t.index ["seller_id"], name: "index_auction_items_on_seller_id"
   end
 
@@ -132,6 +133,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_09_231230) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "auction_items", "buyers", column: "winning_buyer_id"
   add_foreign_key "auction_items", "sellers"
   add_foreign_key "bids", "auction_items"
   add_foreign_key "bids", "buyers"

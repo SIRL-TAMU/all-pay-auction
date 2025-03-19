@@ -10,6 +10,7 @@ RUN apt-get update -qq && \
     libpq-dev \
     libyaml-dev \
     postgresql-client \
+    cron \
     pkg-config && \  
     rm -rf /var/lib/apt/lists/*
 

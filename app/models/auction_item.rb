@@ -4,6 +4,8 @@
 class AuctionItem < ApplicationRecord
   belongs_to :seller
   has_many :bids, dependent: :destroy
+  has_many :buyers, through: :bids
+  belongs_to :winning_buyer, class_name: "Buyer", optional: true
   has_many_attached :images
 
   # validates :opening_date, presence: true, comparison: { greater_than_or_equal_to: -> { Time.zone.now } }
@@ -53,20 +55,54 @@ class AuctionItem < ApplicationRecord
       "#{days}d #{hours}h #{minutes}m"
     elsif hours.positive?
       "#{hours}h #{minutes}m"
-    else
+    elsif minutes.positive?
       "#{minutes}m"
+    else
+      "0m"
     end
   end
 
+  def archived?
+    is_archived
+  end
+
   def active?
-    Time.zone.now.between?(opening_date, closing_date)
+    return Time.zone.now.between?(opening_date, closing_date) unless archived?
+    !archived?
   end
 
   def closed?
-    Time.zone.now > closing_date
+    return Time.zone.now > closing_date unless archived?
+    archived?
   end
 
   def upcoming?
-    Time.zone.now < opening_date
+    return Time.zone.now < opening_date unless is_archived
+    !archived?
+  end
+
+  def self.test_cron_job
+    auction_items = AuctionItem.all
+    File.write("test_cron.txt", "#{Time.zone.now}\n", mode: "a")
+    auction_items.each do |auction_item|
+      File.write("test_cron.txt", "#{auction_item.name}\n", mode: "a")
+    end
+    File.write("test_cron.txt", "\n", mode: "a")
+  end
+
+  def close_auction!
+    return if archived? || ! closed?
+
+    winning_buyer = winning_bid.buyer
+    update!(winning_buyer_id: winning_buyer.id, is_archived: true)
+
+    # Add notification logic if we can
+  end
+
+  def self.cron_close_auctions!
+    auction_items = AuctionItem.all
+    auction_items.each do |auction_item|
+      auction_item.close_auction!
+    end
   end
 end
