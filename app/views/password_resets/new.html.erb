@@ -1,0 +1,14 @@
+<div class="password-reset-container">
+  <h2>Reset Your Password</h2>
+
+  <%= form_with url: password_resets_path(account_type: params[:account_type]), method: :post do |f| %>
+    <%= hidden_field_tag :account_type, params[:account_type] %>
+
+    <div class="form-group">
+      <%= label_tag :email, "Enter your email" %>
+      <%= email_field_tag :email, nil, class: "input-field", required: true %>
+    </div>
+
+    <%= submit_tag "Send Reset Link", class: "submit-btn" %>
+  <% end %>
+</div>
