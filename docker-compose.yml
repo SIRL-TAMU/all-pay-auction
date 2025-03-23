@@ -7,9 +7,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
     env_file: .env_dev  # Use environment file
     environment:
       DB_HOST: db
+      REDIS_URL: redis://redis:6379/1
     networks:
       - project_network
     ports:
@@ -30,6 +33,14 @@ services:
       - project_network
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    container_name: redis-dev
+    ports:
+      - "6379:6379"
+    networks:
+      - project_network
 
 networks:
   project_network:
