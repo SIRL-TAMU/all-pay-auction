@@ -85,3 +85,4 @@ group :production do
 end
 
 gem "letter_opener", "~> 1.10", group: :development
+gem "redis"
