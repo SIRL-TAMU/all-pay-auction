@@ -35,6 +35,12 @@ document.addEventListener("DOMContentLoaded", () => {
           totalBidsEl.textContent = `${data.total_bids} bids`;
         }
 
+        const bidInput = document.querySelector(".auction-item-bid-input");
+        if (bidInput) {
+          const newMin = parseFloat(data.amount) + 0.01;
+          bidInput.min = newMin.toFixed(2);
+        }
+
         // Prepend bid to history
         const bidHistory = document.querySelector(".auction-item-bid-history");
         if (bidHistory) {
