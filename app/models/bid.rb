@@ -23,7 +23,8 @@ class Bid < ApplicationRecord
                                    auction_item_id: auction_item.id,
                                    amount: amount,
                                    buyer_name: buyer.first_name,
-                                   created_at: created_at.strftime("%b %d, %Y at %I:%M%p")
+                                   created_at: created_at.strftime("%b %d, %Y at %I:%M%p"),
+                                   total_bids: auction_item.total_bids
                                  })
   end
 end

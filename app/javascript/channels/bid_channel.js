@@ -1,15 +1,59 @@
-import consumer from "channels/consumer"
+import consumer from "channels/consumer";
 
-consumer.subscriptions.create("BidChannel", {
-  connected() {
-    // Called when the subscription is ready for use on the server
-  },
+document.addEventListener("DOMContentLoaded", () => {
+  const auctionItemContainer = document.querySelector(
+    ".auction-item-container"
+  );
 
-  disconnected() {
-    // Called when the subscription has been terminated by the server
-  },
+  if (!auctionItemContainer) return;
 
-  received(data) {
-    // Called when there's incoming data on the websocket for this channel
-  }
+  const auctionItemId = auctionItemContainer.dataset.auctionItemId;
+
+  consumer.subscriptions.create(
+    { channel: "BidChannel", auction_item_id: auctionItemId },
+    {
+      connected() {
+        console.log("Connected to BidChannel for item", auctionItemId);
+      },
+
+      disconnected() {
+        console.log("Disconnected from BidChannel");
+      },
+
+      received(data) {
+        console.log("Received new bid:", data);
+
+        // Update max bid
+        const maxBidEl = document.getElementById("max-bid");
+        if (maxBidEl) {
+          maxBidEl.textContent = `$${parseFloat(data.amount).toFixed(2)} USD`;
+        }
+
+        // Update total bids
+        const totalBidsEl = document.getElementById("total-bids");
+        if (totalBidsEl) {
+          totalBidsEl.textContent = `${data.total_bids} bids`;
+        }
+
+        // Prepend bid to history
+        const bidHistory = document.querySelector(".auction-item-bid-history");
+        if (bidHistory) {
+          const newBid = document.createElement("div");
+          newBid.className = "auction-item-bid-entry";
+          newBid.innerHTML = `
+            <div class="auction-item-user-card">
+              <p>${data.buyer_name}</p>
+              <p class="auction-item-user-card-subtext">${data.created_at}</p>
+            </div>
+            <p class="auction-item-user-card-amount">
+              <strong>$${parseFloat(data.amount).toFixed(2)} USD</strong>
+            </p>
+          `;
+          bidHistory
+            .querySelector(".auction-item-user-card-title")
+            .after(newBid);
+        }
+      },
+    }
+  );
 });
