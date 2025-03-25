@@ -6,7 +6,12 @@
       <div class="auction-card">
         <%# Image and Countdown %>
         <div class="auction-card-image">
-          <%= image_tag(@active_or_upcoming_auction.image.present? && @active_or_upcoming_auction.image.start_with?("http") ? @active_or_upcoming_auction.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
+          <% if @active_or_upcoming_auction.images.attached? %>
+            <%= image_tag @active_or_upcoming_auction.images.first, width: 200 %>
+          <% else %>
+            <%= image_tag "default_item.png", width: 200 %>
+          <% end %>
+
           <div class="countdown-container">
             <% if is_active %>
               <p>Closing in&nbsp;
@@ -29,13 +34,17 @@
             <%# Bidding Info %>
             <div class="bid-info">
               <div class="bid-item">
-                <span class="bid-value">$<%= @active_or_upcoming_auction.bid_pool %> USD</span>
+                <span class="bid-value">
+                  <%= number_to_currency(@active_or_upcoming_auction.bid_pool, unit: "$", precision: 2) %> USD
+                </span>
                 <span class="bid-label">Bid Pool</span>
               </div>
 
               <div class="bid-item">
-                <span class="bid-value">$<%= @active_or_upcoming_auction.max_bid %> USD</span>
-                <span class="bid-label">Max Bid</span>
+                <span class="bid-value">
+                  <%= number_to_currency(@active_or_upcoming_auction.max_bid, unit: "$", precision: 2) %> USD
+                </span>
+                <span class="bid-label">Highest Bid</span>
               </div>
 
               <div class="bid-item">
@@ -60,7 +69,7 @@
                       </div>
                     </div>
                     <div class="bidder-amount">
-                      $<%= bid.amount %> USD
+                      <%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD
                     </div>
                   </li>
                 <% end %>
@@ -102,7 +111,11 @@
         <%= link_to auction_item_path(auction), class: "past-auction-card-link" do %>
           <div class="past-auction-card">
             <div class="past-auction-image-container">
-              <%= image_tag(auction.image.present? && auction.image.start_with?("http") ? auction.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg", class: "past-auction-image") %>
+              <% if auction.images.attached? %>
+                <%= image_tag auction.images.first, class: "past-auction-image" %>
+              <% else %>
+                <%= image_tag "default_item.png", width: 200 %>
+              <% end %>
             </div>
             
             <div class="past-auction-details">
@@ -113,12 +126,16 @@
 
               <div class="past-auction-bid-info">
                 <div class="past-auction-bid-item">
-                  <span class="past-auction-bid-value">$<%= auction.bid_pool %> USD</span>
+                  <span class="past-auction-bid-value">
+                    <%= number_to_currency(auction.bid_pool, unit: "$", precision: 2) %> USD
+                  </span>
                   <span class="past-auction-bid-label">Bid Pool</span>
                 </div>
                 <div class="past-auction-bid-item">
-                  <span class="past-auction-bid-value">$<%= auction.max_bid %> USD</span>
-                  <span class="past-auction-bid-label">Max Bid</span>
+                  <span class="past-auction-bid-value">
+                    <%= number_to_currency(auction.max_bid, unit: "$", precision: 2) %> USD
+                  </span>
+                  <span class="past-auction-bid-label">Highest Bid</span>
                 </div>
                 <div class="past-auction-bid-item">
                   <span class="past-auction-bid-value"><%= auction.total_bids %> bids</span>
@@ -135,7 +152,9 @@
                       <strong><%= winning_bid.buyer.first_name %></strong>
                       <span class="past-auction-bidder-email"><%= winning_bid.buyer.email %></span>
                     </div>
-                    <div class="past-auction-winning-amount">$<%= winning_bid.amount %> USD</div>
+                    <div class="past-auction-winning-amount">
+                      <%= number_to_currency(winning_bid.amount, unit: "$", precision: 2) %> USD
+                    </div>
                   </div>
                 </div>
               <% end %>

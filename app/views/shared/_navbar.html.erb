@@ -2,10 +2,12 @@
     <div class="navbar">
         <div class="navbar-container">  
             <div class="logo">
-                <%= link_to "All Pay Auction", root_path %>
+                <%= link_to "All Pay Auction", logged_in? ? root_path : login_path(account_type: params[:account_type] || "buyer") %>
+    
             </div>
 
             <ul class="links">
+                <%= link_to "Home", root_path %>
                 <li><%= link_to "Auction Block", auction_items_path %></li>
                 <li><%= link_to "Sell", "/sell" %></li>
                 <li><%= link_to "About Us", "/about" %></li>
@@ -23,13 +25,15 @@
                         <div class="profile-dropdown-menu">
                             <% if seller? %>
                                 <%= link_to "Seller Dashboard", seller_dashboard_path %>
+                                <%= link_to "Settings", seller_setting_path %>
                             <% end %>
 
                             <% if buyer? %>
                                 <%= link_to "Buyer Dashboard", buyer_dashboard_path %>
+                                <%= link_to "Settings", buyer_setting_path %>
                             <% end %>
 
-                            <%= link_to "Settings", "#", class: "temp" %>
+                            <!--<%= link_to "Settings", "#", class: "temp" %>-->
                             <%= link_to "Manage Funds", manage_funds_path %>
                             <%= link_to "Logout", logout_path, method: :delete %>
                         </div>

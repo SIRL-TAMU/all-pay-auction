@@ -16,7 +16,6 @@
     <div class="auction-items-tabs">
       <button class="auction-items-tab-button active" onclick="filterAuctionItems('active')">Active</button>
       <button class="auction-items-tab-button" onclick="filterAuctionItems('upcoming')">Upcoming</button>
-      <button class="auction-items-tab-button" onclick="filterAuctionItems('closed')">Closed</button>
     </div>
     
     <!-- Auction Items Grid -->
@@ -26,7 +25,11 @@
           <% status_class, status_text = auction_status(item) %>
           <div class="auction-items-card auction-items-<%= status_class %>">
             <div class="auction-items-image">
-                  <%= image_tag(item.image.present? && item.image.start_with?("http") ? item.image : "https://images.pexels.com/photos/7004697/pexels-photo-7004697.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", width: 200) %>
+                  <% if item.images.attached? %>
+                    <%= image_tag item.images.first, width: 200 %>
+                  <% else %>
+                    <%= image_tag "default_item.png", width: 200 %>
+                  <% end %>
             </div>
             <div class="auction-items-info">
               <div class="auction-items-status"><%= status_text %></div>
@@ -41,8 +44,8 @@
               <div class="auction-items-bid-container">
                 <div class="auction-items-bid-info">
                   <p class="bid-info-card">
-                    <strong class="bid-value">$<%= item.max_bid %> USD</strong>
-                    <span class="bid-label">Max Bid</span>
+                    <strong class="bid-value"><%= number_to_currency(item.max_bid, unit: "$", precision: 2) %> USD</strong>
+                    <span class="bid-label">Highest Bid</span>
                   </p>
                   <p class="bid-info-card">
                     <strong class="bid-value"><%= item.total_bids %> bids</strong>

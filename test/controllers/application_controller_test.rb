@@ -4,16 +4,34 @@ require "test_helper"
 
 class ApplicationControllerTest < ActionDispatch::IntegrationTest
   def setup
-    @buyer = buyers(:john) # Assumes fixtures are set up
-    @seller = sellers(:alice)
-    get root_path
+    Buyer.destroy_all
+    Seller.destroy_all
+
+    @buyer = Buyer.create!(
+      first_name: "John",
+      last_name: "Doe",
+      email: "john@example.com",
+      password: "password123#",
+      password_confirmation: "password123#",
+      verified: true
+    )
+
+    @seller = Seller.create!(
+      first_name: "Alice",
+      last_name: "Johnson",
+      email: "seller1@example.com",
+      password: "sellerpass123#",
+      password_confirmation: "sellerpass123#",
+      verified: true
+    )
   end
 
   test "buyer? returns true when session account type is buyer" do
     post login_path, params: {
       account_type: "buyer",
       email: @buyer.email,
-      password: "password123"
+      password: "password123#",
+      verified: true
     }
 
     assert_equal "buyer", session[:account_type], "Session account_type not set correctly"
@@ -26,7 +44,7 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
     post login_path, params: {
       account_type: "seller",
       email: @seller.email,
-      password: "sellerpass123"
+      password: "sellerpass123#"
     }
 
     assert_equal "seller", session[:account_type], "Session account_type not set correctly"
@@ -38,7 +56,8 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
         post login_path, params: {
           account_type: "buyer",
           email: @buyer.email,
-          password: "password123"
+          password: "password123#",
+          verified: true
         }
         get root_path
 
@@ -48,7 +67,7 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
         post login_path, params: {
           account_type: "seller",
           email: @seller.email,
-          password: "sellerpass123"
+          password: "sellerpass123#"
         }
         get root_path
 
@@ -58,7 +77,8 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
         post login_path, params: {
           account_type: "buyer",
           email: @buyer.email,
-          password: "password123"
+          password: "password123#",
+          verified: true
         }
         get root_path
 

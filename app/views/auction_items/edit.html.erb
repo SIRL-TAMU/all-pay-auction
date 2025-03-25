@@ -2,8 +2,7 @@
   <i class="fa-solid fa-chevron-left"></i> Back
 <% end %>
 
-
-<%= form_with(model: @auction_item, local: true, class: "auction-form") do |form| %>
+<%= form_with(model: @auction_item, local: true, html: { multipart: true }, class: "auction-form") do |form| %>
   <div class="auction-container">
     <div class="create-auction-title-container">
       <div class="create-auction-title"><i class="fa-solid fa-gavel"></i> Edit Auction Item</div>
@@ -45,46 +44,81 @@
             
             <div> </div>
 
+            <%# THIS IS REAL VERSION, UNCOMMENTED VERSION BELOW IS FOR TESTING %>
+            <!-- 
             <div class="input-group">
               <p>Open Date</p>
-              <%= form.datetime_local_field :opening_date, required: true, class: "input-field" %>
+              <%= form.datetime_local_field :opening_date, required: true, class: "input-field",
+                  min: Time.zone.now.strftime("%Y-%m-%dT%H:%M"),
+                  value: (form.object.opening_date || Time.zone.now).strftime("%Y-%m-%dT%H:%M"),
+                  id: "opening_date" %>
             </div>
 
             <div class="input-group">
               <p>Close Date</p>
-              <%= form.datetime_local_field :closing_date, required: true, class: "input-field" %>
+              <%= form.datetime_local_field :closing_date, required: true, class: "input-field",
+                  min: Time.zone.now.strftime("%Y-%m-%dT%H:%M"),
+                  value: (form.object.closing_date || (Time.zone.now + 1.week)).strftime("%Y-%m-%dT%H:%M"),
+                  id: "closing_date" %>
             </div>
+            -->
+
+            <div class="input-group">
+              <p>Open Date (Testing Version)</p>
+              <%= form.datetime_local_field :opening_date, class: "input-field",
+                  value: (form.object.opening_date || Time.zone.now).strftime("%Y-%m-%dT%H:%M"),
+                  id: "opening_date" %>
+            </div>
+
+            <div class="input-group">
+              <p>Close Date (Testing Version)</p>
+              <%= form.datetime_local_field :closing_date, class: "input-field",
+                  value: (form.object.closing_date || (Time.zone.now + 1.week)).strftime("%Y-%m-%dT%H:%M"),
+                  id: "closing_date" %>
+            </div>
+
+
           </div>
         </div>
       </div>
 
       <!-- Right Side: Image Upload -->
       <div class="auction-right">
-        <p>Product Image</p>
+        <p class="section-title">Product Images</p>
 
-        <div class="product-image-container">
-          <% if @auction_item.image.present? %>
-            <%= image_tag(@auction_item.image, id: "preview-image", class: "product-image") %>
+        <!-- Main Image Display -->
+        <div class="main-image-container">
+          <% if @auction_item.images.attached? %>
+            <%= image_tag @auction_item.images.first, class: "main-product-image", id: "main-image" %>
           <% else %>
-            <div class="image-placeholder" onclick="openImageModal()">
-              <i class="fa-solid fa-plus"></i>
-            </div>
+            <%= image_tag "default_item.png", class: "main-product-image", id: "main-image" %>
           <% end %>
         </div>
 
-        <%= form.hidden_field :image, id: "image-url-hidden" %>
+        <!-- Thumbnails -->
+        <div class="thumbnail-container">
+          <% @auction_item.images.each do |image| %>
+            <div class="thumbnail-wrapper" data-image-url="<%= url_for(image) %>">
+              <%= image_tag image, class: "thumbnail-image" %>
 
-        <div class="image-thumbnails">
-          <% if @auction_item.image.present? %>
-            <div class="thumbnail">
-              <%= image_tag(@auction_item.image) %>
+              <%= link_to remove_image_auction_item_path(@auction_item, image.blob.id),
+                  method: :delete,
+                  class: "remove-btn",
+                  title: "Remove Image" do %>
+                <i class="fa-solid fa-xmark"></i>
+              <% end %>
             </div>
           <% end %>
-          <div class="thumbnail add-image-btn" onclick="openImageModal()">
+
+          <label for="image-upload-input" class="upload-btn">
             <i class="fa-solid fa-plus"></i>
-          </div>
+          </label>
         </div>
+
+        <%= form.file_field :images, multiple: true, class: "input-field", id: "image-upload-input", style: "display: none;" %>
       </div>
+
+
     </div>
   </div>
 
@@ -94,42 +128,88 @@
 
 <% end %>
 
-<!-- Modal for Adding Image URL -->
-<div id="imageModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeImageModal()">&times;</span>
-    <p>Enter Image URL:</p>
-    <input type="text" id="imageUrlInput" class="input-field" placeholder="https://example.com/image.jpg">
-    <button onclick="updateImage()">Update Image</button>
-  </div>
-</div>
-
-<div class="bottom-padding"></div>
 
 <script>
-  function openImageModal() {
-    document.getElementById("imageModal").style.display = "flex";
+
+document.addEventListener("DOMContentLoaded", function () {
+  const mainImage = document.getElementById("main-image");
+  const thumbnailContainer = document.querySelector(".thumbnail-container");
+  const imageInput = document.getElementById("image-upload-input");
+  let fileList = new DataTransfer();
+
+  function createThumbnail(imageSrc, file = null) {
+    let newThumbnail = document.createElement("div");
+    newThumbnail.classList.add("thumbnail-wrapper");
+
+    let img = document.createElement("img");
+    img.src = imageSrc;
+    img.classList.add("thumbnail-image");
+
+    let removeBtn = document.createElement("button");
+    removeBtn.textContent = "Remove";
+    removeBtn.classList.add("remove-btn");
+
+    removeBtn.addEventListener("click", function (event) {
+      event.stopPropagation();
+      newThumbnail.remove();
+
+      if (file) {
+        let fileIndex = [...fileList.files].findIndex(f => f.name === file.name && f.lastModified === file.lastModified);
+        if (fileIndex !== -1) {
+          fileList.items.remove(fileIndex);
+          imageInput.files = fileList.files;
+        }
+      }
+    });
+
+    newThumbnail.addEventListener("click", function () {
+      mainImage.src = imageSrc;
+      document.querySelectorAll(".thumbnail-wrapper").forEach(t => t.classList.remove("selected"));
+      newThumbnail.classList.add("selected");
+    });
+
+    newThumbnail.appendChild(img);
+    newThumbnail.appendChild(removeBtn);
+    thumbnailContainer.insertBefore(newThumbnail, thumbnailContainer.lastElementChild);
   }
 
-  function closeImageModal() {
-    document.getElementById("imageModal").style.display = "none";
-  }
+  imageInput.addEventListener("change", function (event) {
+    let files = Array.from(event.target.files);
+    if (files.length === 0) return;
 
-  function updateImage() {
-    let imageUrl = document.getElementById("imageUrlInput").value;
-    if (imageUrl.trim() !== "") {
-        let previewContainer = document.querySelector(".product-image-container");
-        previewContainer.innerHTML = `<img src="${imageUrl}" id="preview-image" class="product-image">`;
+    files.forEach((file) => {
+      let reader = new FileReader();
+      reader.onload = function (e) {
+        createThumbnail(e.target.result, file);
 
-        document.getElementById("image-url-hidden").value = imageUrl;
+        if (!mainImage.src || mainImage.src.includes("default_item.png")) {
+          mainImage.src = e.target.result;
+        }
+      };
+      reader.readAsDataURL(file);
 
-        let thumbnailContainer = document.querySelector(".image-thumbnails");
-        let newThumbnail = document.createElement("div");
-        newThumbnail.classList.add("thumbnail");
-        newThumbnail.innerHTML = `<img src="${imageUrl}">`;
-        thumbnailContainer.insertBefore(newThumbnail, document.querySelector(".add-image-btn"));
+      fileList.items.add(file);
+    });
 
-        closeImageModal();
+    imageInput.files = fileList.files;
+  });
+});
+
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const openingDateInput = document.getElementById("opening_date");
+    const closingDateInput = document.getElementById("closing_date");
+
+    function updateClosingDateMin() {
+      const openDate = new Date(openingDateInput.value);
+      if (!isNaN(openDate)) {
+        closingDateInput.min = openDate.toISOString().slice(0, 16);
+        if (new Date(closingDateInput.value) < openDate) {
+          closingDateInput.value = openDate.toISOString().slice(0, 16);
+        }
+      }
     }
-}
+
+    openingDateInput.addEventListener("change", updateClosingDateMin);
+  });
 </script>

@@ -41,6 +41,10 @@ gem "rubocop-minitest", "~> 0.37.1"
 gem "rubocop-performance", "~> 1.24"
 gem "rubocop-rails", "~> 2.30"
 
+gem "aws-sdk-s3", require: false
+
+gem "omniauth"
+gem "omniauth-google-oauth2"
 #########
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
@@ -81,3 +85,5 @@ group :production do
   # Use postgresql as the database for Active Record
   gem "pg", "~> 1.1"
 end
+
+gem "letter_opener", "~> 1.10", group: :development
