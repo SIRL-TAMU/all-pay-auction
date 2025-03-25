@@ -26,8 +26,14 @@ class AccountsController < ApplicationController
   end
 
   def add_funds
-    amount = params[:amount].to_i
+    amount = params[:amount].to_f
 
+    if amount <= 0
+      flash[:alert] = "Amount must be positive."
+      redirect_to manage_funds_path and return
+    end
+
+    stripe_amount = (amount*100).to_i
     session = Stripe::Checkout::Session.create({
                                                  customer_email: current_user.email,
                                                  payment_method_types: [ "card" ],
@@ -37,7 +43,7 @@ class AccountsController < ApplicationController
                                                      product_data: {
                                                        name: "Purchasing All Pay Auction Credits: "
                                                      },
-                                                     unit_amount: amount * 100 # Convert to cents
+                                                     unit_amount: stripe_amount
                                                    },
                                                    quantity: 1
                                                  } ],

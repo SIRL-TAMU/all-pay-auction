@@ -3,12 +3,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: 
+    command: # this done in dockerfile already bundle exec rails server -b 0.0.0.0 -p 3000
     depends_on:
-      db:
+      db: 
         condition: service_healthy
+      stripe-cli:
+        condition: service_started
     env_file: .env_dev  # Use environment file
     environment:
+      WEBHOOK_URL: http://app:3000/stripe/webhook
       DB_HOST: db
     networks:
       - project_network
@@ -31,6 +34,14 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  stripe-cli:
+    image: stripe/stripe-cli:latest
+    env_file: .env
+    command: listen --api-key ${STRIPE_SECRET_KEY} --forward-to http://app:3000/stripe/webhook
+    networks:
+      - project_network
+    volumes:  
+      - ./stripe-cli-output:/output
 networks:
   project_network:
     name: project_default

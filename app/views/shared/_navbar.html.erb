@@ -1,15 +1,15 @@
-<header>
+<header class="custom-navbar">
     <div class="navbar">
         <div class="navbar-container">  
             <div class="logo">
                 <%= link_to "All Pay Auction", root_path %>
             </div>
 
-            <div class="links">
+            <ul class="links">
                 <li><%= link_to "Auction Block", auction_items_path %></li>
-                <%= link_to "Sell", "/sell" %>
-                <%= link_to "About Us", "/about" %>
-            </div>
+                <li><%= link_to "Sell", "/sell" %></li>
+                <li><%= link_to "About Us", "/about" %></li>
+            </ul>
 
             <div class="user-links">
                 <% if logged_in? %>
@@ -39,6 +39,7 @@
                     <%= link_to "Sign up", signup_path(account_type: params[:account_type] || "buyer"), class: "signup-btn" %>
                 <% end %>
             </div>
+
         </div>
     </div>
 </header>

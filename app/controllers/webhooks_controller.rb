@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#Webhooks used to handle Stripe events for payment processing
+# Webhooks used to handle Stripe events for payment processing
 class WebhooksController < ApplicationController
     skip_before_action :verify_authenticity_token # Webhooks don’t require CSRF protection
 
@@ -22,7 +22,7 @@ class WebhooksController < ApplicationController
 
         session = event["data"]["object"]
         user_email = session["metadata"]["user_email"]
-        amount = session["amount"] / 100 # Convert cents to dollars
+        amount = session["amount"].to_f / 100 # Convert cents to dollars
         account_type = session["metadata"]["account_type"]
         user = if account_type == "buyer"
             Buyer.find_by(email: user_email)
@@ -32,6 +32,7 @@ class WebhooksController < ApplicationController
         if user
             Rails.logger.debug "Update liquid balance??"
           user.update(liquid_balance: user.liquid_balance + amount) # Add funds to balance
+          # additionally create a transaction recording in a database for the user
         else
             Rails.logger.error("User not found for payment: user_id=#{user_id}, amount=#{amount}")
         end
