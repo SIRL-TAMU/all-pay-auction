@@ -37,7 +37,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const bidInput = document.querySelector(".auction-item-bid-input");
         if (bidInput) {
-          const newMin = parseFloat(data.amount) + 0.01;
+          const minIncrement = parseFloat(
+            bidInput.dataset.minIncrement || "0.01"
+          );
+          const newMin = parseFloat(data.amount) + minIncrement;
           bidInput.min = newMin.toFixed(2);
         }
 

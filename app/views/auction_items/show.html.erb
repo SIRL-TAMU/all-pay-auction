@@ -146,7 +146,7 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
           <strong><label for="bid_amount">Set Bid:</label></strong>
           <%= form_with(model: Bid.new, local: true, class: "auction-item-bid-form") do |form| %>
             <%= form.hidden_field :auction_item_id, value: @auction_item.id %>
-            <%= form.number_field :amount, step: 0.01, min: @auction_item.max_bid + @auction_item.min_increment, required: true, class: "auction-item-bid-input" %>
+            <%= form.number_field :amount, step: @auction_item.min_increment, min: @auction_item.max_bid + @auction_item.min_increment, required: true, class: "auction-item-bid-input",  data: { min_increment: @auction_item.min_increment } %>
             <%= form.submit "Place Bid", class: "auction-item-bid-btn" %>
           <% end %>
         <% end %> 
