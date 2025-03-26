@@ -14,7 +14,7 @@
   <i class="fa-solid fa-chevron-left"></i> Back
 <% end %>
 
-<div class="auction-item-container">
+<div class="auction-item-container" data-auction-item-id="<%= @auction_item.id %>">
   <div class="auction-item-info-left">
     <div class="auction-item-title">
       <%= @auction_item.name %>
@@ -138,18 +138,18 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
           Est: <%= number_to_currency(@auction_item.innate_value, unit: "$", precision: 2) %>
         </div>
         <div class="auction-item-bid-info-text">
-          <strong><%= number_to_currency(@auction_item.max_bid, unit: "$", precision: 2) %> USD</strong> •
-          <span class="info-text-subtext"><strong><%= @auction_item.total_bids %> bids</strong></span>
+          <strong id="max-bid"><%= number_to_currency(@auction_item.max_bid, unit: "$", precision: 2) %> USD</strong> •
+          <span class="info-text-subtext"><strong id="total-bids"><%= @auction_item.total_bids %> bids</strong></span>
         </div>
 
         <% if buyer? && @auction_item.active? %>
           <strong><label for="bid_amount">Set Bid:</label></strong>
           <%= form_with(model: Bid.new, local: true, class: "auction-item-bid-form") do |form| %>
             <%= form.hidden_field :auction_item_id, value: @auction_item.id %>
-            <%= form.number_field :amount, step: 0.01, min: @auction_item.max_bid + 0.01, required: true, class: "auction-item-bid-input" %>
+            <%= form.number_field :amount, step: @auction_item.min_increment, min: @auction_item.max_bid + @auction_item.min_increment, required: true, class: "auction-item-bid-input",  data: { min_increment: @auction_item.min_increment } %>
             <%= form.submit "Place Bid", class: "auction-item-bid-btn" %>
           <% end %>
-        <% end %>
+        <% end %> 
       </div>
 
 

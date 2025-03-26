@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+#Remove pre existing server
+rm -f /app/tmp/pids/server.pid
+
 # Wait for PostgreSQL using environment variables
 until pg_isready -h $DB_HOST -U $DB_USER; do
   >&2 echo "PostgreSQL is unavailable - sleeping"
