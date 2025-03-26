@@ -18,7 +18,7 @@
                     <div class="profile-btn">
                         <div class="user-name">
                             <%= current_user.first_name %> <%= current_user.last_name %>
-                            <span class="balance">($<%= current_user.liquid_balance %>)</span>
+                            <span class="balance">($<%= number_to_currency(current_user.liquid_balance, unit: "", precision: 2) %>)</span>
                         </div>
                         <i class="fa-solid fa-chevron-down"></i>
 
