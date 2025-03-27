@@ -99,8 +99,9 @@ class AuctionItem < ApplicationRecord
     puts "Auction #{name} has closed and now will be settled."
     if winning_bid.nil?
       puts "There is no winning bid"
-      update!(winning_buyer_id: winning_buyer.id, is_archived: true)
+      update!(winning_buyer_id: nil, is_archived: true)
       return
+    end
 
     winning_buyer = winning_bid.buyer
     
