@@ -91,12 +91,23 @@ class AuctionItem < ApplicationRecord
   end
 
   def close_auction!
-    return if archived? || ! closed?
+    if archived? || ! closed?
+      puts "Auction #{name} is either settled or closed."
+      return
+    end
 
+    puts "Auction #{name} has closed and now will be settled."
     winning_buyer = winning_bid.buyer
+    
+    # Updates itself, the winning buyer, and the seller
     update!(winning_buyer_id: winning_buyer.id, is_archived: true)
+    winning_buyer.update!(asset_balance: winning_buyer.asset_balance + innate_value)
+    seller.update!(liquid_balance: seller.liquid_balance + bid_pool)
 
     # Add notification logic if we can
+    puts "Notification logic NOT implemented yet."
+
+    puts "Auction #{name} has been settled."
   end
 
   def self.cron_close_auctions!

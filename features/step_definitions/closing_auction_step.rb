@@ -21,7 +21,7 @@ Then("the auction should be archived") do
   expect(@auction_item.reload.is_archived).to be true
 end
 
-Then("the winning buyer should be set") do
+Then("the winning buyer should be set with an updated asset balance") do
   @high_buyer = @auction_item.winning_bid.buyer
   expect(@auction_item.reload.winning_buyer_id).to eq(@high_buyer.id)
 end
