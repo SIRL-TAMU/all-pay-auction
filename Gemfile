@@ -18,10 +18,12 @@ gem "stimulus-rails"
 gem "jbuilder"
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
-
+# For stripe integration
+gem "stripe"
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
-
+# Load environment variables into ENV when app starts
+gem "dotenv-rails"
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"
 
@@ -85,3 +87,4 @@ group :production do
 end
 
 gem "letter_opener", "~> 1.10", group: :development
+gem "redis"

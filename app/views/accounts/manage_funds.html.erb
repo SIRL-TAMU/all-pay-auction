@@ -1,0 +1,9 @@
+<h1>Manage Funds</h1>
+<!-- Add form or content for managing funds here -->
+
+<%= form_tag add_funds_path do %>
+    <%= number_field_tag :amount, nil, step: 0.01 %>
+    <%= submit_tag "Add Funds" %>
+  <% end %>
+
+  

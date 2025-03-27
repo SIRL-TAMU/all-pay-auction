@@ -1,4 +1,4 @@
-<header>
+<header class="custom-navbar">
     <div class="navbar">
         <div class="navbar-container">  
             <div class="logo">
@@ -6,18 +6,19 @@
     
             </div>
 
-            <div class="links">
+            <ul class="links">
                 <%= link_to "Home", root_path %>
                 <li><%= link_to "Auction Block", auction_items_path %></li>
-                <%= link_to "Sell", "/sell" %>
-                <%= link_to "About Us", "/about" %>
-            </div>
+                <li><%= link_to "Sell", "/sell" %></li>
+                <li><%= link_to "About Us", "/about" %></li>
+            </ul>
 
             <div class="user-links">
                 <% if logged_in? %>
                     <div class="profile-btn">
                         <div class="user-name">
                             <%= current_user.first_name %> <%= current_user.last_name %>
+                            <span class="balance">($<%= number_to_currency(current_user.liquid_balance, unit: "", precision: 2) %>)</span>
                         </div>
                         <i class="fa-solid fa-chevron-down"></i>
 
@@ -33,6 +34,7 @@
                             <% end %>
 
                             <!--<%= link_to "Settings", "#", class: "temp" %>-->
+                            <%= link_to "Manage Funds", manage_funds_path %>
                             <%= link_to "Logout", logout_path, method: :delete %>
                         </div>
                     </div>
@@ -41,6 +43,7 @@
                     <%= link_to "Sign up", signup_path(account_type: params[:account_type] || "buyer"), class: "signup-btn" %>
                 <% end %>
             </div>
+
         </div>
     </div>
 </header>
