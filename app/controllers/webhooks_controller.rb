@@ -33,6 +33,19 @@ class WebhooksController < ApplicationController
             Rails.logger.debug "Update liquid balance??"
           user.update(liquid_balance: user.liquid_balance + amount) # Add funds to balance
           # additionally create a transaction recording in a database for the user
+          @stripe_transaction = user.stripe_transactions.new(
+            amount: amount,
+            transaction_type: "deposit",
+            #stripe_transaction_id: transfer.id,  #check on this later TODO
+            transaction_date: Time.now
+          )
+          
+          if @stripe_transaction.save
+            Rails.logger.info("Stripe transaction recorded successfully for user #{user.id}.")
+          else
+            Rails.logger.error("Failed to save Stripe transaction for user #{user.id}: #{stripe_transaction.errors.full_messages.join(", ")}")
+          end
+
         else
             Rails.logger.error("User not found for payment: user_id=#{user_id}, amount=#{amount}")
         end

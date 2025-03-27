@@ -152,16 +152,28 @@ class AccountsController < ApplicationController
         }
       })
 
+          # Deduct the amount from user's balance (assuming you have a method for this)
+    current_user.deduct_funds(amount)
+    @stripe_transaction = current_user.stripe_transactions.new(
+      amount: amount,
+      transaction_type: "withdraw",
+      stripe_transaction_id: transfer.id,
+      transaction_date: Time.now
+    )
+
+    if @stripe_transaction.save
       flash[:notice] = "Successfully transferred $#{amount} to your connected Stripe account!"
+    else
+      # Log the failure for investigation
+      Rails.logger.error("Failed to save transaction for user #{current_user.id}. Transfer ID: #{transfer.id}")
+      flash[:alert] = "Stripe transfer succeeded, but failed to record transaction. Please contact support."
+    end
+
     rescue Stripe::StripeError => e
       flash[:alert] = "Failed to transfer funds: #{e.message}"
     end
 
-    # Deduct the amount from user's balance (assuming you have a method for this)
-    current_user.deduct_funds(amount)
 
-
-    flash[:notice] = "Successfully withdrew $#{amount}."
     redirect_to manage_funds_path
   end
 end

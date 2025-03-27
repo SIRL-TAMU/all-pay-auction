@@ -24,3 +24,58 @@
   <%= button_to "Disconnect Stripe Account", disconnect_stripe_account_path, method: :post, class: "btn btn-danger", data: { confirm: "Are you sure you want to disconnect your Stripe account?" } %>
 
 <% end %>
+
+<% if buyer? %>
+  <!-- Buyer Table -->
+  <h2>Buyer Transactions</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% current_user.stripe_transactions.each do |transaction| %>
+        <tr>
+          <td><%= transaction.transaction_type.capitalize %></td>
+          <td><%= number_to_currency(transaction.amount) %></td>
+          <td><%= transaction.transaction_date.strftime("%B %d, %Y %H:%M") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+<% elsif seller? %>
+  <!-- Seller Table -->
+  <h2>Seller Transactions</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% current_user.stripe_transactions.each do |transaction| %>
+        <tr>
+          <td><%= transaction.transaction_type.capitalize %></td>
+          <td><%= number_to_currency(transaction.amount) %></td>
+          <td><%= transaction.transaction_date.strftime("%B %d, %Y %H:%M") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+<% else %>
+  <!-- Fallback for users who are neither buyers nor sellers -->
+  <p>You have no transactions to display.</p>
+
+<% end %>
+
+
+
+
+
