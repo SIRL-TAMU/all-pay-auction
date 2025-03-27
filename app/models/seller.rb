@@ -25,6 +25,11 @@ class Seller < ApplicationRecord
     reset_password_sent_at > 2.hours.ago
   end
 
+  # After seller withdraws, deduct funds
+  def deduct_funds(bid_amount)
+    update(liquid_balance: liquid_balance - bid_amount)
+  end
+
   def clear_password_reset_token
     update(reset_password_token: nil, reset_password_sent_at: nil)
   end

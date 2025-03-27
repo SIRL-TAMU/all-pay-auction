@@ -7,3 +7,20 @@
   <% end %>
 
   
+
+  
+
+  <% if current_user.stripe_account_id.blank? %>
+    <p>You must connect to stripe to withdraw funds.</p>
+  <%= button_to "Connect Stripe Account", connect_stripe_account_path, method: :get, class: "btn btn-primary" %>
+<% else %>
+  <p>You are connected your Stripe account.</p>
+  <p>Stripe Account ID: <strong><%= current_user.stripe_account_id %></strong></p>
+   <%= form_tag withdraw_funds_path do %>
+    <%= number_field_tag :amount, nil, step: 0.01 %>
+    <%= submit_tag "Withdraw Funds" %>
+  <% end %> 
+  <br>
+  <%= button_to "Disconnect Stripe Account", disconnect_stripe_account_path, method: :post, class: "btn btn-danger", data: { confirm: "Are you sure you want to disconnect your Stripe account?" } %>
+
+<% end %>

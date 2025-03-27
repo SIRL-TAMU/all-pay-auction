@@ -22,7 +22,7 @@ class WebhooksController < ApplicationController
 
         session = event["data"]["object"]
         user_email = session["metadata"]["user_email"]
-        amount = session["amount"].to_f / 100 # Convert cents to dollars
+        amount = session["metadata"]["credits"].to_f / 100 # Convert cents to dollars
         account_type = session["metadata"]["account_type"]
         user = if account_type == "buyer"
             Buyer.find_by(email: user_email)
