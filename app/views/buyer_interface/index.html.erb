@@ -126,7 +126,11 @@
                                                 <%= item.closing_date.strftime('%B %d, %Y at %I:%M %p') %>
                                             </td>
                                             <td>
+                                                <% if item.is_archived %>
                                                 <span class="badge bg-secondary">Closed</span>
+                                                <% else %>
+                                                <span class="badge bg-warning text-dark">Unsettled</span>
+                                                <% end %>
                                             </td>
                                         </tr>
                                     <% end %>
