@@ -1,55 +1,61 @@
 <h1>Edit Your Settings</h1>
 
 <% if flash.now[:alert] %>
-  <p style="color: red;"><%= flash.now[:alert] %></p>
+  <div class="alert-message error"><%= flash.now[:alert] %></div>
 <% end %>
 
 <% if flash.now[:notice] %>
-  <p style="color: green;"><%= flash.now[:notice] %></p>
+  <div class="alert-message success"><%= flash.now[:notice] %></div>
 <% end %>
 
-<h2>Update Profile Information</h2>
-<%= form_with(model: @buyer, url: update_profile_buyer_setting_path, method: :patch, local: true) do |form| %>
-  <div class="field">
-    <%= form.label :first_name %>
-    <%= form.text_field :first_name %>
-  </div>
+<div class="settings-section">
+  <h2>Update Profile Information</h2>
+  <%= form_with(model: @buyer, url: update_profile_buyer_setting_path, method: :patch, local: true, class: 'profile-form') do |form| %>
+    <div class="form-group">
+      <%= form.label :first_name, class: 'form-label' %>
+      <%= form.text_field :first_name, class: 'form-control' %>
+    </div>
 
-  <div class="field">
-    <%= form.label :last_name %>
-    <%= form.text_field :last_name %>
-  </div>
+    <div class="form-group">
+      <%= form.label :last_name, class: 'form-label' %>
+      <%= form.text_field :last_name, class: 'form-control' %>
+    </div>
 
-  <div class="actions">
-    <%= form.submit "Update Profile" %>
-  </div>
-<% end %>
+    <div class="form-actions">
+      <%= form.submit "Update Profile", class: 'button primary' %>
+    </div>
+  <% end %>
+</div>
 
-<h2>Update Password</h2>
-<%= form_with(model: @buyer, url: update_password_buyer_setting_path, method: :patch, local: true) do |form| %>
-  <div class="field">
-    <%= form.label :current_password %>
-    <%= form.password_field :current_password %>
-  </div>
+<div class="settings-section">
+  <h2>Update Password</h2>
+  <%= form_with(model: @buyer, url: update_password_buyer_setting_path, method: :patch, local: true, class: 'password-form') do |form| %>
+    <div class="form-group">
+      <%= form.label :current_password, class: 'form-label' %>
+      <%= form.password_field :current_password, class: 'form-control' %>
+    </div>
 
-  <div class="field">
-    <%= form.label :password %>
-    <%= form.password_field :password %>
-  </div>
+    <div class="form-group">
+      <%= form.label :password, class: 'form-label' %>
+      <%= form.password_field :password, class: 'form-control' %>
+    </div>
 
-  <div class="field">
-    <%= form.label :password_confirmation %>
-    <%= form.password_field :password_confirmation %>
-  </div>
+    <div class="form-group">
+      <%= form.label :password_confirmation, class: 'form-label' %>
+      <%= form.password_field :password_confirmation, class: 'form-control' %>
+    </div>
 
-  <div class="actions">
-    <%= form.submit "Update Password" %>
-  </div>
-<% end %>
+    <div class="form-actions">
+      <%= form.submit "Update Password", class: 'button primary' %>
+    </div>
+  <% end %>
+</div>
 
-<h2>Delete Account</h2>
-<p>
-  <strong>Warning:</strong> Deleting your account is permanent and cannot be undone.
-</p>
+<div class="settings-section delete-account">
+  <h2>Delete Account</h2>
+  <p class="warning-message">
+    <strong>Warning:</strong> Deleting your account is permanent and cannot be undone.
+  </p>
 
-<%= button_to "Delete Account", delete_buyer_setting_path, method: :delete, data: { confirm: "Are you sure you want to delete your account? This action cannot be undone." } %>
+  <%= button_to "Delete Account", delete_buyer_setting_path, method: :delete, data: { confirm: "Are you sure you want to delete your account? This action cannot be undone." }, class: 'button danger' %>
+</div>
