@@ -119,7 +119,13 @@
             </div>
             
             <div class="past-auction-details">
-              <div class="past-auction-closed-badge">Closed <%= auction.closing_date.strftime('%B %d, %Y') %></div>
+              <div class="past-auction-closed-badge">
+                <% if auction.is_archived %>
+                  Closed <%= auction.closing_date.strftime('%B %d, %Y') %>
+                <% else %>
+                  Unsettled <%= auction.closing_date.strftime('%B %d, %Y') %>
+                <% end %>
+              </div>
 
               <h3 class="past-auction-title"><%= auction.name %></h3>
               <p class="past-auction-seller"><%= auction.seller.first_name %> <%= auction.seller.last_name %></p>
