@@ -2,7 +2,7 @@
   <nav id="nav-container" class="flex flex-col justify-between px-6 pt-4 pb-2 transition-all duration-300">
 
     <%# Top Nav %>
-    <div id="top-nav" class="flex flex-row justify-between items-center transition-all duration-300 text-md">
+    <div id="top-nav" class="flex flex-row justify-between items-center transition-all duration-300 text-md z-20">
       <div>Contact us</div>
       <div class="flex flex-row items-center space-x-3">
         <div>
@@ -20,8 +20,8 @@
     </div>
 
     <%# Logo %>
-    <div id="logo" class="flex justify-center items-center transition-all duration-300">
-    <%= link_to "WINLESS", logged_in? ? root_path : login_path(account_type: params[:account_type] || "buyer"),
+    <div id="logo" class="flex justify-center items-center transition-all duration-300 -mt-4 z-10">
+    <%= link_to "BIDRUSH", logged_in? ? root_path : login_path(account_type: params[:account_type] || "buyer"),
         class: "font-bold text-5xl transition-all duration-300" %>
     </div>
 

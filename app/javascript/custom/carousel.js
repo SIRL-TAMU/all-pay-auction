@@ -11,11 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   btnLeft.addEventListener("click", () => {
-    container.scrollBy({ left: -200, behavior: "smooth" });
+    container.scrollBy({ left: -300, behavior: "smooth" });
   });
 
   btnRight.addEventListener("click", () => {
-    container.scrollBy({ left: 200, behavior: "smooth" });
+    container.scrollBy({ left: 300, behavior: "smooth" });
   });
 
   container.addEventListener("scroll", updateButtons);
