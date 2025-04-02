@@ -131,3 +131,13 @@ header {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none !important;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}  

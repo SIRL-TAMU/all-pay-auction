@@ -10,3 +10,4 @@ pin_all_from "app/javascript/channels", under: "channels"
 
 
 pin "navbar", to: "custom/navbar.js"
+pin "carousel", to: "custom/carousel.js"

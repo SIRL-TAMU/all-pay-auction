@@ -4,3 +4,4 @@ Rails.start();
 import "channels";
 
 import "navbar";
+import "carousel";
