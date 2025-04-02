@@ -1,62 +1,46 @@
-<header class="custom-navbar">
-    <div class="navbar">
-        <div class="navbar-container">  
-            <div class="logo">
-                <%= link_to "All Pay Auction", logged_in? ? root_path : login_path(account_type: params[:account_type] || "buyer") %>
-    
-            </div>
-
-            <ul class="links">
-                <%= link_to "Home", root_path %>
-                <li><%= link_to "Auction Block", auction_items_path %></li>
-                <li><%= link_to "Sell", "/sell" %></li>
-                <li><%= link_to "About Us", "/about" %></li>
-            </ul>
-
-            <div class="user-links">
+<div class="flex flex-col justify-between h-20 mx-6 mt-2 bg-white">
+    <%# Top Nav Button %>
+    <div class="flex flex-row justify-between items-center z-20">
+        <div class="text-sm">Contact us</div>
+        <div class="flex flex-row items-center space-x-3">
+            <div class="text-sm">
                 <% if logged_in? %>
-                    <div class="profile-btn">
-                        <div class="user-name">
-                            <%= current_user.first_name %> <%= current_user.last_name %>
-                            <span class="balance">($<%= number_to_currency(current_user.liquid_balance, unit: "", precision: 2) %>)</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-down"></i>
-
-                        <div class="profile-dropdown-menu">
-                            <% if seller? %>
-                                <%= link_to "Seller Dashboard", seller_dashboard_path %>
-                                <%= link_to "Settings", seller_setting_path %>
-                            <% end %>
-
-                            <% if buyer? %>
-                                <%= link_to "Buyer Dashboard", buyer_dashboard_path %>
-                                <%= link_to "Settings", buyer_setting_path %>
-                            <% end %>
-
-                            <!--<%= link_to "Settings", "#", class: "temp" %>-->
-                            <%= link_to "Manage Funds", manage_funds_path %>
-                            <%= link_to "Logout", logout_path, method: :delete %>
-                        </div>
-                    </div>
+                    <% if seller? %>
+                    <%= link_to "My Account", seller_setting_path, class: "hover:underline" %>
+                    <% elsif buyer? %>
+                    <%= link_to "My Account", buyer_setting_path, class: "hover:underline" %>
+                    <% end %>
                 <% else %>
-                    <%= link_to "Log in", login_path(account_type: params[:account_type] || "buyer"), class: "login-btn" %>
-                    <%= link_to "Sign up", signup_path(account_type: params[:account_type] || "buyer"), class: "signup-btn" %>
+                    <%= link_to "Login", login_path(account_type: "buyer"), class: "hover:underline" %>
                 <% end %>
             </div>
-
         </div>
     </div>
-</header>
 
+    <%# Website Logo %>
+    <div class="flex justify-center items-center -mt-4 z-10">
+        <%= link_to "WINLESS", logged_in? ? root_path : login_path(account_type: params[:account_type] || "buyer"), class: "font-bold text-5xl" %>
+    </div>
+     
 
-<script>
-    const profileBtn = document.querySelector('.profile-btn');
-    const profileBtnIcon = profileBtn.querySelector('i');
-    const profileDropDownMenu = document.querySelector('.profile-dropdown-menu');
+    <%# Nav Links %>
+    <div class="mt-3 flex flex-row items-center justify-center mx-auto space-x-8 text-sm font-medium">
+        <div>
+            <%= link_to "Home", root_path,
+            class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?(root_path) ? 'bg-[#E5E5E5]' : ''}" %>
+        </div>
+        <div>
+            <%= link_to "Auction Block", auction_items_path,
+            class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?(auction_items_path) ? 'bg-[#E5E5E5]' : ''}" %>
+        </div>
+        <div>
+            <%= link_to "Sell", "/sell",
+            class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?('/sell') ? 'bg-[#E5E5E5]' : ''}" %>
+        </div>
+        <div>
+            <%= link_to "About Us", "/about",
+            class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?('/about') ? 'bg-[#E5E5E5]' : ''}" %>
+        </div>
+    </div>
 
-    profileBtn.onclick = function () {
-        const isOpen = profileDropDownMenu.classList.toggle('open');
-        profileBtn.classList.toggle('active', isOpen);
-        profileBtnIcon.classList = isOpen ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
-    };
-</script>
+</div>
