@@ -5,70 +5,30 @@
 
 <%# Auction Block Carousel %>
 <div class="w-full px-4 mt-10 relative">
-  <%# Title and Explore %>
-
   <div class="flex flex-row items-center justify-between mb-4">
     <div class="flex flex-row items-center space-x-4">
       <div class="font-bold text-md">The Auction Block</div>
       <%= link_to "Explore More →", auction_items_path, class: "text-sm underline" %>
+      <div id="auction-loader" class=" hidden">
+        <div class="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
     </div>
 
+
     <div class="mr-10 space-x-4">
-      <button id="auction-left"
-        class="disabled:opacity-40"
-        disabled>
+      <button id="auction-left" class="disabled:opacity-40" disabled>
         <i class="fas fa-chevron-left"></i>
       </button>
-
-      <%# Right Arrow %>
-      <button id="auction-right"
-        class="disabled:opacity-40">
+      <button id="auction-right" class="disabled:opacity-40">
         <i class="fas fa-chevron-right"></i>
       </button>
     </div>
   </div>
 
-  <%# Left Arrow %>
-
-  <%# Scrollable Container %>
-  <div id="auction-carousel"
-    class="flex space-x-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 hide-scrollbar">
-    <% @auction_items.each do |item| %>
-      <% status_label = item.active? ? "Active" : item.upcoming? ? "Upcoming" : nil %>
-
-      <%= link_to auction_item_path(item),
-          class: "snap-start min-w-[180px] max-w-[180px] flex-shrink-0 border rounded-md shadow hover:shadow-lg transition-all relative group" do %>
-
-        <%# Status Label %>
-        <% if status_label %>
-          <div class="absolute top-2 left-2 bg-blue-500 text-white text-xs font-semibold px-2 py-0.5 rounded z-10">
-            <%= status_label %>
-          </div>
-        <% end %>
-
-        <%# Image %>
-        <div class="w-full h-40 overflow-hidden bg-gray-100">
-          <% if item.images.attached? %>
-            <%= image_tag item.images.first, class: "w-full h-full object-cover transition group-hover:scale-105 duration-200" %>
-          <% else %>
-            <%= image_tag "default_item.png", class: "w-full h-full object-cover" %>
-          <% end %>
-        </div>
-
-        <%# Info %>
-        <div class="p-2 text-xs space-y-1">
-          <div class="flex justify-between items-center">
-            <strong><%= number_to_currency(item.max_bid || 0) %></strong>
-            <span class="text-gray-500">Max Bid</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <strong><%= item.total_bids %> bids</strong>
-            <span class="text-gray-500">Total Bids</span>
-          </div>
-        </div>
-      <% end %>
-    <% end %>
+  <div id="auction-carousel" class="flex space-x-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 hide-scrollbar">
+    <%= render partial: "shared/auction_item_cards", locals: { auction_items: @auction_items } %>
   </div>
+
 </div>
 
 <div class="py-20"></div>
