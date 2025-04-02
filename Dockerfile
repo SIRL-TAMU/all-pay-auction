@@ -42,4 +42,4 @@ ENTRYPOINT ["entrypoint.sh"]
 # Expose port 3000
 EXPOSE 3000
 
-CMD ["sh", "-c", "rm -f tmp/pids/server.pid && rails server -b 0.0.0.0 & rails tailwindcss:watch & wait"]
+CMD ["sh", "-c", "rm -f tmp/pids/server.pid && rails server -b 0.0.0.0"]
