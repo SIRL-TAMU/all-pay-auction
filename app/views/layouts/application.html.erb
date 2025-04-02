@@ -19,23 +19,14 @@
 
     <!-- Rails Application Styles -->
 
-    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {}
-        }
-      }
-    </script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.tailwindcss.com/3.3.5" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com/3.3.5"></script>
 
 
-    <% unless Rails.env.test? %>
     <%= stylesheet_link_tag "application" %>
     <!--buyer/seller settings-->
     <%= stylesheet_link_tag "buyer_settings" %>
     <%= stylesheet_link_tag "seller_settings" %>
-    <% end %>
 
 
     <%= javascript_importmap_tags %>
