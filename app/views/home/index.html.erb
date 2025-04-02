@@ -1,13 +1,51 @@
-<main>
-    <% if logged_in? %>
-        <div class="debug-card">
-            <h3>Debugging Info</h3>
-            <p><strong>Account Type:</strong> <%= buyer? ? "Buyer" : "Seller" %></p>
-            <p><strong>Name:</strong> <%= current_user.first_name %> <%= current_user.last_name %></p>
-            <p><strong>Email:</strong> <%= current_user.email %></p>
-            <p><strong>Liquid Balance:</strong> $<%= number_to_currency(current_user.liquid_balance, unit: "", precision: 2) %></p>
-            <p><strong>Asset Balance:</strong> $<%= number_to_currency(current_user.asset_balance, unit: "", precision: 2) %></p>
+<%# Home Page Image %>
+<div class="w-full items-center flex flex-col px-4">
+  <%= image_tag "home_image.png", class: "h-auto object-cover" %>
+</div>
 
+<%# The Auction Block Preview %>
+<div class="w-full px-4 mt-10">
+  <div class="flex flex-row items-center space-x-3">
+    <div class="font-bold text-md">The Auction Block</div>
+    <%= link_to "Explore More →", auction_items_path, class: "text-sm underline" %>
+  </div>
+
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mt-4">
+    <% @auction_items.each do |item| %>
+      <%# Determine label %>
+      <% status_label = item.active? ? "Active" : item.upcoming? ? "Upcoming" : nil %>
+
+      <%= link_to auction_item_path(item), class: "relative group block border rounded-md shadow hover:shadow-lg transition-all overflow-hidden" do %>
+        <%# Status Label %>
+        <% if status_label %>
+          <div class="absolute top-2 left-2 bg-blue-500 text-white text-xs font-semibold px-2 py-0.5 rounded z-10">
+            <%= status_label %>
+          </div>
+        <% end %>
+
+        <%# Item Image %>
+        <div class="w-full h-48 overflow-hidden bg-gray-100">
+          <% if item.images.attached? %>
+            <%= image_tag item.images.first, class: "w-full h-full object-cover transition group-hover:scale-105 duration-200" %>
+          <% else %>
+            <%= image_tag "default_item.png", class: "w-full h-full object-cover" %>
+          <% end %>
         </div>
+
+        <%# Info Section %>
+        <div class="p-3 text-sm space-y-1">
+          <div class="flex flex-row items-center space-x-4">
+            <strong><%= number_to_currency(item.max_bid || 0) %></strong>
+            <div class="text-xs text-gray-500">Max Bid</div>
+          </div>
+          <div class="flex flex-row items-center space-x-3">
+            <strong><%= item.total_bids %> bids</strong>
+            <div class="text-xs text-gray-500">Total Bids</div>
+          </div>
+        </div>
+      <% end %>
     <% end %>
-</main>
+  </div>
+</div>
+
+<div class="py-20"></div>

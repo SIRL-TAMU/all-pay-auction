@@ -4,7 +4,7 @@ document.addEventListener("scroll", () => {
   const topNav = document.getElementById("top-nav");
   const navContainer = document.getElementById("nav-container");
 
-  if (window.scrollY > 20) {
+  if (window.scrollY > 0) {
     if (topNav) topNav.classList.replace("text-md", "text-sm");
     if (logoText) {
       logoText.classList.replace("text-5xl", "text-4xl");
