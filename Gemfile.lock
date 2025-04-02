@@ -432,6 +432,8 @@ GEM
     stripe (13.5.0)
     sys-uname (1.3.1)
       ffi (~> 1.1)
+    terser (1.2.5)
+      execjs (>= 0.3.0, < 3)
     thor (1.3.2)
     tilt (2.6.0)
     timeout (0.4.3)
@@ -505,6 +507,7 @@ DEPENDENCIES
   sqlite3 (>= 1.4)
   stimulus-rails
   stripe
+  terser
   turbo-rails
   tzinfo-data
   uglifier (~> 4.0)
