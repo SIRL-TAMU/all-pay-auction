@@ -89,6 +89,6 @@ end
 gem "letter_opener", "~> 1.10", group: :development
 gem "redis"
 
-gem "tailwindcss-ruby", "~> 4.0"
+# gem "tailwindcss-ruby", "~> 4.0"
 
-gem "tailwindcss-rails", "~> 4.2"
+# gem "tailwindcss-rails", "~> 4.2"
