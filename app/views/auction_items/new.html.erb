@@ -1,7 +1,3 @@
-<%= link_to seller_dashboard_path, class: "back-link" do %>
-  <i class="fa-solid fa-chevron-left"></i> Back
-<% end %>
-
 <%= form_with(model: @auction_item, local: true, html: { multipart: true }, class: "auction-form") do |form| %>
   <div class="auction-container">
     <div class="create-auction-title-container">
