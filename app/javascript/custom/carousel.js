@@ -56,7 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
       container.scrollLeft + container.offsetWidth >=
         container.scrollWidth - 100
     ) {
-      console.log("test");
       loadMoreItems();
     }
   });
