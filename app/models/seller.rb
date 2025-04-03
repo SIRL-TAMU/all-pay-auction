@@ -14,7 +14,7 @@ class Seller < ApplicationRecord
 
   has_many :transactions, dependent: :destroy
   has_many :auction_items, dependent: :destroy
-
+  has_many :stripe_transactions
   def generate_password_reset_token
     self.reset_password_token = SecureRandom.urlsafe_base64(24)
     self.reset_password_sent_at = Time.current
@@ -23,6 +23,11 @@ class Seller < ApplicationRecord
 
   def password_reset_token_valid?
     reset_password_sent_at > 2.hours.ago
+  end
+
+  # After seller withdraws, deduct funds
+  def deduct_funds(bid_amount)
+    update(liquid_balance: liquid_balance - bid_amount)
   end
 
   def clear_password_reset_token

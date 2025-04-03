@@ -10,6 +10,8 @@
         <li><%= link_to "Dashboard", buyer_dashboard_path, class: "#{current_page?(buyer_dashboard_path) ? 'underline' : ''}" %></li>
       <% end %>
       <li><%= link_to "Manage Funds", manage_funds_path, class: "#{current_page?(manage_funds_path) ? 'underline' : ''}" %></li>
+      <li><%= link_to "Transaction History", manage_funds_path, class: "#{current_page?(manage_funds_path) ? 'underline' : ''}" %></li>
+
       <li><%= link_to "Log Out", logout_path, method: :delete %></li>
     </ul>
   </div>
@@ -41,28 +43,78 @@
       </div>
     </div>
 
-    <!-- Add Funds Form -->
-    <div id="add-form" class="bg-[#D9D9D9] mt-6 p-6 rounded hidden">
-      <%= form_tag add_funds_path do %>
-        <div class="mb-4">
-          <%= label_tag :amount, "Add Amount", class: "block text-xs font-semibold uppercase mb-1" %>
-          <%= number_field_tag :amount, nil, step: 0.01, class: "w-full p-2 border rounded" %>
-        </div>
-        <%= submit_tag "Add Funds", class: "px-4 py-2 bg-black text-white rounded hover:bg-gray-800" %>
-      <% end %>
-    </div>
+      <!-- Add Funds Form -->
+      <div id="add-form" class="bg-[#D9D9D9] mt-6 p-6 rounded hidden">
+        <%= form_tag add_funds_path do %>
+          <div class="mb-4">
+            <%= label_tag :amount, "Add Amount", class: "block text-xs font-semibold uppercase mb-1" %>
+            <%= number_field_tag :amount, nil, step: 0.01, class: "w-full p-2 border rounded" %>
+          </div>
+          <%= submit_tag "Add Funds", class: "px-4 py-2 bg-black text-white rounded hover:bg-gray-800" %>
+        <% end %>
+      </div>
 
-    <!-- Withdraw Funds Placeholder -->
-    <div id="withdraw-form" class="bg-[#D9D9D9] mt-6 p-6 rounded hidden">
-      <form>
-        <div class="mb-4">
-          <label for="withdraw-amount" class="block text-xs font-semibold uppercase mb-1">Withdraw Amount</label>
-          <input type="number" id="withdraw-amount" step="0.01" class="w-full p-2 border rounded" placeholder="$0.00">
+      <!-- Withdraw Funds Form -->
+      <div id="withdraw-form" class="bg-[#D9D9D9] mt-6 p-6 rounded hidden">
+        <% if current_user.stripe_account_id.blank? %>
+          <p>You must connect to Stripe to withdraw funds.</p>
+          <%= button_to "Connect Stripe Account", connect_stripe_account_path, method: :get, class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" %>
+        <% else %>
+          <p>You are connected to your Stripe account.</p>
+          <p>Stripe Account ID: <strong><%= current_user.stripe_account_id %></strong></p>
+          <%= form_tag withdraw_funds_path do %>
+          <div class="mb-4">
+            <%= label_tag :amount, "Withdraw Amount", class: "block text-xs font-semibold uppercase mb-1" %>
+            <%= number_field_tag :amount, nil, step: 0.01, class: "w-full p-2 border rounded" %>
+          </div>
+          <%= submit_tag "Withdraw Funds", class: "px-4 py-2 bg-black text-white rounded hover:bg-gray-800" %>
+          <% end %>
+          <br>
+          <%= button_to "Disconnect Stripe Account", disconnect_stripe_account_path, method: :post, class: "px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700", data: { confirm: "Are you sure you want to disconnect your Stripe account?" } %>
+        <% end %>
         </div>
-        <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded cursor-not-allowed" disabled>
-          Coming Soon
-        </button>
-      </form>
+      </div>
+
+      <!-- Transactions Section -->
+      <div class="mt-12 bg-white p-6 rounded shadow">
+        <h2 class="text-lg font-semibold mb-4">
+          <%= buyer? ? "Buyer Transactions" : "Seller Transactions" %>
+        </h2>
+        <% if current_user.stripe_transactions.any? %>
+          <div class="overflow-x-auto">
+            <table class="w-full border-collapse border border-gray-300">
+              <thead>
+                <tr class="bg-gray-100 text-left">
+                  <th class="p-3 border border-gray-300">Type</th>
+                  <th class="p-3 border border-gray-300">Amount</th>
+                  <th class="p-3 border border-gray-300">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% current_user.stripe_transactions.order(transaction_date: :desc).each do |transaction| %>
+                  <tr class="even:bg-gray-50 hover:bg-gray-200">
+                    <td class="p-3 border border-gray-300"><%= transaction.transaction_type.capitalize %></td>
+                    <td class="p-3 border border-gray-300"><%= number_to_currency(transaction.amount) %></td>
+                    <td class="p-3 border border-gray-300"><%= transaction.transaction_date.strftime("%B %d, %Y %H:%M") %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <p class="text-gray-600">No transactions available.</p>
+        <% end %>
+      </div>
+
+
     </div>
   </div>
-</div>
+    
+
+
+
+
+
+
+
+  
