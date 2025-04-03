@@ -37,7 +37,7 @@
 }
 
 .auction-items-content {
-width: 80%;
+width: 100%;
 }
 
 .auction-items-tabs {
@@ -71,7 +71,7 @@ width: 80%;
 .auction-items-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
+    gap: 3rem;
     max-width: 100%;
 }
 
