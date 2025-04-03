@@ -1,65 +1,103 @@
-<h1 class="text-xl font-bold underline bg-blue-900">
-      testunderlined
-</h1>
+<div class="flex min-h-screen bg-[#D9D9D9]">
+  <!-- Side Navigation -->
+  <div class="w-48 p-6 text-sm">
+    <ul class="space-y-3">
+      <li><%= link_to "Your Profile", buyer_setting_path, class: "#{current_page?(buyer_setting_path) ? 'underline' : ''}" %></li>
+      <li><%= link_to "Dashboard", buyer_dashboard_path %></li>
+      <li><%= link_to "Manage Funds", manage_funds_path %></li>
+      <li><%= link_to "Log Out", logout_path, method: :delete %></li>
+    </ul>
+  </div>
 
-<h1>Edit Your Settings</h1>
+  <!-- Main Content -->
+  <div class="flex-1 p-10">
+    <!-- Title -->
+    <h1 class="text-sm uppercase tracking-wide mb-8">Your Profile</h1>
 
-<% if flash.now[:alert] %>
-  <div class="alert-message error"><%= flash.now[:alert] %></div>
-<% end %>
-
-<% if flash.now[:notice] %>
-  <div class="alert-message success"><%= flash.now[:notice] %></div>
-<% end %>
-
-<div class="settings-section">
-  <h2>Update Profile Information</h2>
-  <%= form_with(model: @buyer, url: update_profile_buyer_setting_path, method: :patch, local: true, class: 'profile-form') do |form| %>
-    <div class="form-group">
-      <%= form.label :first_name, class: 'form-label' %>
-      <%= form.text_field :first_name, class: 'form-control' %>
+    <!-- Personal Info Header -->
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-md font-semibold">Personal Information</h2>
+      <div class="space-x-2 text-sm">
+        <button id="edit-info-btn" class="underline">Edit</button>
+        /
+        <button id="change-password-btn" class="underline">Change Password</button>
+      </div>
     </div>
 
-    <div class="form-group">
-      <%= form.label :last_name, class: 'form-label' %>
-      <%= form.text_field :last_name, class: 'form-control' %>
+    <!-- Info Display Block -->
+    <div id="info-display" class="bg-gray-200 p-6 rounded space-y-2">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <div class="text-xs font-semibold uppercase">First Name</div>
+          <div class="text-sm"><%= @buyer.first_name %></div>
+        </div>
+        <div>
+          <div class="text-xs font-semibold uppercase">Last Name</div>
+          <div class="text-sm"><%= @buyer.last_name %></div>
+        </div>
+        <div>
+          <div class="text-xs font-semibold uppercase">Email</div>
+          <div class="text-sm"><%= @buyer.email %></div>
+        </div>
+        <div>
+          <div class="text-xs font-semibold uppercase">Password</div>
+          <div class="text-sm">********</div>
+        </div>
+      </div>
     </div>
 
-    <div class="form-actions">
-      <%= form.submit "Update Profile", class: 'button primary' %>
+    <!-- Edit Form (Hidden by default) -->
+    <div id="edit-info-form" class="hidden mt-4 bg-[#D9D9D9] p-6 rounded">
+      <%= form_with(model: @buyer, url: update_profile_buyer_setting_path, method: :patch, local: true) do |form| %>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <%= form.label :first_name, class: 'text-xs uppercase font-semibold' %>
+            <%= form.text_field :first_name, class: 'w-full border p-2 rounded' %>
+          </div>
+          <div>
+            <%= form.label :last_name, class: 'text-xs uppercase font-semibold' %>
+            <%= form.text_field :last_name, class: 'w-full border p-2 rounded' %>
+          </div>
+          <div class="col-span-2">
+            <%= form.label :email, class: 'text-xs uppercase font-semibold' %>
+            <div class="text-sm"><%= @buyer.email %></div>
+          </div>
+        </div>
+        <div class="mt-4 space-x-3">
+          <%= form.submit "Save", class: 'px-4 py-2 bg-black text-white rounded' %>
+          <button type="button" id="cancel-edit" class="underline text-sm">Cancel</button>
+        </div>
+      <% end %>
     </div>
-  <% end %>
-</div>
 
-<div class="settings-section">
-  <h2>Update Password</h2>
-  <%= form_with(model: @buyer, url: update_password_buyer_setting_path, method: :patch, local: true, class: 'password-form') do |form| %>
-    <div class="form-group">
-      <%= form.label :current_password, class: 'form-label' %>
-      <%= form.password_field :current_password, class: 'form-control' %>
+    <!-- Password Form (Hidden by default) -->
+    <div id="change-password-form" class="hidden mt-4 bg-[#D9D9D9] p-6 rounded">
+      <% if @buyer.provider == "google_oauth2" %>
+        <div class="text-sm text-gray-700">
+          You are logged in with Google and cannot change your password here.
+        </div>
+      <% else %>
+        <%= form_with(model: @buyer, url: update_password_buyer_setting_path, method: :patch, local: true) do |form| %>
+          <div class="grid grid-cols-1 gap-4">
+            <div>
+              <%= form.label :current_password, class: 'text-xs uppercase font-semibold' %>
+              <%= form.password_field :current_password, class: 'w-full border p-2 rounded' %>
+            </div>
+            <div>
+              <%= form.label :password, class: 'text-xs uppercase font-semibold' %>
+              <%= form.password_field :password, class: 'w-full border p-2 rounded' %>
+            </div>
+            <div>
+              <%= form.label :password_confirmation, class: 'text-xs uppercase font-semibold' %>
+              <%= form.password_field :password_confirmation, class: 'w-full border p-2 rounded' %>
+            </div>
+          </div>
+          <div class="mt-4 space-x-3">
+            <%= form.submit "Save", class: 'px-4 py-2 bg-black text-white rounded' %>
+            <button type="button" id="cancel-password" class="underline text-sm">Cancel</button>
+          </div>
+        <% end %>
+      <% end %>
     </div>
-
-    <div class="form-group">
-      <%= form.label :password, class: 'form-label' %>
-      <%= form.password_field :password, class: 'form-control' %>
-    </div>
-
-    <div class="form-group">
-      <%= form.label :password_confirmation, class: 'form-label' %>
-      <%= form.password_field :password_confirmation, class: 'form-control' %>
-    </div>
-
-    <div class="form-actions">
-      <%= form.submit "Update Password", class: 'button primary' %>
-    </div>
-  <% end %>
-</div>
-
-<div class="settings-section delete-account">
-  <h2>Delete Account</h2>
-  <p class="warning-message">
-    <strong>Warning:</strong> Deleting your account is permanent and cannot be undone.
-  </p>
-
-  <%= button_to "Delete Account", delete_buyer_setting_path, method: :delete, data: { confirm: "Are you sure you want to delete your account? This action cannot be undone." }, class: 'button danger' %>
+  </div>
 </div>

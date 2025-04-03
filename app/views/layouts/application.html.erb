@@ -34,29 +34,37 @@
   </head>
 
   <body class="<%= "#{controller_name}-#{action_name}" %>">
-    <%= render "shared/navbar" %> 
+    <div class="min-h-screen flex flex-col">
+      
+      <%= render "shared/navbar" %>
 
-    <% if flash[:notice] || flash[:alert] %>
-      <div class="flash-container">
-        <% if flash[:notice] %>
-          <div class="flash-message flash-success">
-            <span><%= flash[:notice] %></span>
-            <button class="close-flash" onclick="this.parentElement.style.display='none'">✖</button>
-          </div>
-        <% end %>
+      <%# Flash messages %>
+      <% if flash[:notice] || flash[:alert] %>
+        <div class="flash-container">
+          <% if flash[:notice] %>
+            <div class="flash-message flash-success">
+              <span><%= flash[:notice] %></span>
+              <button class="close-flash" onclick="this.parentElement.style.display='none'">✖</button>
+            </div>
+          <% end %>
 
-        <% if flash[:alert] %>
-          <div class="flash-message flash-danger">
-            <span><%= flash[:alert] %></span>
-            <button class="close-flash" onclick="this.parentElement.style.display='none'">✖</button>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
+          <% if flash[:alert] %>
+            <div class="flash-message flash-danger">
+              <span><%= flash[:alert] %></span>
+              <button class="close-flash" onclick="this.parentElement.style.display='none'">✖</button>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
 
+      <%# Page Content %>
+      <main class="flex-grow">
+        <%= yield %>
+      </main>
 
-    <%= yield %>
- </body>
+       <%= render "shared/footer" %>
+    </div>
+  </body>
 
 
   <script>
