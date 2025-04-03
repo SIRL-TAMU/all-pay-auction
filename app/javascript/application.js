@@ -5,3 +5,4 @@ import "channels";
 
 import "navbar";
 import "carousel";
+import "profile_edit_form";
