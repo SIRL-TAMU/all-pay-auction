@@ -18,35 +18,53 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Rails Application Styles -->
+
+    <link href="https://cdn.tailwindcss.com/3.3.5" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com/3.3.5"></script>
+
+
     <%= stylesheet_link_tag "application" %>
+    <!--buyer/seller settings-->
+    <%= stylesheet_link_tag "buyer_settings" %>
+    <%= stylesheet_link_tag "seller_settings" %>
+
+
     <%= javascript_importmap_tags %>
 
   </head>
 
   <body class="<%= "#{controller_name}-#{action_name}" %>">
-    <%= render "shared/navbar" %> 
+    <div class="min-h-screen flex flex-col">
+      
+      <%= render "shared/navbar" %>
 
-    <% if flash[:notice] || flash[:alert] %>
-      <div class="flash-container">
-        <% if flash[:notice] %>
-          <div class="flash-message flash-success">
-            <span><%= flash[:notice] %></span>
-            <button class="close-flash" onclick="this.parentElement.style.display='none'">✖</button>
-          </div>
-        <% end %>
+      <%# Flash messages %>
+      <% if flash[:notice] || flash[:alert] %>
+        <div class="flash-container">
+          <% if flash[:notice] %>
+            <div class="flash-message flash-success">
+              <span><%= flash[:notice] %></span>
+              <button class="close-flash" onclick="this.parentElement.style.display='none'">✖</button>
+            </div>
+          <% end %>
 
-        <% if flash[:alert] %>
-          <div class="flash-message flash-danger">
-            <span><%= flash[:alert] %></span>
-            <button class="close-flash" onclick="this.parentElement.style.display='none'">✖</button>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
+          <% if flash[:alert] %>
+            <div class="flash-message flash-danger">
+              <span><%= flash[:alert] %></span>
+              <button class="close-flash" onclick="this.parentElement.style.display='none'">✖</button>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
 
+      <%# Page Content %>
+      <main class="flex-grow">
+        <%= yield %>
+      </main>
 
-    <%= yield %>
- </body>
+       <%= render "shared/footer" %>
+    </div>
+  </body>
 
 
   <script>

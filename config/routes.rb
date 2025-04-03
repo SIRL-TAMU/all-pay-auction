@@ -87,4 +87,6 @@ Rails.application.routes.draw do
   post "/auth/google_oauth2_setup_login", to: "sessions#google_oauth2_setup_login", as: :google_oauth2_setup_login
   post "/auth/google_oauth2_setup_register", to: "sessions#google_oauth2_setup_register",
                                              as: :google_oauth2_setup_register
+
+  get "load_auction_items", to: "home#load_auction_items"
 end

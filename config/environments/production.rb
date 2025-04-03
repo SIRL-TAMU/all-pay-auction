@@ -28,6 +28,7 @@ Rails.application.configure do
   # Compress CSS using a preprocessor.
   # config.assets.css_compressor = :sass
 
+  config.assets.js_compressor = :uglifier
   # Do not fall back to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
 
@@ -110,7 +111,7 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.default_url_options = { host: "localhost", port: 3000 } # UPDATE THIS TO PRODUCTION URL
+  config.action_mailer.default_url_options = { host: "all-pay-auction3-478f271f12bd.herokuapp.com", protocol: "https" }
 
   config.action_mailer.smtp_settings = {
     address: "smtp.gmail.com",

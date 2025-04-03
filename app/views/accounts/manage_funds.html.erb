@@ -1,13 +1,71 @@
-<h1>Manage Funds</h1>
-<!-- Add form or content for managing funds here -->
+<div class="flex min-h-screen bg-[#D9D9D9]">
+  <!-- Side Navigation -->
+  <div class="w-48 p-6 text-sm">
+    <ul class="space-y-3">
+      <% if seller? %>
+        <li><%= link_to "Your Profile", seller_setting_path, class: "#{current_page?(seller_setting_path) ? 'underline' : ''}" %></li>
+        <li><%= link_to "Dashboard", seller_dashboard_path, class: "#{current_page?(seller_dashboard_path) ? 'underline' : ''}" %></li>
+      <% elsif buyer? %>
+        <li><%= link_to "Your Profile", buyer_setting_path, class: "#{current_page?(buyer_setting_path) ? 'underline' : ''}" %></li>
+        <li><%= link_to "Dashboard", buyer_dashboard_path, class: "#{current_page?(buyer_dashboard_path) ? 'underline' : ''}" %></li>
+      <% end %>
+      <li><%= link_to "Manage Funds", manage_funds_path, class: "#{current_page?(manage_funds_path) ? 'underline' : ''}" %></li>
+      <li><%= link_to "Log Out", logout_path, method: :delete %></li>
+    </ul>
+  </div>
 
-<%= form_tag add_funds_path do %>
-    <%= number_field_tag :amount, nil, step: 0.01 %>
-    <%= submit_tag "Add Funds" %>
-  <% end %>
+  <!-- Main Content -->
+  <div class="flex-1 p-10">
+    <h1 class="text-sm uppercase tracking-wide mb-8">Manage Funds</h1>
 
-  
+    <!-- Top Section -->
+    <div class="flex items-center justify-between mb-2">
+      <h2 class="text-md font-semibold">Personal Information</h2>
+      <div class="space-x-2 text-sm">
+        <button id="add-btn" class="underline">Add</button> /
+        <button id="withdraw-btn" class="underline">Withdraw</button>
+      </div>
+    </div>
 
+    <!-- Balance Section -->
+    <div class="bg-gray-200 p-6 rounded">
+      <div class="grid grid-cols-2 gap-12">
+        <div>
+          <div class="text-sm font-semibold mb-1">Asset Balance</div>
+          <div class="text-md font-mono"><%= number_to_currency(current_user.asset_balance || 0) %></div>
+        </div>
+        <div>
+          <div class="text-sm font-semibold mb-1">Liquid Balance</div>
+          <div class="text-md font-mono"><%= number_to_currency(current_user.liquid_balance || 0) %></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Funds Form -->
+    <div id="add-form" class="bg-[#D9D9D9] mt-6 p-6 rounded hidden">
+      <%= form_tag add_funds_path do %>
+        <div class="mb-4">
+          <%= label_tag :amount, "Add Amount", class: "block text-xs font-semibold uppercase mb-1" %>
+          <%= number_field_tag :amount, nil, step: 0.01, class: "w-full p-2 border rounded" %>
+        </div>
+        <%= submit_tag "Add Funds", class: "px-4 py-2 bg-black text-white rounded hover:bg-gray-800" %>
+      <% end %>
+    </div>
+
+    <!-- Withdraw Funds Placeholder -->
+    <div id="withdraw-form" class="bg-[#D9D9D9] mt-6 p-6 rounded hidden">
+      <form>
+        <div class="mb-4">
+          <label for="withdraw-amount" class="block text-xs font-semibold uppercase mb-1">Withdraw Amount</label>
+          <input type="number" id="withdraw-amount" step="0.01" class="w-full p-2 border rounded" placeholder="$0.00">
+        </div>
+        <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded cursor-not-allowed" disabled>
+          Coming Soon
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
   
 
   <% if current_user.stripe_account_id.blank? %>
