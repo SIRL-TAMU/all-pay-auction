@@ -1,0 +1,27 @@
+<% auction_items.each do |item| %>
+  <% status_label = item.active? ? "Active" : item.upcoming? ? "Upcoming" : nil %>
+  <%= link_to auction_item_path(item), class: "carousel-item snap-start min-w-[200px] max-w-[200px] flex-shrink-0 border rounded-md shadow hover:shadow-lg transition-all relative group" do %>
+    <% if status_label %>
+      <div class="absolute top-2 left-2 bg-blue-500 text-white text-xs font-semibold px-2 py-0.5 rounded z-10">
+        <%= status_label %>
+      </div>
+    <% end %>
+    <div class="w-full h-40 overflow-hidden bg-gray-100">
+      <% if item.images.attached? %>
+        <%= image_tag item.images.first, class: "w-full h-full object-cover transition group-hover:scale-105 duration-200" %>
+      <% else %>
+        <%= image_tag "default_item.png", class: "w-full h-full object-cover" %>
+      <% end %>
+    </div>
+    <div class="p-2 pb-6 text-xs space-y-1">
+      <div class="flex justify-between items-center">
+        <strong><%= number_to_currency(item.max_bid || 0) %></strong>
+        <span class="text-gray-500">Max Bid</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <strong><%= item.total_bids %> bids</strong>
+        <span class="text-gray-500">Total Bids</span>
+      </div>
+    </div>
+  <% end %>
+<% end %>

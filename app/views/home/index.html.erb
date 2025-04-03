@@ -1,13 +1,34 @@
-<main>
-    <% if logged_in? %>
-        <div class="debug-card">
-            <h3>Debugging Info</h3>
-            <p><strong>Account Type:</strong> <%= buyer? ? "Buyer" : "Seller" %></p>
-            <p><strong>Name:</strong> <%= current_user.first_name %> <%= current_user.last_name %></p>
-            <p><strong>Email:</strong> <%= current_user.email %></p>
-            <p><strong>Liquid Balance:</strong> $<%= number_to_currency(current_user.liquid_balance, unit: "", precision: 2) %></p>
-            <p><strong>Asset Balance:</strong> $<%= number_to_currency(current_user.asset_balance, unit: "", precision: 2) %></p>
+<%# Home Page Image %>
+<div class="w-full items-center flex flex-col px-4">
+  <%= image_tag "home_image.png", class: "h-auto object-cover" %>
+</div>
 
-        </div>
-    <% end %>
-</main>
+<%# Auction Block Carousel %>
+<div class="w-full px-4 mt-10 relative">
+  <div class="flex flex-row items-center justify-between mb-4">
+    <div class="flex flex-row items-center space-x-4">
+      <div class="font-bold text-md">The Auction Block</div>
+      <%= link_to "Explore More →", auction_items_path, class: "text-sm underline" %>
+      <div id="auction-loader" class=" hidden">
+        <div class="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    </div>
+
+
+    <div class="mr-10 space-x-4">
+      <button id="auction-left" class="disabled:opacity-40" disabled>
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button id="auction-right" class="disabled:opacity-40">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="auction-carousel" class="flex space-x-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 hide-scrollbar">
+    <%= render partial: "shared/auction_item_cards", locals: { auction_items: @auction_items } %>
+  </div>
+
+</div>
+
+<div class="py-20"></div>

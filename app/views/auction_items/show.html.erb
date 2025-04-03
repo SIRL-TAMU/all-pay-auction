@@ -1,19 +1,3 @@
-<% back_path =
-  if seller?
-    if request.referer.present? && request.referer.include?(seller_dashboard_path)
-      seller_dashboard_path
-    else
-      auction_items_path
-    end
-  else
-    request.referer.present? ? request.referer : auction_items_path
-  end
-%>
-
-<%= link_to back_path, class: "back-link" do %>
-  <i class="fa-solid fa-chevron-left"></i> Back
-<% end %>
-
 <div class="auction-item-container" data-auction-item-id="<%= @auction_item.id %>">
   <div class="auction-item-info-left">
     <div class="auction-item-title">
@@ -22,24 +6,26 @@
 
     <div class="auction-gallery">
       <!-- Thumbnail Navigation -->
-      <div class="auction-thumbnails-container">
-        <button class="scroll-btn up-btn" id="scroll-up">
-          <i class="fa-solid fa-chevron-up"></i>
-        </button>
+      <% if @auction_item.images.attached? && @auction_item.images.size > 1 %>
+        <div class="auction-thumbnails-container">
+          <button class="scroll-btn up-btn" id="scroll-up">
+            <i class="fa-solid fa-chevron-up"></i>
+          </button>
 
-        <div class="auction-thumbnails" id="thumbnails">
-          <% @auction_item.images.each_with_index do |image, index| %>
-            <div class="thumbnail-wrapper <%= 'selected' if index == 0 %>"
-                data-image-url="<%= url_for(image) %>">
-              <%= image_tag image, class: "auction-thumbnail" %>
-            </div>
-          <% end %>
+          <div class="auction-thumbnails" id="thumbnails">
+            <% @auction_item.images.each_with_index do |image, index| %>
+              <div class="thumbnail-wrapper <%= 'selected' if index == 0 %>"
+                  data-image-url="<%= url_for(image) %>">
+                <%= image_tag image, class: "auction-thumbnail" %>
+              </div>
+            <% end %>
+          </div>
+
+          <button class="scroll-btn down-btn" id="scroll-down">
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
         </div>
-
-        <button class="scroll-btn down-btn" id="scroll-down">
-          <i class="fa-solid fa-chevron-down"></i>
-        </button>
-      </div>
+      <% end %>
 
       <!-- Main Image Display -->
       <div class="auction-item-image-container">

@@ -48,7 +48,7 @@ class AccountsController < ApplicationController
                                                    quantity: 1
                                                  } ],
                                                  mode: "payment",
-                                                 success_url: root_url.to_s,
+                                                 success_url: manage_funds_url + "?success=true",
                                                  cancel_url: "#{root_url}/manage_funds",
                                                  metadata: {
                                                    user_id: current_user.id
