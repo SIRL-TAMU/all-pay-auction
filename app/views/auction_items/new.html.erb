@@ -14,9 +14,14 @@
             <%= form.text_field :name, required: true, class: "input-field" %>
           </div>
 
-          <div class="input-group">
+          <div class="input-group" style="position: relative;">
             <p class="input-group-product">Product Description</p>
-            <%= form.text_area :description, required: true, class: "input-field textarea" %>
+            <%= form.text_area :description,
+                  required: true,
+                  class: "input-field textarea",
+                  maxlength: 500,
+                  id: "product-description" %>
+            <small id="description-count">0 / 500</small>
           </div>
         </div>
 
@@ -170,4 +175,14 @@
 
     openingDateInput.addEventListener("change", updateClosingDateMin);
   });
+
+  const descriptionInput = document.getElementById("product-description");
+  const descriptionCount = document.getElementById("description-count");
+
+  if (descriptionInput && descriptionCount) {
+    descriptionInput.addEventListener("input", function () {
+      const len = descriptionInput.value.length;
+      descriptionCount.textContent = `${len} / 500`;
+    });
+  }
 </script>
