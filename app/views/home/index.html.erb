@@ -1,7 +1,13 @@
-<%# Home Page Image %>
-<div class="w-full items-center flex flex-col px-4">
-  <%= image_tag "home_image.png", class: "h-auto object-cover" %>
+<div class="flex items-center justify-center">
+  <div class="max-w-2xl mx-auto text-center px-6 py-12">
+    <p class="text-lg text-gray-700 leading-relaxed">
+      AllPAY is a kind of auction where every bid matters — even if you don’t win. 
+      Every participant pays their bid, but only the highest bidder takes the prize. 
+    </p>
+  </div>
 </div>
+
+
 
 <%# Auction Block Carousel %>
 <div class="w-full px-4 mt-10 relative">
@@ -12,16 +18,6 @@
       <div id="auction-loader" class=" hidden">
         <div class="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
-    </div>
-
-
-    <div class="mr-10 space-x-4">
-      <button id="auction-left" class="disabled:opacity-40" disabled>
-        <i class="fas fa-chevron-left"></i>
-      </button>
-      <button id="auction-right" class="disabled:opacity-40">
-        <i class="fas fa-chevron-right"></i>
-      </button>
     </div>
   </div>
 
