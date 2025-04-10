@@ -36,7 +36,7 @@ class AccountsController < ApplicationController
 
     fixed_percentage = 0.04
     total_fee = (amount * fixed_percentage)
-    total_charge = amount + total_fee 
+    total_charge = amount + total_fee
     stripe_amount = (total_charge*100).to_i
     credits = (amount*100).to_i
     session = Stripe::Checkout::Session.create({
@@ -68,13 +68,13 @@ class AccountsController < ApplicationController
                                                    },
                                                    transfer_data: {
                                                      # Already defaults payment to auction house stripe
-                                                     #destination: ENV.fetch("STRIPE_ACCOUNT_ID", nil)
+                                                     # destination: ENV.fetch("STRIPE_ACCOUNT_ID", nil)
                                                    }
                                                  }
 
                                                }, {
                                                  # Defaults payment to the auction house's Stripe account
-                                                 #stripe_account: ENV.fetch("STRIPE_ACCOUNT_ID", nil)
+                                                 # stripe_account: ENV.fetch("STRIPE_ACCOUNT_ID", nil)
                                                })
 
     redirect_to session.url, allow_other_host: true
@@ -85,7 +85,7 @@ class AccountsController < ApplicationController
     client_id = ENV.fetch("STRIPE_CONNECT_CLIENT_ID") # Fetch your client ID from .env
     redirect_uri = "#{root_url}stripe/oauth/callback" # Your callback URL after OAuth
     scope = "read_write" # Permissions needed for your platform (read-only is also an option)
-  
+
     oauth_url = "https://connect.stripe.com/oauth/authorize?response_type=code&client_id=#{client_id}&scope=#{scope}&redirect_uri=#{redirect_uri}"
     redirect_to oauth_url, allow_other_host: true
   end
@@ -152,7 +152,7 @@ class AccountsController < ApplicationController
         }
       })
 
-          # Deduct the amount from user's balance (assuming you have a method for this)
+    # Deduct the amount from user's balance (assuming you have a method for this)
     current_user.deduct_funds(amount)
     @stripe_transaction = current_user.stripe_transactions.new(
       amount: amount,
