@@ -21,7 +21,7 @@
                   class: "input-field textarea",
                   maxlength: 500,
                   id: "product-description" %>
-            <small id="description-count">0 / 500</small>
+            <small id="description-count">0/500</small>
           </div>
         </div>
 
@@ -221,7 +221,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (descriptionInput && descriptionCount) {
       descriptionInput.addEventListener("input", function () {
         const len = descriptionInput.value.length;
-        descriptionCount.textContent = `${len} / 300 characters`;
+        descriptionCount.textContent = `${len}/300`;
       });
     }
 </script>
