@@ -36,10 +36,10 @@ class WebhooksController < ApplicationController
           @stripe_transaction = user.stripe_transactions.new(
             amount: amount,
             transaction_type: "deposit",
-            #stripe_transaction_id: transfer.id,  #check on this later TODO
+            # stripe_transaction_id: transfer.id,  #check on this later TODO
             transaction_date: Time.now
           )
-          
+
           if @stripe_transaction.save
             Rails.logger.info("Stripe transaction recorded successfully for user #{user.id}.")
           else

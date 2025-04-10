@@ -47,8 +47,8 @@ Rails.application.routes.draw do
   # Withdraw Funds
   post "/withdraw_funds", to: "accounts#withdraw_funds", as: :withdraw_funds
   # Connect Stripe Authentication
-  get '/accounts/connect_stripe_account', to: 'accounts#connect_stripe_account', as: :connect_stripe_account
-  get '/stripe/oauth/callback', to: 'accounts#stripe_oauth_callback', as: :stripe_oauth_callback
+  get "/accounts/connect_stripe_account", to: "accounts#connect_stripe_account", as: :connect_stripe_account
+  get "/stripe/oauth/callback", to: "accounts#stripe_oauth_callback", as: :stripe_oauth_callback
   post "/disconnect_stripe_account", to: "accounts#disconnect_stripe", as: :disconnect_stripe_account
 
   # Webhook for stripe transactions

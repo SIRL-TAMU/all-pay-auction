@@ -335,3 +335,17 @@
 .upload-input {
     margin-top: 10px;
 }
+
+#description-count {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    font-size: 12px;
+    color: #666;
+    pointer-events: none;
+  }
+  
+  #product-description {
+    resize: none;
+  }
+  
