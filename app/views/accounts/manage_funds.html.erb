@@ -4,10 +4,8 @@
     <ul class="space-y-3">
       <% if seller? %>
         <li><%= link_to "Your Profile", seller_setting_path, class: "#{current_page?(seller_setting_path) ? 'underline' : ''}" %></li>
-        <li><%= link_to "Dashboard", seller_dashboard_path, class: "#{current_page?(seller_dashboard_path) ? 'underline' : ''}" %></li>
       <% elsif buyer? %>
         <li><%= link_to "Your Profile", buyer_setting_path, class: "#{current_page?(buyer_setting_path) ? 'underline' : ''}" %></li>
-        <li><%= link_to "Dashboard", buyer_dashboard_path, class: "#{current_page?(buyer_dashboard_path) ? 'underline' : ''}" %></li>
       <% end %>
       <li><%= link_to "Manage Funds", manage_funds_path, class: "#{current_page?(manage_funds_path) ? 'underline' : ''}" %></li>
       <li><%= link_to "Transaction History", manage_funds_path, class: "#{current_page?(manage_funds_path) ? 'underline' : ''}" %></li>

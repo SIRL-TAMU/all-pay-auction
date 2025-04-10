@@ -21,8 +21,9 @@
 
     <%# Logo %>
     <div id="logo" class="flex justify-center items-center transition-all duration-300 -mt-4 z-10">
-    <%= link_to "ALLPAY", logged_in? ? root_path : login_path(account_type: params[:account_type] || "buyer"),
-        class: "font-bold text-5xl transition-all duration-300" %>
+    <%= link_to (seller? ? seller_dashboard_path : buyer_dashboard_path), class: "font-bold text-5xl transition-all duration-300" do %>
+      BIDRUSH
+    <% end %>
     </div>
 
 
@@ -30,13 +31,17 @@
     <div class="mt-3 flex flex-row items-center justify-center mx-auto space-x-8 text-sm font-medium transition-all duration-300">
       <%= link_to "Home", root_path,
         class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?(root_path) ? 'bg-[#E5E5E5]' : ''}" %>
+
+      <% if seller? %>
+        <%= link_to "Dashboard", seller_dashboard_path,
+          class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?(seller_dashboard_path) ? 'bg-[#E5E5E5]' : ''}" %>
+      <% elsif buyer? %>
+        <%= link_to "Dashboard", buyer_dashboard_path,
+          class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?(buyer_dashboard_path) ? 'bg-[#E5E5E5]' : ''}" %>
+      <% end %>
+
       <%= link_to "Auction Block", auction_items_path,
         class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?(auction_items_path) ? 'bg-[#E5E5E5]' : ''}" %>
-      <%= link_to "Sell", "/sell",
-        class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?('/sell') ? 'bg-[#E5E5E5]' : ''}" %>
-      <%= link_to "About Us", "/about",
-        class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?('/about') ? 'bg-[#E5E5E5]' : ''}" %>
     </div>
-
   </nav>
 </div>
