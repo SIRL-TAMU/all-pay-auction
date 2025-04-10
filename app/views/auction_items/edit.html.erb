@@ -197,21 +197,29 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("DOMContentLoaded", function () {
     const openingDateInput = document.getElementById("opening_date");
     const closingDateInput = document.getElementById("closing_date");
 
-    function updateClosingDateMin() {
+    function updateClosingDateBounds() {
       const openDate = new Date(openingDateInput.value);
       if (!isNaN(openDate)) {
-        closingDateInput.min = openDate.toISOString().slice(0, 16);
-        if (new Date(closingDateInput.value) < openDate) {
-          closingDateInput.value = openDate.toISOString().slice(0, 16);
+        const minDate = openDate.toISOString().slice(0, 16);
+        closingDateInput.min = minDate;
+
+        const maxDate = new Date(openDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+        closingDateInput.max = maxDate.toISOString().slice(0, 16);
+
+        const currentClose = new Date(closingDateInput.value);
+        if (currentClose < openDate || currentClose > maxDate) {
+          closingDateInput.value = minDate;
         }
       }
     }
 
-    openingDateInput.addEventListener("change", updateClosingDateMin);
+    openingDateInput.addEventListener("change", updateClosingDateBounds);
+
+    updateClosingDateBounds();
   });
 
 
