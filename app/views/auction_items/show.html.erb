@@ -30,9 +30,9 @@
       <!-- Main Image Display -->
       <div class="auction-item-image-container">
         <% if @auction_item.images.attached? %>
-          <%= image_tag @auction_item.images.first, class: "auction-item-image", id: "main-image" %>
+          <%= image_tag @auction_item.images.first, class: "auction-item-image", id: "auction-item-main-image" %>
         <% else %>
-          <%= image_tag "default_item.png", class: "auction-item-image", id: "main-image" %>
+          <%= image_tag "default_item.png", class: "auction-item-image", id: "auction-item-main-image" %>
         <% end %>
       </div>
     </div>
@@ -53,17 +53,6 @@
           Payment & Shipping <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div id="auction-item-shipping-info" class="auction-item-details-content">
-          <p>Lorem ipsum odor amet, consectetuer adipiscing elit. Lacus aliquam id convallis class scelerisque, conubia taciti mi. Arcu bibendum placerat aliquam non nisi nostra. Adipiscing rutrum tempus at id in arcu. Accumsan nulla nisl magna ridiculus mattis per. Elementum leo himenaeos convallis volutpat auctor ultrices pretium.
-
-Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesuada suscipit quam integer dictumst, litora montes. Arcu semper et cubilia; semper ultricies pretium. Nisi feugiat justo vulputate massa tellus eget metus. Litora porta lectus lectus eros libero auctor. Sociosqu feugiat eget magnis sagittis natoque felis. Dui vivamus rhoncus lacus; conubia est erat. Hac tellus ac auctor vivamus massa nisl erat vitae! Lacinia vitae per arcu odio hac nisl elementum primis.</p>
-        </div>
-      </div>
-
-      <div class="auction-item-details-section">
-        <button class="auction-item-details-toggle" onclick="toggleDetails(this, 'auction-item-terms-conditions')">
-          Terms & Conditions <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div id="auction-item-terms-conditions" class="auction-item-details-content">
           <p>Lorem ipsum odor amet, consectetuer adipiscing elit. Lacus aliquam id convallis class scelerisque, conubia taciti mi. Arcu bibendum placerat aliquam non nisi nostra. Adipiscing rutrum tempus at id in arcu. Accumsan nulla nisl magna ridiculus mattis per. Elementum leo himenaeos convallis volutpat auctor ultrices pretium.
 
 Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesuada suscipit quam integer dictumst, litora montes. Arcu semper et cubilia; semper ultricies pretium. Nisi feugiat justo vulputate massa tellus eget metus. Litora porta lectus lectus eros libero auctor. Sociosqu feugiat eget magnis sagittis natoque felis. Dui vivamus rhoncus lacus; conubia est erat. Hac tellus ac auctor vivamus massa nisl erat vitae! Lacinia vitae per arcu odio hac nisl elementum primis.</p>
@@ -132,10 +121,16 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
           <strong><label for="bid_amount">Set Bid:</label></strong>
           <%= form_with(model: Bid.new, local: true, class: "auction-item-bid-form") do |form| %>
             <%= form.hidden_field :auction_item_id, value: @auction_item.id %>
-            <%= form.number_field :amount, step: @auction_item.min_increment, min: @auction_item.max_bid + @auction_item.min_increment, required: true, class: "auction-item-bid-input",  data: { min_increment: @auction_item.min_increment } %>
+            <%= form.number_field :amount,
+                  step: @auction_item.min_increment,
+                  min: @auction_item.max_bid + @auction_item.min_increment,
+                  value: @auction_item.max_bid + @auction_item.min_increment,
+                  required: true,
+                  class: "auction-item-bid-input",
+                  data: { min_increment: @auction_item.min_increment } %>
             <%= form.submit "Place Bid", class: "auction-item-bid-btn" %>
           <% end %>
-        <% end %> 
+        <% end %>
       </div>
 
 
@@ -182,6 +177,16 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
   </div>
 </div>
 
+<!-- Modal -->
+<div id="auction-item-image-modal" class="auction-item-modal auction-item-hidden">
+  <div class="auction-item-modal-backdrop">
+    <div class="auction-item-modal-content">
+      <span class="auction-item-close-btn" id="auction-item-close-modal">&times;</span>
+      <img id="auction-item-modal-image" class="auction-item-modal-image" src="" alt="Expanded Auction Image">
+    </div>
+  </div>
+</div>
+
 <div class="bottom-padding"></div>
 <div class="bottom-padding"></div>
 
@@ -211,61 +216,66 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
   }
 
   document.addEventListener("DOMContentLoaded", function () {
+    const mainImage = document.getElementById("auction-item-main-image");
     const thumbnails = document.querySelectorAll(".thumbnail-wrapper");
-    const mainImage = document.getElementById("main-image");
 
-    thumbnails.forEach(thumbnail => {
+    if (mainImage && thumbnails.length > 0) {
+      thumbnails.forEach(thumbnail => {
         thumbnail.addEventListener("click", function () {
-            mainImage.src = this.getAttribute("data-image-url");
+          mainImage.src = this.getAttribute("data-image-url");
 
-            thumbnails.forEach(thumb => thumb.classList.remove("selected"));
-            this.classList.add("selected");
+          thumbnails.forEach(thumb => thumb.classList.remove("selected"));
+          this.classList.add("selected");
         });
-    });
-});
+      });
+    }
 
-
-  document.addEventListener("DOMContentLoaded", function () {
     const thumbnailsContainer = document.getElementById("thumbnails");
     const scrollUpBtn = document.getElementById("scroll-up");
     const scrollDownBtn = document.getElementById("scroll-down");
-    const thumbnails = document.querySelectorAll(".thumbnail-wrapper");
-    const mainImage = document.getElementById("main-image");
 
-    function updateScrollButtons() {
-        if (thumbnailsContainer.scrollTop > 0) {
-            scrollUpBtn.classList.add("visible");
-        } else {
-            scrollUpBtn.classList.remove("visible");
-        }
+    if (thumbnailsContainer) {
+      function updateScrollButtons() {
+        scrollUpBtn?.classList.toggle("visible", thumbnailsContainer.scrollTop > 0);
+        scrollDownBtn?.classList.toggle(
+          "visible",
+          thumbnailsContainer.scrollHeight > thumbnailsContainer.clientHeight + thumbnailsContainer.scrollTop
+        );
+      }
 
-        if (thumbnailsContainer.scrollHeight > thumbnailsContainer.clientHeight + thumbnailsContainer.scrollTop) {
-            scrollDownBtn.classList.add("visible");
-        } else {
-            scrollDownBtn.classList.remove("visible");
-        }
+      scrollUpBtn?.addEventListener("click", () => {
+        thumbnailsContainer.scrollBy({ top: -100, behavior: "smooth" });
+      });
+
+      scrollDownBtn?.addEventListener("click", () => {
+        thumbnailsContainer.scrollBy({ top: 100, behavior: "smooth" });
+      });
+
+      thumbnailsContainer.addEventListener("scroll", updateScrollButtons);
+      updateScrollButtons();
     }
 
-    scrollUpBtn.addEventListener("click", function () {
-        thumbnailsContainer.scrollBy({ top: -100, behavior: "smooth" });
-    });
+    const modal = document.getElementById("auction-item-image-modal");
+    const closeBtn = document.getElementById("auction-item-close-modal");
+    const modalImage = document.getElementById("auction-item-modal-image");
 
-    scrollDownBtn.addEventListener("click", function () {
-        thumbnailsContainer.scrollBy({ top: 100, behavior: "smooth" });
-    });
+    if (mainImage && modal && closeBtn && modalImage) {
+      mainImage.addEventListener("click", () => {
+        modalImage.src = mainImage.src;
+        modal.style.display = "block";
+      });
 
-    thumbnailsContainer.addEventListener("scroll", updateScrollButtons);
-    updateScrollButtons();
-    
-    thumbnails.forEach(thumbnail => {
-        thumbnail.addEventListener("click", function () {
-            mainImage.src = this.getAttribute("data-image-url");
+      closeBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+        modalImage.src = "";
+      });
 
-            thumbnails.forEach(thumb => thumb.classList.remove("selected"));
-            this.classList.add("selected");
-        });
-    });
+      window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.style.display = "none";
+          modalImage.src = "";
+        }
+      });
+    }
   });
-
-
 </script>
