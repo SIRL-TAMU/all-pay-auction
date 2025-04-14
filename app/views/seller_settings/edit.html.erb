@@ -3,7 +3,6 @@
   <div class="w-48 p-6 text-sm">
     <ul class="space-y-3">
       <li><%= link_to "Your Profile", seller_setting_path, class: "#{current_page?(seller_setting_path) ? 'underline' : ''}" %></li>
-      <li><%= link_to "Dashboard", seller_dashboard_path %></li>
       <li><%= link_to "Manage Funds", manage_funds_path %></li>
       <li><%= link_to "Log Out", logout_path, method: :delete %></li>
     </ul>

@@ -7,7 +7,7 @@ class HomeController < ApplicationController
                       .includes(:seller, images_attachments: :blob)
                       .where("closing_date >= ? AND is_archived = ?", Time.zone.now, false)
                       .order(opening_date: :asc)
-                      .limit(10)
+                      .limit(5)
   end
 
   def load_auction_items
@@ -19,7 +19,7 @@ class HomeController < ApplicationController
                       .where("closing_date >= ? AND is_archived = ?", Time.zone.now, false)
                       .order(opening_date: :asc)
                       .offset(offset)
-                      .limit(10)
+                      .limit(5)
 
     render partial: "shared/auction_item_cards", locals: { auction_items: @auction_items }, layout: false
   end

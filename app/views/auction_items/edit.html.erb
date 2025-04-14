@@ -1,3 +1,10 @@
+<% def round_to_nearest_10_min(time)
+     seconds = time.sec + time.min % 10 * 60
+     adjustment = seconds >= 5 * 60 ? 10 - time.min % 10 : -(time.min % 10)
+     time.change(min: (time.min + adjustment) % 60, sec: 0)
+   end %>
+
+
 <%= form_with(model: @auction_item, local: true, html: { multipart: true }, class: "auction-form") do |form| %>
   <div class="auction-container">
     <div class="create-auction-title-container">
@@ -49,19 +56,24 @@
             <!-- 
             <div class="input-group">
               <p>Open Date</p>
-              <%= form.datetime_local_field :opening_date, required: true, class: "input-field",
+              <%= form.datetime_local_field :opening_date,
+                  required: true,
+                  class: "input-field",
                   min: Time.zone.now.strftime("%Y-%m-%dT%H:%M"),
-                  value: (form.object.opening_date || Time.zone.now).strftime("%Y-%m-%dT%H:%M"),
+                  value: (form.object.opening_date || round_to_nearest_10_min(Time.zone.now)).strftime("%Y-%m-%dT%H:%M"),
                   id: "opening_date" %>
             </div>
 
             <div class="input-group">
               <p>Close Date</p>
-              <%= form.datetime_local_field :closing_date, required: true, class: "input-field",
+              <%= form.datetime_local_field :closing_date,
+                  required: true,
+                  class: "input-field",
                   min: Time.zone.now.strftime("%Y-%m-%dT%H:%M"),
-                  value: (form.object.closing_date || (Time.zone.now + 1.week)).strftime("%Y-%m-%dT%H:%M"),
+                  value: (form.object.closing_date || round_to_nearest_10_min(Time.zone.now + 1.week)).strftime("%Y-%m-%dT%H:%M"),
                   id: "closing_date" %>
             </div>
+
             -->
 
             <div class="input-group">
@@ -201,14 +213,59 @@ document.addEventListener("DOMContentLoaded", function () {
     const openingDateInput = document.getElementById("opening_date");
     const closingDateInput = document.getElementById("closing_date");
 
+    function roundToNearest10Minutes(date) {
+      const rounded = new Date(date);
+      const minutes = rounded.getMinutes();
+      const remainder = minutes % 10;
+      if (remainder >= 5) {
+        rounded.setMinutes(minutes + (10 - remainder));
+      } else {
+        rounded.setMinutes(minutes - remainder);
+      }
+      rounded.setSeconds(0);
+      rounded.setMilliseconds(0);
+      return rounded;
+    }
+
+    function formatDateTimeLocal(date) {
+      const pad = (n) => n.toString().padStart(2, "0");
+      return (
+        date.getFullYear() +
+        "-" +
+        pad(date.getMonth() + 1) +
+        "-" +
+        pad(date.getDate()) +
+        "T" +
+        pad(date.getHours()) +
+        ":" +
+        pad(date.getMinutes())
+      );
+    }
+
+    function setInitialValues() {
+      const now = new Date();
+      const roundedOpen = roundToNearest10Minutes(now);
+      const roundedClose = roundToNearest10Minutes(new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)); // +1 week
+
+      if (!openingDateInput.value) {
+        openingDateInput.value = formatDateTimeLocal(roundedOpen);
+      }
+
+      if (!closingDateInput.value) {
+        closingDateInput.value = formatDateTimeLocal(roundedClose);
+      }
+
+      updateClosingDateBounds();
+    }
+
     function updateClosingDateBounds() {
       const openDate = new Date(openingDateInput.value);
       if (!isNaN(openDate)) {
-        const minDate = openDate.toISOString().slice(0, 16);
+        const minDate = formatDateTimeLocal(openDate);
         closingDateInput.min = minDate;
 
         const maxDate = new Date(openDate.getTime() + 30 * 24 * 60 * 60 * 1000);
-        closingDateInput.max = maxDate.toISOString().slice(0, 16);
+        closingDateInput.max = formatDateTimeLocal(maxDate);
 
         const currentClose = new Date(closingDateInput.value);
         if (currentClose < openDate || currentClose > maxDate) {
@@ -217,10 +274,18 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    openingDateInput.addEventListener("change", updateClosingDateBounds);
+    openingDateInput.addEventListener("blur", function () {
+      openingDateInput.value = formatDateTimeLocal(roundToNearest10Minutes(new Date(openingDateInput.value)));
+      updateClosingDateBounds();
+    });
 
-    updateClosingDateBounds();
+    closingDateInput.addEventListener("blur", function () {
+      closingDateInput.value = formatDateTimeLocal(roundToNearest10Minutes(new Date(closingDateInput.value)));
+    });
+
+    setInitialValues();
   });
+
 
 
     const descriptionInput = document.getElementById("product-description");
