@@ -34,24 +34,22 @@
         <div class="auction-left-general">
           <p>Bid Details</p>
           <div class="bid-details-grid">
-            <div class="input-group">
+            <div class="input-group col-span-4">
               <p>Starting Bid</p>
               <%= form.number_field :curr_max_bid, step: 0.01, required: true, class: "input-field" %>
             </div>
 
-            <div class="input-group">
+            <div class="input-group col-span-4">
               <p>Minimum Increment</p>
               <%= form.number_field :min_increment, step: 0.01, required: true, class: "input-field" %>
             </div>
 
-            <div class="input-group">
+            <div class="input-group col-span-4">
               <p>Product Estimated Value</p>
               <%= form.number_field :innate_value, step: 0.01, required: true, class: "input-field" %>
             </div>
-            
-            <div> </div>
 
-            <div class="input-group">
+            <div class="input-group col-span-6">
               <p>Open Date</p>
               <%= form.datetime_local_field :opening_date,
                   required: true,
@@ -61,7 +59,7 @@
                   id: "opening_date" %>
             </div>
 
-            <div class="input-group">
+            <div class="input-group col-span-6">
               <p>Close Date</p>
               <%= form.datetime_local_field :closing_date,
                   required: true,

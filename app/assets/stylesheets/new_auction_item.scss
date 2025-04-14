@@ -164,7 +164,7 @@
 }
 
 .auction-left-general {
-    width: 100%;
+    width: 95%;
     background-color: #f5f5f5;
     padding: 1rem;
     border-radius: 10px;
@@ -173,10 +173,17 @@
 }
 
 .bid-details-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    align-items: start;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+}
+
+.col-span-4 {
+  grid-column: span 4;
+}
+
+.col-span-6 {
+  grid-column: span 6;
 }
 
 .input-group {
