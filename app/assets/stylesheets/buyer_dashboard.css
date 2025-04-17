@@ -188,15 +188,20 @@
   }
   
   /* Cell styling */
-  .bid-cell {
+  .winning-bid {
     font-weight: 700;
     font-family: monospace;
-    color: #f1c40f;
+    color: var(--success-color);
 
   }
-  
+  .losing-bid {
+    font-weight: 700;
+    font-family: monospace;
+    color: red;
+
+  }
   .bid-max {
-    color: var(--success-color);
+    color: var(--warning-color);
   }
   
   .value-cell {

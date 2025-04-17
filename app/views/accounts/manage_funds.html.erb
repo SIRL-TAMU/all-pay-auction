@@ -9,7 +9,6 @@
       <% end %>
       <li><%= link_to "Manage Funds", manage_funds_path, class: "#{current_page?(manage_funds_path) ? 'underline' : ''}" %></li>
       <li><%= link_to "Transaction History", manage_funds_path, class: "#{current_page?(manage_funds_path) ? 'underline' : ''}" %></li>
-
       <li><%= link_to "Log Out", logout_path, method: :delete %></li>
     </ul>
   </div>
@@ -21,7 +20,7 @@
     <!-- Top Section -->
     <div class="flex items-center justify-between mb-2">
       <h2 class="text-md font-semibold">Personal Information</h2>
-      <div class="space-x-2 text-sm">
+      <div class="space-x-2 text-sm" id="toggle-buttons">
         <button id="add-btn" class="underline">Add</button> /
         <button id="withdraw-btn" class="underline">Withdraw</button>
       </div>
@@ -41,78 +40,134 @@
       </div>
     </div>
 
-      <!-- Add Funds Form -->
-      <div id="add-form" class="bg-[#D9D9D9] mt-6 p-6 rounded hidden">
-        <%= form_tag add_funds_path do %>
-          <div class="mb-4">
-            <%= label_tag :amount, "Add Amount", class: "block text-xs font-semibold uppercase mb-1" %>
-            <%= number_field_tag :amount, nil, step: 0.01, class: "w-full p-2 border rounded" %>
-          </div>
-          <%= submit_tag "Add Funds", class: "px-4 py-2 bg-black text-white rounded hover:bg-gray-800" %>
-        <% end %>
-      </div>
-
-      <!-- Withdraw Funds Form -->
-      <div id="withdraw-form" class="bg-[#D9D9D9] mt-6 p-6 rounded hidden">
-        <% if current_user.stripe_account_id.blank? %>
-          <p>You must connect to Stripe to withdraw funds.</p>
-          <%= button_to "Connect Stripe Account", connect_stripe_account_path, method: :get, class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" %>
-        <% else %>
-          <p>You are connected to your Stripe account.</p>
-          <p>Stripe Account ID: <strong><%= current_user.stripe_account_id %></strong></p>
-          <%= form_tag withdraw_funds_path do %>
-          <div class="mb-4">
-            <%= label_tag :amount, "Withdraw Amount", class: "block text-xs font-semibold uppercase mb-1" %>
-            <%= number_field_tag :amount, nil, step: 0.01, class: "w-full p-2 border rounded" %>
-          </div>
-          <%= submit_tag "Withdraw Funds", class: "px-4 py-2 bg-black text-white rounded hover:bg-gray-800" %>
-          <% end %>
-          <br>
-          <%= button_to "Disconnect Stripe Account", disconnect_stripe_account_path, method: :post, class: "px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700", data: { confirm: "Are you sure you want to disconnect your Stripe account?" } %>
-        <% end %>
+    <!-- Add Funds Form -->
+    <div id="add-form" class="bg-[#D9D9D9] mt-6 p-6 rounded hidden">
+      <%= form_tag add_funds_path, id: "add-funds-form-handler" do %>
+        <label for="amount" class="block text-xs font-semibold uppercase mb-2">Add Amount</label>
+        <div class="flex items-center bg-white border rounded w-full max-w-xs mb-4 overflow-hidden">
+          <span class="px-3 font-mono text-gray-500 select-none">$</span>
+          <input
+            type="number"
+            name="amount"
+            id="add-amount-input"
+            step="0.01"
+            min="0"
+            class="w-full p-2 focus:outline-none font-mono text-sm"
+            placeholder="0.00"
+            required
+          />
         </div>
-      </div>
+        <%= submit_tag "Add Funds", id: "add-submit-button", class: "px-4 py-2 bg-black text-white rounded hover:bg-gray-800" %>
+      <% end %>
+    </div>
 
-      <!-- Transactions Section -->
-      <div class="mt-12 bg-white p-6 rounded shadow">
-        <h2 class="text-lg font-semibold mb-4">
-          <%= buyer? ? "Buyer Transactions" : "Seller Transactions" %>
-        </h2>
-        <% if current_user.stripe_transactions.any? %>
-          <div class="overflow-x-auto">
-            <table class="w-full border-collapse border border-gray-300">
-              <thead>
-                <tr class="bg-gray-100 text-left">
-                  <th class="p-3 border border-gray-300">Type</th>
-                  <th class="p-3 border border-gray-300">Amount</th>
-                  <th class="p-3 border border-gray-300">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% current_user.stripe_transactions.order(transaction_date: :desc).each do |transaction| %>
-                  <tr class="even:bg-gray-50 hover:bg-gray-200">
-                    <td class="p-3 border border-gray-300"><%= transaction.transaction_type.capitalize %></td>
-                    <td class="p-3 border border-gray-300"><%= number_to_currency(transaction.amount) %></td>
-                    <td class="p-3 border border-gray-300"><%= transaction.transaction_date.strftime("%B %d, %Y %H:%M") %></td>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
+    <!-- Withdraw Funds Form -->
+    <div id="withdraw-form" class="bg-[#D9D9D9] mt-6 p-6 rounded">
+      <% if current_user.stripe_account_id.blank? %>
+        <p>You must connect to Stripe to withdraw funds.</p>
+        <%= button_to "Connect Stripe Account", connect_stripe_account_path, method: :get, class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" %>
+      <% else %>
+        <%= form_tag withdraw_funds_path, id: "withdraw-form-handler" do %>
+          <label for="amount" class="block text-xs font-semibold uppercase mb-2">Withdraw Amount</label>
+          <div class="flex items-center bg-white border rounded w-full max-w-xs mb-4 overflow-hidden">
+            <span class="px-3 font-mono text-gray-500 select-none">$</span>
+            <input
+              type="number"
+              name="amount"
+              id="withdraw-amount-input"
+              step="0.01"
+              min="0"
+              class="w-full p-2 focus:outline-none font-mono text-sm"
+              placeholder="0.00"
+              required
+            />
           </div>
-        <% else %>
-          <p class="text-gray-600">No transactions available.</p>
+          <div class="flex items-center justify-between text-sm text-gray-700 mb-4">
+            <span class="font-semibold">Stripe</span>
+            <span class="font-mono"><%= "Account ID: #{current_user.stripe_account_id}" %></span>
+          </div>
+          <%= submit_tag "Withdraw", class: "withdraw-btn px-4 py-2 bg-black text-white rounded hover:bg-gray-800", data: { disable_with: "Processing..." } %>
         <% end %>
-      </div>
+        <div class="mt-4">
+          <%= button_to "Disconnect Stripe Account", disconnect_stripe_account_path, method: :post, class: "px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700", data: { confirm: "Are you sure you want to disconnect your Stripe account?" } %>
+        </div>
+      <% end %>
+    </div>
 
-
+    <!-- Transactions Section -->
+    <div class="mt-12 bg-white p-6 rounded shadow">
+      <h2 class="text-lg font-semibold mb-4">Bank Transactions</h2>
+      <% if current_user.stripe_transactions.any? %>
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse border border-gray-300">
+            <thead>
+              <tr class="bg-gray-100 text-left">
+                <th class="p-3 border border-gray-300">Type</th>
+                <th class="p-3 border border-gray-300">Amount</th>
+                <th class="p-3 border border-gray-300">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% current_user.stripe_transactions.order(transaction_date: :desc).each do |transaction| %>
+                <tr class="even:bg-gray-50 hover:bg-gray-200">
+                  <td class="p-3 border border-gray-300"><%= transaction.transaction_type.capitalize %></td>
+                  <td class="p-3 border border-gray-300"><%= number_to_currency(transaction.amount) %></td>
+                  <td class="p-3 border border-gray-300"><%= transaction.transaction_date.strftime("%B %d, %Y %H:%M") %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-gray-600">No transactions available.</p>
+      <% end %>
     </div>
   </div>
-    
+</div>
 
+<!-- JavaScript for form logic -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const addForm = document.getElementById('add-form');
+    const withdrawForm = document.getElementById('withdraw-form');
+    const addBtn = document.getElementById('add-btn');
+    const withdrawBtn = document.getElementById('withdraw-btn');
 
+    addBtn.addEventListener('click', () => {
+      addForm.classList.remove('hidden');
+      withdrawForm.classList.add('hidden');
+    });
 
+    withdrawBtn.addEventListener('click', () => {
+      withdrawForm.classList.remove('hidden');
+      addForm.classList.add('hidden');
+    });
 
+    // Update withdraw button label and add button label
+    const amountInput = document.getElementById('withdraw-amount-input');
+    const submitButton = document.querySelector('#withdraw-form-handler input[type="submit"]');
 
+    if (amountInput && submitButton) {
+      const updateButtonLabel = () => {
+        const value = parseFloat(amountInput.value);
+        submitButton.value = (!isNaN(value) && value > 0) ? `Withdraw $${value.toFixed(2)}` : "Withdraw";
+      };
 
+      amountInput.addEventListener('input', updateButtonLabel);
+      updateButtonLabel(); // initialize on load
+    }
+    // Update add button label
+    const addInput = document.getElementById('add-amount-input');
+    const addButton = document.getElementById('add-submit-button');
 
-  
+    if (addInput && addButton) {
+      const updateAddButtonLabel = () => {
+        const value = parseFloat(addInput.value);
+        addButton.value = (!isNaN(value) && value > 0) ? `Add $${value.toFixed(2)}` : "Add Funds";
+      };
+
+      addInput.addEventListener('input', updateAddButtonLabel);
+      updateAddButtonLabel(); // initialize on load
+    }
+  });
+</script>

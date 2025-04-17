@@ -64,7 +64,9 @@
                       <td><%= link_to item.name, auction_item_path(item), class: "item-link" %></td>
                       <td class="value-cell">$<%= number_with_precision(item.innate_value, precision: 2) %></td>
                       <td class="bid-cell bid-max">$<%= number_with_precision(item.max_bid, precision: 2) %></td>
-                      <td class="bid-cell">
+                      <% user_bid = current_user.bids.where(auction_item: item).maximum(:amount) %>
+                        <% is_highest = user_bid == item.max_bid %>
+                        <td class="bid-cell <%= is_highest ? 'winning-bid' : 'losing-bid' %>">
                         $<%= number_with_precision(current_user.bids.where(auction_item: item).maximum(:amount), precision: 2) %>
                       </td>
                       <td class="date-cell">
@@ -87,8 +89,10 @@
                       <td><%= link_to item.name, auction_item_path(item), class: "item-link" %></td>
                       <td class="value-cell">$<%= number_with_precision(item.innate_value, precision: 2) %></td>
                       <td class="bid-cell bid-max">$<%= number_with_precision(item.max_bid, precision: 2) %></td>
-                      <td class="bid-cell">
-                        $<%= number_with_precision(current_user.bids.where(auction_item: item).maximum(:amount), precision: 2) %>
+
+                      <% user_bid = current_user.bids.where(auction_item: item).maximum(:amount) %>
+                        <% is_highest = user_bid == item.max_bid %>
+                        <td class="bid-cell <%= is_highest ? 'winning-bid' : 'losing-bid' %>">                        $<%= number_with_precision(current_user.bids.where(auction_item: item).maximum(:amount), precision: 2) %>
                       </td>
                       <td class="date-cell">
                         <i class="far fa-clock"></i>
