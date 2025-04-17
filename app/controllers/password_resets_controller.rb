@@ -19,21 +19,23 @@ class PasswordResetsController < ApplicationController
     account_type = params[:account_type]
     email = params[:email]
     user_class = account_type == "buyer" ? Buyer : Seller
+    user = user_class.find_by(email: email)
 
-    if user_class.find_by(email: email, provider: nil).nil? && user_class.find_by(email: email).present?
-      flash[:alert] = I18n.t("notices.errors.google_login_required")
-      redirect_to login_path(account_type: account_type) and return
+    if user.nil?
+      flash.now[:alert] = I18n.t("notices.email_not_found")
+      render :new, status: :unprocessable_entity and return
     end
 
-    user = user_class.find_by(email: email, provider: nil)
-
-    if user
-      user.generate_password_reset_token
-      UserMailer.password_reset_email(user, account_type).deliver_now
+    if user.provider.present?
+      flash.now[:alert] = I18n.t("notices.errors.google_login_required")
+      render :new, status: :unprocessable_entity and return
     end
 
-    flash[:notice] = I18n.t("mailers.reset_password")
-    redirect_to login_path(account_type: account_type)
+    user.generate_password_reset_token
+    UserMailer.password_reset_email(user, account_type).deliver_now
+
+    flash.now[:notice] = I18n.t("notices.password_reset_sent")
+    render :new
   end
 
   def update

@@ -47,6 +47,8 @@ en:
     verify_email: "Please check your email to verify your account before logging in."
     register_first: "No account found. Please register first."
     not_verified: "Please verify your email before logging in."
+    email_not_found: "No account was found with that email address."
+    password_reset_sent: "We successfully sent you a password reset email."
   errors:
     invalid_credentials: "Invalid email or password"
     unauthorized_edit: "You are not authorized to edit this auction item."
