@@ -19,8 +19,12 @@
             <p>Product Name</p>
             <%= form.text_field :name, required: true, class: "input-field" %>
           </div>
-
-          <div class="input-group" style="position: relative;">
+          <div class="input-group-product" style="position: relative;">
+            <div class="input-group">
+              <p>Item Type</p>
+              <%= form.select :item_type, AuctionItem.item_types.keys.map { |k| [k.titleize, k] },
+              {}, class: "input-field" %>
+            </div>
             <p class="input-group-product">Product Description</p>
             <%= form.text_area :description,
                   required: true,
@@ -30,7 +34,6 @@
             <small id="description-count">0/500</small>
           </div>
         </div>
-
         <div class="auction-left-general">
           <p>Bid Details</p>
           <div class="bid-details-grid">
