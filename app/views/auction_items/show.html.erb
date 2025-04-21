@@ -329,7 +329,11 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
         const timeRemaining = endTime - now;
 
         if (timeRemaining <= 0) {
-          textElement.textContent = "Auction Closed";
+          container.innerHTML = "Closed on " + new Date(endTime).toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          });
           return;
         }
 
@@ -350,6 +354,7 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
 
         textElement.textContent = output.join(' ');
       }
+
 
       updateCountdown();
       setInterval(updateCountdown, 1000);

@@ -132,7 +132,11 @@
         const timeRemaining = endTime - now;
 
         if (timeRemaining <= 0) {
-          textElement.textContent = "Auction Closed";
+          container.innerHTML = "Closed on " + new Date(endTime).toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          });
           return;
         }
 
