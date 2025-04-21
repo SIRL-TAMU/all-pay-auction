@@ -172,22 +172,27 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
     <% end %>
     </div>
 
-    <% if @auction_item.latest_bids.any? %>
+    <% if @auction_item.bids.any? %>
       <div class="auction-item-bid-history">
         <p class="auction-item-user-card-title">Bid History</p>
-        <% @auction_item.latest_bids.each do |bid| %>
-          <div class="auction-item-bid-entry">
-            <div class="auction-item-user-card">
-              <p><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></p>
-              <p class="auction-item-user-card-subtext"><%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %></p>
+        <div class="auction-bid-scroll">
+          <% @auction_item.bids.order(created_at: :desc).each do |bid| %>
+            <div class="auction-item-bid-entry">
+              <div class="auction-item-user-card">
+                <p><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></p>
+                <p class="auction-item-user-card-subtext">
+                  <%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %>
+                </p>
+              </div>
+              <p class="auction-item-user-card-amount">
+                <strong><%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD</strong>
+              </p>
             </div>
-            <p class="auction-item-user-card-amount">
-              <strong><%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD</strong>
-            </p>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
       </div>
     <% end %>
+
 
 
     <div class="auction-item-seller-info">
