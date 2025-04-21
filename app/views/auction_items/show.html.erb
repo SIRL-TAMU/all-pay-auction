@@ -104,9 +104,17 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
     <% end %>
 
     <div class="auction-item-bid-section">
-      <div class="auction-item-status">
-        <%= @auction_item.status_text %>
+      <div class="auction-item-status auction-item-timer" data-end-time="<%= @auction_item.closing_date.iso8601 %>">
+        <% now = Time.zone.now %>
+        <% if @auction_item.opening_date > now %>
+          Opens on <%= @auction_item.opening_date.strftime('%b %d, %Y') %>
+        <% elsif @auction_item.closing_date < now %>
+          Closed on <%= @auction_item.closing_date.strftime('%b %d, %Y') %>
+        <% else %>
+          <span>Closing in <strong><span class="countdown-text">...</span></strong></span>
+        <% end %>
       </div>
+
 
       <div class="auction-item-bid-info-container">
         <div class="auction-item-estimate-value">
@@ -306,4 +314,46 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
       });
     }
   });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const timers = document.querySelectorAll(".auction-item-timer");
+
+    timers.forEach(container => {
+      const endTime = new Date(container.dataset.endTime).getTime();
+      const textElement = container.querySelector(".countdown-text");
+
+      if (!textElement) return;
+
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const timeRemaining = endTime - now;
+
+        if (timeRemaining <= 0) {
+          textElement.textContent = "Auction Closed";
+          return;
+        }
+
+        const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+        let output = [];
+
+        if (days > 0) output.push(`${days}d`);
+        if (hours > 0 || days > 0) output.push(`${hours}h`);
+        output.push(`${minutes}m`);
+
+        if (days === 0 && hours === 0) {
+          output.push(`${seconds}s`);
+        }
+
+        textElement.textContent = output.join(' ');
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    });
+  });
+
 </script>

@@ -20,7 +20,9 @@
 
             <div class="countdown-container">
               <% if is_active %>
-                <p>Closing in <strong><span class="ml-2" id="countdown" data-end-time="<%= auction.closing_date.iso8601 %>"></span></strong></p>
+                <p>Closing in <strong>
+                  <span class="ml-2 countdown-text" data-end-time="<%= auction.closing_date.iso8601 %>">...</span>
+                </strong></p>
               <% end %>
             </div>
           </div>
@@ -172,28 +174,40 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-      const countdownElement = document.getElementById("countdown");
-      if (!countdownElement) return;
+    const countdownElements = document.querySelectorAll('.countdown-text');
 
+    countdownElements.forEach(countdownElement => {
       const endTime = new Date(countdownElement.dataset.endTime).getTime();
 
       function updateCountdown() {
-          const now = new Date().getTime();
-          const timeRemaining = endTime - now;
+        const now = new Date().getTime();
+        const timeRemaining = endTime - now;
 
-          if (timeRemaining <= 0) {
-              countdownElement.innerHTML = "Auction Closed";
-              return;
-          }
+        if (timeRemaining <= 0) {
+          countdownElement.textContent = "Auction Closed";
+          return;
+        }
 
-          const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-          const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-          countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m`;
+        let output = [];
+
+        if (days > 0) output.push(`${days}d`);
+        if (hours > 0 || days > 0) output.push(`${hours}h`);
+        output.push(`${minutes}m`);
+
+        if (days === 0 && hours === 0) {
+          output.push(`${seconds}s`);
+        }
+
+        countdownElement.textContent = output.join(' ');
       }
 
       updateCountdown();
-      setInterval(updateCountdown, 60000); // Update every minute
+      setInterval(updateCountdown, 1000);
+    });
   });
 </script>
