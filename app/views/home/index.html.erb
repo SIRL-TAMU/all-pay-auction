@@ -15,16 +15,22 @@
     <div class="flex flex-row items-center space-x-4">
       <div class="font-bold text-md">The Auction Block</div>
       <%= link_to "Explore More →", auction_items_path, class: "text-sm underline" %>
-      <div id="auction-loader" class=" hidden">
+      <div id="auction-loader" class="hidden">
         <div class="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     </div>
   </div>
 
-  <div id="auction-carousel" class="flex space-x-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 hide-scrollbar">
-    <%= render partial: "shared/auction_item_cards", locals: { auction_items: @auction_items } %>
-  </div>
-
+  <% if @auction_items.present? %>
+    <div id="auction-carousel" class="flex space-x-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 hide-scrollbar">
+      <%= render partial: "shared/auction_item_cards", locals: { auction_items: @auction_items } %>
+    </div>
+  <% else %>
+    <div id="no-auction-items-message" class="italic text-[#808080] ml-4">
+      <p>No <span id="auction-status-text"></span> auction items available.</p>
+    </div>
+  <% end %>
 </div>
+
 
 <div class="py-20"></div>
