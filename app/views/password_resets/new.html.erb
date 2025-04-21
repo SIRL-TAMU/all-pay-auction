@@ -1,14 +1,21 @@
-<div class="password-reset-container">
-  <h2>Reset Your Password</h2>
+<div class="justify-center flex mt-10"> 
+  <div class="onboarding-card">
 
-  <%= form_with url: password_resets_path(account_type: params[:account_type]), method: :post do |f| %>
-    <%= hidden_field_tag :account_type, params[:account_type] %>
+    <div class="login-title">Reset Your Password</div>
 
-    <div class="form-group">
-      <%= label_tag :email, "Enter your email" %>
-      <%= email_field_tag :email, nil, class: "input-field", required: true %>
-    </div>
+    <p class="mb-6 text-sm text-gray-600">
+      Enter your email address and we’ll send you a link to reset your password.
+    </p>
 
-    <%= submit_tag "Send Reset Link", class: "submit-btn" %>
-  <% end %>
+    <%= form_with url: password_resets_path(account_type: params[:account_type]), method: :post do |f| %>
+      <%= hidden_field_tag :account_type, params[:account_type] %>
+
+      <div class="form-group">
+        <%= label_tag :email, "Email", class: "text-sm font-medium mb-1" %>
+        <%= email_field_tag :email, nil, required: true, class: "input-field" %>
+      </div>
+
+      <%= submit_tag "Send Reset Link", class: "login-btn mt-4" %>
+    <% end %>
+  </div>
 </div>
