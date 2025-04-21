@@ -121,16 +121,37 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
           <strong><label for="bid_amount">Set Bid:</label></strong>
           <%= form_with(model: Bid.new, local: true, class: "auction-item-bid-form") do |form| %>
             <%= form.hidden_field :auction_item_id, value: @auction_item.id %>
-            <%= form.number_field :amount,
-                  step: @auction_item.min_increment,
-                  min: @auction_item.max_bid + @auction_item.min_increment,
-                  value: @auction_item.max_bid + @auction_item.min_increment,
-                  required: true,
-                  class: "auction-item-bid-input",
-                  data: { min_increment: @auction_item.min_increment } %>
-            <%= form.submit "Place Bid", class: "auction-item-bid-btn" %>
+
+            <% min_bid = @auction_item.max_bid + @auction_item.min_increment %>
+            <% bid_options = (0..500).map { |i| min_bid + i * @auction_item.min_increment } %>
+
+            <% min_bid = @auction_item.max_bid + @auction_item.min_increment %>
+            <% default_label = "$#{min_bid} USD" %>
+            <div x-data="{ open: false, selectedText: '<%= default_label %>', selectedValue: <%= min_bid %> }" class="relative w-full mt-2">
+                <button @click="open = !open" type="button"
+                        class="w-full border border-gray-300 rounded px-4 py-2 text-left bg-white cursor-pointer pr-10 relative">
+                  <span x-text="selectedText"></span>
+
+                  <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+                </button>
+
+              <ul x-show="open" @click.outside="open = false"
+                  class="absolute z-10 mt-1 max-h-40 w-full overflow-y-auto border border-gray-300 rounded bg-white shadow">
+                <% bid_options.each do |amt| %>
+                  <li @click="selectedText = '$<%= amt %> USD'; selectedValue = <%= amt %>; open = false"
+                      class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    $<%= amt %> USD
+                  </li>
+                <% end %>
+              </ul>
+
+              <input type="hidden" name="bid[amount]" :value="selectedValue">
+            </div>
+
+            <%= form.submit "Place Bid", class: "auction-item-bid-btn mt-2 cursor-pointer" %>
           <% end %>
         <% end %>
+
       </div>
 
 
@@ -190,7 +211,9 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
 <div class="bottom-padding"></div>
 <div class="bottom-padding"></div>
 
+
 <script>
+
   function toggleDetails(button, contentId) {
     const content = document.getElementById(contentId);
     const icon = button.querySelector("i");
