@@ -47,10 +47,10 @@
             </div>
 
             <% if is_active %>
-              <div class="latest-bids-title">Latest Bids</div>
-              <% if auction.latest_bids(4).any? %>
+              <div class="latest-bids-title">Highest Bid</div>
+              <% if auction.latest_bids(1).any? %>
                 <ul class="latest-bids">
-                  <% auction.latest_bids(4).each do |bid| %>
+                  <% auction.latest_bids(1).each do |bid| %>
                     <li class="bidder-item">
                       <div class="bidder-info">
                         <div class="bidder-details">
