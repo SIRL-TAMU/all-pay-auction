@@ -8,7 +8,6 @@
         <li><%= link_to "Your Profile", buyer_setting_path, class: "#{current_page?(buyer_setting_path) ? 'underline' : ''}" %></li>
       <% end %>
       <li><%= link_to "Manage Funds", manage_funds_path, class: "#{current_page?(manage_funds_path) ? 'underline' : ''}" %></li>
-      <li><%= link_to "Transaction History", manage_funds_path, class: "#{current_page?(manage_funds_path) ? 'underline' : ''}" %></li>
       <li><%= link_to "Log Out", logout_path, method: :delete %></li>
     </ul>
   </div>

@@ -32,6 +32,10 @@
     line-height: 1.5;
     font-size: 16px;
   }
+
+  hd2{
+    color: #f8f9fa;
+  }
   
   /* Layout */
   .container {
