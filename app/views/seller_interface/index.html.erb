@@ -20,7 +20,9 @@
 
             <div class="countdown-container">
               <% if is_active %>
-                <p>Closing in <strong><span id="countdown" data-end-time="<%= auction.closing_date.iso8601 %>"></span></strong></p>
+                <p>Closing in <strong>
+                  <span class="ml-2 countdown-text" data-end-time="<%= auction.closing_date.iso8601 %>">...</span>
+                </strong></p>
               <% end %>
             </div>
           </div>
@@ -47,10 +49,10 @@
             </div>
 
             <% if is_active %>
-              <div class="latest-bids-title">Latest Bids</div>
-              <% if auction.latest_bids(4).any? %>
+              <div class="latest-bids-title">Highest Bid</div>
+              <% if auction.latest_bids(1).any? %>
                 <ul class="latest-bids">
-                  <% auction.latest_bids(4).each do |bid| %>
+                  <% auction.latest_bids(1).each do |bid| %>
                     <li class="bidder-item">
                       <div class="bidder-info">
                         <div class="bidder-details">
@@ -172,28 +174,45 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-      const countdownElement = document.getElementById("countdown");
-      if (!countdownElement) return;
+    const countdownElements = document.querySelectorAll('.countdown-text');
 
-      const endTime = new Date(countdownElement.dataset.endTime).getTime();
+    countdownElements.forEach(countdownElement => {
+    const endTime = new Date(countdownElement.dataset.endTime).getTime();
 
-      function updateCountdown() {
-          const now = new Date().getTime();
-          const timeRemaining = endTime - now;
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const timeRemaining = endTime - now;
 
-          if (timeRemaining <= 0) {
-              countdownElement.innerHTML = "Auction Closed";
-              return;
-          }
-
-          const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-          const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-
-          countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m`;
+      if (timeRemaining <= 0) {
+        container.innerHTML = "Closed on " + new Date(endTime).toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+        return;
       }
 
+      const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+      let output = [];
+
+      if (days > 0) output.push(`${days}d`);
+      if (hours > 0 || days > 0) output.push(`${hours}h`);
+      output.push(`${minutes}m`);
+
+      if (days === 0 && hours === 0) {
+        output.push(`${seconds}s`);
+      }
+
+      textElement.textContent = output.join(' ');
+    }
+
+
       updateCountdown();
-      setInterval(updateCountdown, 60000); // Update every minute
+      setInterval(updateCountdown, 1000);
+    });
   });
 </script>

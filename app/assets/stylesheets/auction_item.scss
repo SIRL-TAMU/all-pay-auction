@@ -347,7 +347,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8); /* dark backdrop */
+    background-color: rgba(0, 0, 0, 0.8);
   }
   
   .auction-item-modal-backdrop {
@@ -386,11 +386,16 @@
     cursor: pointer;
     background-color: white;
     border-radius: 100%;
-    // padding: 10px 10px;
     box-shadow: 0 0 5px rgba(0,0,0,0.3);
   }
   
   .auction-item-hidden {
     display: none;
   }
+
+.auction-bid-scroll {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
   

@@ -20,12 +20,7 @@
             <%= form.text_field :name, required: true, class: "input-field" %>
           </div>
           <div class="input-group-product" style="position: relative;">
-            <div class="input-group">
-              <p>Item Type</p>
-              <%= form.select :item_type, AuctionItem.item_types.keys.map { |k| [k.titleize, k] },
-              {}, class: "input-field" %>
-            </div>
-            <p class="input-group-product">Product Description</p>
+            <div class="text-sm">Product Description</div>
             <%= form.text_area :description,
                   required: true,
                   class: "input-field textarea",
@@ -33,28 +28,31 @@
                   id: "product-description" %>
             <small id="description-count">0/500</small>
           </div>
+          <div class="input-group">
+            <p>Item Type</p>
+            <%= form.select :item_type, AuctionItem.item_types.keys.map { |k| [k.titleize, k] },
+            {}, class: "input-field" %>
+          </div>
         </div>
         <div class="auction-left-general">
           <p>Bid Details</p>
           <div class="bid-details-grid">
-            <div class="input-group">
+            <div class="input-group col-span-4">
               <p>Starting Bid</p>
               <%= form.number_field :curr_max_bid, step: 0.01, required: true, class: "input-field" %>
             </div>
 
-            <div class="input-group">
+            <div class="input-group col-span-4">
               <p>Minimum Increment</p>
               <%= form.number_field :min_increment, step: 0.01, required: true, class: "input-field" %>
             </div>
 
-            <div class="input-group">
+            <div class="input-group col-span-4">
               <p>Product Estimated Value</p>
               <%= form.number_field :innate_value, step: 0.01, required: true, class: "input-field" %>
             </div>
-            
-            <div> </div>
 
-            <div class="input-group">
+            <div class="input-group col-span-6">
               <p>Open Date</p>
               <%= form.datetime_local_field :opening_date,
                   required: true,
@@ -64,7 +62,7 @@
                   id: "opening_date" %>
             </div>
 
-            <div class="input-group">
+            <div class="input-group col-span-6">
               <p>Close Date</p>
               <%= form.datetime_local_field :closing_date,
                   required: true,
@@ -73,8 +71,6 @@
                   value: (form.object.closing_date || round_to_nearest_10_min(Time.zone.now + 1.week)).strftime("%Y-%m-%dT%H:%M"),
                   id: "closing_date" %>
             </div>
-
-
           </div>
         </div>
       </div>

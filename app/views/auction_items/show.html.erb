@@ -104,9 +104,17 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
     <% end %>
 
     <div class="auction-item-bid-section">
-      <div class="auction-item-status">
-        <%= @auction_item.status_text %>
+      <div class="auction-item-status auction-item-timer" data-end-time="<%= @auction_item.closing_date.iso8601 %>">
+        <% now = Time.zone.now %>
+        <% if @auction_item.opening_date > now %>
+          Opens on <%= @auction_item.opening_date.strftime('%b %d, %Y') %>
+        <% elsif @auction_item.closing_date < now %>
+          Closed on <%= @auction_item.closing_date.strftime('%b %d, %Y') %>
+        <% else %>
+          <span>Closing in <strong><span class="countdown-text">...</span></strong></span>
+        <% end %>
       </div>
+
 
       <div class="auction-item-bid-info-container">
         <div class="auction-item-estimate-value">
@@ -121,16 +129,37 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
           <strong><label for="bid_amount">Set Bid:</label></strong>
           <%= form_with(model: Bid.new, local: true, class: "auction-item-bid-form") do |form| %>
             <%= form.hidden_field :auction_item_id, value: @auction_item.id %>
-            <%= form.number_field :amount,
-                  step: @auction_item.min_increment,
-                  min: @auction_item.max_bid + @auction_item.min_increment,
-                  value: @auction_item.max_bid + @auction_item.min_increment,
-                  required: true,
-                  class: "auction-item-bid-input",
-                  data: { min_increment: @auction_item.min_increment } %>
-            <%= form.submit "Place Bid", class: "auction-item-bid-btn" %>
+
+            <% min_bid = @auction_item.max_bid + @auction_item.min_increment %>
+            <% bid_options = (0..500).map { |i| min_bid + i * @auction_item.min_increment } %>
+
+            <% min_bid = @auction_item.max_bid + @auction_item.min_increment %>
+            <% default_label = "$#{min_bid} USD" %>
+            <div x-data="{ open: false, selectedText: '<%= default_label %>', selectedValue: <%= min_bid %> }" class="relative w-full mt-2">
+                <button @click="open = !open" type="button"
+                        class="w-full border border-gray-300 rounded px-4 py-2 text-left bg-white cursor-pointer pr-10 relative">
+                  <span x-text="selectedText"></span>
+
+                  <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+                </button>
+
+              <ul x-show="open" @click.outside="open = false"
+                  class="absolute z-10 mt-1 max-h-40 w-full overflow-y-auto border border-gray-300 rounded bg-white shadow">
+                <% bid_options.each do |amt| %>
+                  <li @click="selectedText = '$<%= amt %> USD'; selectedValue = <%= amt %>; open = false"
+                      class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    $<%= amt %> USD
+                  </li>
+                <% end %>
+              </ul>
+
+              <input type="hidden" name="bid[amount]" :value="selectedValue">
+            </div>
+
+            <%= form.submit "Place Bid", class: "auction-item-bid-btn mt-2 cursor-pointer" %>
           <% end %>
         <% end %>
+
       </div>
 
 
@@ -151,22 +180,27 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
     <% end %>
     </div>
 
-    <% if @auction_item.latest_bids.any? %>
+    <% if @auction_item.bids.any? %>
       <div class="auction-item-bid-history">
         <p class="auction-item-user-card-title">Bid History</p>
-        <% @auction_item.latest_bids.each do |bid| %>
-          <div class="auction-item-bid-entry">
-            <div class="auction-item-user-card">
-              <p><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></p>
-              <p class="auction-item-user-card-subtext"><%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %></p>
+        <div class="auction-bid-scroll">
+          <% @auction_item.bids.order(created_at: :desc).each do |bid| %>
+            <div class="auction-item-bid-entry">
+              <div class="auction-item-user-card">
+                <p><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></p>
+                <p class="auction-item-user-card-subtext">
+                  <%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %>
+                </p>
+              </div>
+              <p class="auction-item-user-card-amount">
+                <strong><%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD</strong>
+              </p>
             </div>
-            <p class="auction-item-user-card-amount">
-              <strong><%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD</strong>
-            </p>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
       </div>
     <% end %>
+
 
 
     <div class="auction-item-seller-info">
@@ -190,7 +224,9 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
 <div class="bottom-padding"></div>
 <div class="bottom-padding"></div>
 
+
 <script>
+
   function toggleDetails(button, contentId) {
     const content = document.getElementById(contentId);
     const icon = button.querySelector("i");
@@ -278,4 +314,51 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
       });
     }
   });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const timers = document.querySelectorAll(".auction-item-timer");
+
+    timers.forEach(container => {
+      const endTime = new Date(container.dataset.endTime).getTime();
+      const textElement = container.querySelector(".countdown-text");
+
+      if (!textElement) return;
+
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const timeRemaining = endTime - now;
+
+        if (timeRemaining <= 0) {
+          container.innerHTML = "Closed on " + new Date(endTime).toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          });
+          return;
+        }
+
+        const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+        let output = [];
+
+        if (days > 0) output.push(`${days}d`);
+        if (hours > 0 || days > 0) output.push(`${hours}h`);
+        output.push(`${minutes}m`);
+
+        if (days === 0 && hours === 0) {
+          output.push(`${seconds}s`);
+        }
+
+        textElement.textContent = output.join(' ');
+      }
+
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    });
+  });
+
 </script>
