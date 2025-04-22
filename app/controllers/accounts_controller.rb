@@ -24,6 +24,10 @@ class AccountsController < ApplicationController
   def manage_funds
     # Add logic for managing funds here
     @balance = current_user.liquid_balance
+    
+    if params[:success] == "true"
+      flash.now[:notice] = "Successfully added funds to your account."
+    end
   end
 
   def add_funds
@@ -162,7 +166,8 @@ class AccountsController < ApplicationController
     )
 
     if @stripe_transaction.save
-      flash[:notice] = "Successfully transferred $#{amount} to your connected Stripe account!"
+      flash[:notice] = "Successfully transferred $#{'%.2f' % amount} to your connected Stripe account!"
+
     else
       # Log the failure for investigation
       Rails.logger.error("Failed to save transaction for user #{current_user.id}. Transfer ID: #{transfer.id}")

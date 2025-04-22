@@ -61,7 +61,7 @@
     </div>
 
     <!-- Withdraw Funds Form -->
-    <div id="withdraw-form" class="bg-[#D9D9D9] mt-6 p-6 rounded">
+    <div id="withdraw-form" class="bg-[#D9D9D9] mt-6 p-6 rounded hidden">
       <% if current_user.stripe_account_id.blank? %>
         <p>You must connect to Stripe to withdraw funds.</p>
         <%= button_to "Connect Stripe Account", connect_stripe_account_path, method: :get, class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" %>
@@ -111,7 +111,7 @@
                 <tr class="even:bg-gray-50 hover:bg-gray-200">
                   <td class="p-3 border border-gray-300"><%= transaction.transaction_type.capitalize %></td>
                   <td class="p-3 border border-gray-300"><%= number_to_currency(transaction.amount) %></td>
-                  <td class="p-3 border border-gray-300"><%= transaction.transaction_date.strftime("%B %d, %Y %H:%M") %></td>
+                  <td class="p-3 border border-gray-300"><%= transaction.transaction_date.strftime("%B %d, %Y %I:%M %p") %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -132,17 +132,19 @@
     const addBtn = document.getElementById('add-btn');
     const withdrawBtn = document.getElementById('withdraw-btn');
 
-    addBtn.addEventListener('click', () => {
-      addForm.classList.remove('hidden');
-      withdrawForm.classList.add('hidden');
-    });
+    const toggle = (type) => {
+      addForm.classList.toggle('hidden', type !== 'add');
+      withdrawForm.classList.toggle('hidden', type !== 'withdraw');
+      localStorage.setItem('lastSelectedForm', type);
+    };
 
-    withdrawBtn.addEventListener('click', () => {
-      withdrawForm.classList.remove('hidden');
-      addForm.classList.add('hidden');
-    });
+    addBtn.addEventListener('click', () => toggle('add'));
+    withdrawBtn.addEventListener('click', () => toggle('withdraw'));
 
-    // Update withdraw button label and add button label
+    const lastForm = localStorage.getItem('lastSelectedForm') || 'add';
+    toggle(lastForm);
+
+    // Update withdraw button label
     const amountInput = document.getElementById('withdraw-amount-input');
     const submitButton = document.querySelector('#withdraw-form-handler input[type="submit"]');
 
@@ -153,8 +155,9 @@
       };
 
       amountInput.addEventListener('input', updateButtonLabel);
-      updateButtonLabel(); // initialize on load
+      updateButtonLabel();
     }
+
     // Update add button label
     const addInput = document.getElementById('add-amount-input');
     const addButton = document.getElementById('add-submit-button');
@@ -166,7 +169,7 @@
       };
 
       addInput.addEventListener('input', updateAddButtonLabel);
-      updateAddButtonLabel(); // initialize on load
+      updateAddButtonLabel();
     }
   });
 </script>
