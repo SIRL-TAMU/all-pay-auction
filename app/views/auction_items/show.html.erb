@@ -187,7 +187,7 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
           <% @auction_item.bids.order(created_at: :desc).each do |bid| %>
             <div class="auction-item-bid-entry">
               <div class="auction-item-user-card">
-                <% if @auction_item.names_visible %>
+                <% if @auction_item.names_visible || current_user == @auction_item.seller%>
                   <p><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></p>
                 <% else %>
                   <p><em>Anonymous Bidder</em></p>
@@ -196,7 +196,7 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
                   <%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %>
                 </p>
               </div>
-              <% if @auction_item.bid_amount_visible %>
+              <% if @auction_item.bid_amount_visible || current_user == @auction_item.seller%>
                 <p class="auction-item-user-card-amount">
                   <strong><%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD</strong>
                 </p>
