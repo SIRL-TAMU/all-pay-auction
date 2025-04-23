@@ -187,21 +187,29 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
           <% @auction_item.bids.order(created_at: :desc).each do |bid| %>
             <div class="auction-item-bid-entry">
               <div class="auction-item-user-card">
-                <p><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></p>
+                <% if @auction_item.names_visible %>
+                  <p><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></p>
+                <% else %>
+                  <p><em>Anonymous Bidder</em></p>
+                <% end %>
                 <p class="auction-item-user-card-subtext">
                   <%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %>
                 </p>
               </div>
-              <p class="auction-item-user-card-amount">
-                <strong><%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD</strong>
-              </p>
+              <% if @auction_item.bid_amount_visible %>
+                <p class="auction-item-user-card-amount">
+                  <strong><%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD</strong>
+                </p>
+              <% else %>
+                <p class="auction-item-user-card-amount">
+                  <strong><em>Amount Hidden</em></strong>
+                </p>
+              <% end %>
             </div>
           <% end %>
         </div>
       </div>
     <% end %>
-
-
 
     <div class="auction-item-seller-info">
       <div class="auction-item-user-card-title">Seller Information</div>
