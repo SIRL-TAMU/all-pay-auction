@@ -77,7 +77,7 @@ group :test do
   gem "selenium-webdriver"
   # Add SimpleCov for test coverage reporting
   gem "simplecov", require: false
-
+  gem "rails-controller-testing"
   gem "database_cleaner-active_record", "~> 2.0.1"
 end
 
