@@ -93,6 +93,17 @@ class AuctionItemsController < ApplicationController
     redirect_to edit_auction_item_path(@auction_item)
   end
 
+  def close
+    auction_item = AuctionItem.find(params[:id])
+    if current_user == auction_item.seller
+      auction_item.close_auction!(force: true)
+      redirect_to auction_item_path(auction_item), notice: "Auction settled manually. (Testing)"
+    else
+      redirect_to auction_item_path(auction_item), alert: "You are not authorized to settle this auction."
+    end
+  end
+
+
   private
 
   def set_auction_item
