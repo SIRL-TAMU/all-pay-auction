@@ -247,7 +247,7 @@
     const defaultOpen = roundToNearest10Minutes(now);
     const defaultClose = roundToNearest10Minutes(new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000));
 
-    openingDateInput.min = formatDateTimeLocal(defaultOpen);
+    // openingDateInput.min = formatDateTimeLocal(defaultOpen);
 
     initializeInput(openingDateInput, defaultOpen);
     initializeInput(closingDateInput, defaultClose);
