@@ -55,44 +55,46 @@
               <p>Product Estimated Value</p>
               <%= form.number_field :innate_value, step: 0.01, required: true, class: "input-field" %>
             </div>
-            
-
-            <%# THIS IS REAL VERSION, UNCOMMENTED VERSION BELOW IS FOR TESTING %>
-            <!-- 
+        <div class="auction-left-general">
+          <p>Bidder Information Confidentiality</p>
+          <div class="bid-visibility-grid">
             <div class="input-group">
+              <div class="visible-toggle-wrapper">
+                <span>Allow bidders to see the names of other bidders</span>
+                <label class="switch">
+                  <%= form.check_box :names_visible, {}, true, false %>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="visible-toggle-wrapper">
+                <span>Allow bidders to see the amount of other bids</span>
+                <label class="switch">
+                  <%= form.check_box :bid_amount_visible, {}, true, false %>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+            
+            <div class="input-group col-span-6">
               <p>Open Date</p>
               <%= form.datetime_local_field :opening_date,
                   required: true,
                   class: "input-field",
-                  min: Time.zone.now.strftime("%Y-%m-%dT%H:%M"),
-                  value: (form.object.opening_date || round_to_nearest_10_min(Time.zone.now)).strftime("%Y-%m-%dT%H:%M"),
-                  id: "opening_date" %>
+                  id: "opening_date",
+                  data: { utc: @auction_item.opening_date&.iso8601 } %>
             </div>
 
-            <div class="input-group">
+            <div class="input-group col-span-6">
               <p>Close Date</p>
               <%= form.datetime_local_field :closing_date,
                   required: true,
                   class: "input-field",
-                  min: Time.zone.now.strftime("%Y-%m-%dT%H:%M"),
-                  value: (form.object.closing_date || round_to_nearest_10_min(Time.zone.now + 1.week)).strftime("%Y-%m-%dT%H:%M"),
-                  id: "closing_date" %>
-            </div>
-
-            -->
-
-            <div class="input-group col-span-6">
-              <p>Open Date (Testing Version)</p>
-              <%= form.datetime_local_field :opening_date, class: "input-field",
-                  value: (form.object.opening_date || Time.zone.now).strftime("%Y-%m-%dT%H:%M"),
-                  id: "opening_date" %>
-            </div>
-
-            <div class="input-group col-span-6">
-              <p>Close Date (Testing Version)</p>
-              <%= form.datetime_local_field :closing_date, class: "input-field",
-                  value: (form.object.closing_date || (Time.zone.now + 1.week)).strftime("%Y-%m-%dT%H:%M"),
-                  id: "closing_date" %>
+                  id: "closing_date",
+                  data: { utc: @auction_item.closing_date&.iso8601 } %>
             </div>
 
 
@@ -146,73 +148,64 @@
 
 <% end %>
 
-
 <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const mainImage = document.getElementById("main-image");
+    const thumbnailContainer = document.querySelector(".thumbnail-container");
+    const imageInput = document.getElementById("image-upload-input");
+    let fileList = new DataTransfer();
 
-document.addEventListener("DOMContentLoaded", function () {
-  const mainImage = document.getElementById("main-image");
-  const thumbnailContainer = document.querySelector(".thumbnail-container");
-  const imageInput = document.getElementById("image-upload-input");
-  let fileList = new DataTransfer();
+    function createThumbnail(imageSrc, file = null) {
+      const newThumbnail = document.createElement("div");
+      newThumbnail.classList.add("thumbnail-wrapper");
 
-  function createThumbnail(imageSrc, file = null) {
-    let newThumbnail = document.createElement("div");
-    newThumbnail.classList.add("thumbnail-wrapper");
+      const img = document.createElement("img");
+      img.src = imageSrc;
+      img.classList.add("thumbnail-image");
 
-    let img = document.createElement("img");
-    img.src = imageSrc;
-    img.classList.add("thumbnail-image");
+      const removeBtn = document.createElement("button");
+      removeBtn.textContent = "Remove";
+      removeBtn.classList.add("remove-btn");
 
-    let removeBtn = document.createElement("button");
-    removeBtn.textContent = "Remove";
-    removeBtn.classList.add("remove-btn");
-
-    removeBtn.addEventListener("click", function (event) {
-      event.stopPropagation();
-      newThumbnail.remove();
-
-      if (file) {
-        let fileIndex = [...fileList.files].findIndex(f => f.name === file.name && f.lastModified === file.lastModified);
-        if (fileIndex !== -1) {
-          fileList.items.remove(fileIndex);
-          imageInput.files = fileList.files;
+      removeBtn.addEventListener("click", function (event) {
+        event.stopPropagation();
+        newThumbnail.remove();
+        if (file) {
+          const fileIndex = [...fileList.files].findIndex(f => f.name === file.name && f.lastModified === file.lastModified);
+          if (fileIndex !== -1) {
+            fileList.items.remove(fileIndex);
+            imageInput.files = fileList.files;
+          }
         }
-      }
+      });
+
+      newThumbnail.addEventListener("click", function () {
+        mainImage.src = imageSrc;
+        document.querySelectorAll(".thumbnail-wrapper").forEach(t => t.classList.remove("selected"));
+        newThumbnail.classList.add("selected");
+      });
+
+      newThumbnail.appendChild(img);
+      newThumbnail.appendChild(removeBtn);
+      thumbnailContainer.insertBefore(newThumbnail, thumbnailContainer.lastElementChild);
+    }
+
+    imageInput.addEventListener("change", function () {
+      const files = Array.from(imageInput.files);
+      files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          createThumbnail(e.target.result, file);
+          if (!mainImage.src || mainImage.src.includes("default_item.png")) {
+            mainImage.src = e.target.result;
+          }
+        };
+        reader.readAsDataURL(file);
+        fileList.items.add(file);
+      });
+      imageInput.files = fileList.files;
     });
-
-    newThumbnail.addEventListener("click", function () {
-      mainImage.src = imageSrc;
-      document.querySelectorAll(".thumbnail-wrapper").forEach(t => t.classList.remove("selected"));
-      newThumbnail.classList.add("selected");
-    });
-
-    newThumbnail.appendChild(img);
-    newThumbnail.appendChild(removeBtn);
-    thumbnailContainer.insertBefore(newThumbnail, thumbnailContainer.lastElementChild);
-  }
-
-  imageInput.addEventListener("change", function (event) {
-    let files = Array.from(event.target.files);
-    if (files.length === 0) return;
-
-    files.forEach((file) => {
-      let reader = new FileReader();
-      reader.onload = function (e) {
-        createThumbnail(e.target.result, file);
-
-        if (!mainImage.src || mainImage.src.includes("default_item.png")) {
-          mainImage.src = e.target.result;
-        }
-      };
-      reader.readAsDataURL(file);
-
-      fileList.items.add(file);
-    });
-
-    imageInput.files = fileList.files;
   });
-});
-
 
   document.addEventListener("DOMContentLoaded", function () {
     const openingDateInput = document.getElementById("opening_date");
@@ -222,11 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const rounded = new Date(date);
       const minutes = rounded.getMinutes();
       const remainder = minutes % 10;
-      if (remainder >= 5) {
-        rounded.setMinutes(minutes + (10 - remainder));
-      } else {
-        rounded.setMinutes(minutes - remainder);
-      }
+      rounded.setMinutes(remainder >= 5 ? minutes + (10 - remainder) : minutes - remainder);
       rounded.setSeconds(0);
       rounded.setMilliseconds(0);
       return rounded;
@@ -234,72 +223,71 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function formatDateTimeLocal(date) {
       const pad = (n) => n.toString().padStart(2, "0");
-      return (
-        date.getFullYear() +
-        "-" +
-        pad(date.getMonth() + 1) +
-        "-" +
-        pad(date.getDate()) +
-        "T" +
-        pad(date.getHours()) +
-        ":" +
-        pad(date.getMinutes())
-      );
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
     }
 
-    function setInitialValues() {
-      const now = new Date();
-      const roundedOpen = roundToNearest10Minutes(now);
-      const roundedClose = roundToNearest10Minutes(new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)); // +1 week
-
-      if (!openingDateInput.value) {
-        openingDateInput.value = formatDateTimeLocal(roundedOpen);
+    function initializeInput(inputElement, fallbackDate) {
+      const utc = inputElement.dataset.utc;
+      if (utc) {
+        const local = new Date(utc);
+        inputElement.value = formatDateTimeLocal(roundToNearest10Minutes(local));
+      } else if (!inputElement.value) {
+        inputElement.value = formatDateTimeLocal(roundToNearest10Minutes(fallbackDate));
       }
-
-      if (!closingDateInput.value) {
-        closingDateInput.value = formatDateTimeLocal(roundedClose);
-      }
-
-      updateClosingDateBounds();
     }
 
-    function updateClosingDateBounds() {
+    function updateMinAndMaxBounds() {
       const openDate = new Date(openingDateInput.value);
       if (!isNaN(openDate)) {
-        const minDate = formatDateTimeLocal(openDate);
-        closingDateInput.min = minDate;
-
-        const maxDate = new Date(openDate.getTime() + 30 * 24 * 60 * 60 * 1000);
-        closingDateInput.max = formatDateTimeLocal(maxDate);
-
+        const minClose = openDate;
+        const maxClose = new Date(openDate.getTime() + 30 * 24 * 60 * 60 * 1000);
         const currentClose = new Date(closingDateInput.value);
-        if (currentClose < openDate || currentClose > maxDate) {
-          closingDateInput.value = minDate;
+
+        closingDateInput.min = formatDateTimeLocal(minClose);
+        closingDateInput.max = formatDateTimeLocal(maxClose);
+
+        if (currentClose < minClose || currentClose > maxClose) {
+          closingDateInput.value = formatDateTimeLocal(minClose);
         }
       }
     }
 
+    const now = new Date();
+    const roundedNow = roundToNearest10Minutes(now);
+    const defaultClose = roundToNearest10Minutes(new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)); // +1 week
+
+    openingDateInput.min = formatDateTimeLocal(roundedNow); // Prevent past time
+
+    initializeInput(openingDateInput, roundedNow);
+    initializeInput(closingDateInput, defaultClose);
+    updateMinAndMaxBounds();
+
     openingDateInput.addEventListener("blur", function () {
       openingDateInput.value = formatDateTimeLocal(roundToNearest10Minutes(new Date(openingDateInput.value)));
-      updateClosingDateBounds();
+      updateMinAndMaxBounds();
     });
 
     closingDateInput.addEventListener("blur", function () {
       closingDateInput.value = formatDateTimeLocal(roundToNearest10Minutes(new Date(closingDateInput.value)));
     });
 
-    setInitialValues();
+    document.querySelector("form")?.addEventListener("submit", function () {
+      function convertToUTC(input) {
+        const local = new Date(input.value);
+        input.value = local.toISOString().slice(0, 16);
+      }
+      convertToUTC(openingDateInput);
+      convertToUTC(closingDateInput);
+    });
   });
 
+  const descriptionInput = document.getElementById("product-description");
+  const descriptionCount = document.getElementById("description-count");
 
-
-    const descriptionInput = document.getElementById("product-description");
-    const descriptionCount = document.getElementById("description-count");
-
-    if (descriptionInput && descriptionCount) {
-      descriptionInput.addEventListener("input", function () {
-        const len = descriptionInput.value.length;
-        descriptionCount.textContent = `${len}/500`;
-      });
-    }
+  if (descriptionInput && descriptionCount) {
+    descriptionInput.addEventListener("input", function () {
+      const len = descriptionInput.value.length;
+      descriptionCount.textContent = `${len}/500`;
+    });
+  }
 </script>

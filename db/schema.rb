@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_16_193544) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_23_200837) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -65,6 +65,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_16_193544) do
     t.decimal "curr_max_bid", null: false
     t.bigint "winning_buyer_id"
     t.integer "item_type", default: 0, null: false
+    t.boolean "names_visible", default: true, null: false
+    t.boolean "bid_amount_visible", default: true, null: false
     t.index ["seller_id"], name: "index_auction_items_on_seller_id"
   end
 

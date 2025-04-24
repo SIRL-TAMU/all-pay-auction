@@ -57,9 +57,8 @@
               <%= form.datetime_local_field :opening_date,
                   required: true,
                   class: "input-field",
-                  min: Time.zone.now.strftime("%Y-%m-%dT%H:%M"),
-                  value: (form.object.opening_date || round_to_nearest_10_min(Time.zone.now)).strftime("%Y-%m-%dT%H:%M"),
-                  id: "opening_date" %>
+                  id: "opening_date",
+                  data: { utc: @auction_item.opening_date&.iso8601 } %>
             </div>
 
             <div class="input-group col-span-6">
@@ -67,9 +66,31 @@
               <%= form.datetime_local_field :closing_date,
                   required: true,
                   class: "input-field",
-                  min: Time.zone.now.strftime("%Y-%m-%dT%H:%M"),
-                  value: (form.object.closing_date || round_to_nearest_10_min(Time.zone.now + 1.week)).strftime("%Y-%m-%dT%H:%M"),
-                  id: "closing_date" %>
+                  id: "closing_date",
+                  data: { utc: @auction_item.closing_date&.iso8601 } %>
+            </div>
+          </div>
+        </div>
+        <div class="auction-left-general">
+          <p>Bidder Information Confidentiality</p>
+          <div class="bid-visibility-grid">
+            <div class="input-group">
+              <div class="visible-toggle-wrapper">
+                <span>Allow bidders to see the names of other bidders</span>
+                <label class="switch">
+                  <%= form.check_box :names_visible %>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="visible-toggle-wrapper">
+                <span>Allow bidders to see the amount of other bids</span>
+                <label class="switch">
+                  <%= form.check_box :bid_amount_visible %>
+                  <span class="slider round"></span>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -101,7 +122,6 @@
   </div>
 
 <% end %>
-
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -190,62 +210,67 @@
       const pad = (n) => n.toString().padStart(2, "0");
       return (
         date.getFullYear() +
-        "-" +
-        pad(date.getMonth() + 1) +
-        "-" +
-        pad(date.getDate()) +
-        "T" +
-        pad(date.getHours()) +
-        ":" +
-        pad(date.getMinutes())
+        "-" + pad(date.getMonth() + 1) +
+        "-" + pad(date.getDate()) +
+        "T" + pad(date.getHours()) +
+        ":" + pad(date.getMinutes())
       );
     }
 
-    function setInitialValues() {
-      const now = new Date();
-      const roundedOpen = roundToNearest10Minutes(now);
-      const roundedClose = roundToNearest10Minutes(new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)); // +1 week
-
-      if (!openingDateInput.value) {
-        openingDateInput.value = formatDateTimeLocal(roundedOpen);
+    function initializeInput(inputElement, fallbackDate) {
+      if (inputElement.dataset.utc && !inputElement.value) {
+        const local = roundToNearest10Minutes(new Date(inputElement.dataset.utc));
+        inputElement.value = formatDateTimeLocal(local);
+      } else if (!inputElement.value) {
+        inputElement.value = formatDateTimeLocal(fallbackDate);
       }
-
-      if (!closingDateInput.value) {
-        closingDateInput.value = formatDateTimeLocal(roundedClose);
-      }
-
-      updateClosingDateBounds();
     }
 
-    function updateClosingDateBounds() {
+    function updateClosingBounds() {
       const openDate = new Date(openingDateInput.value);
       if (!isNaN(openDate)) {
-        const minDate = formatDateTimeLocal(openDate);
-        closingDateInput.min = minDate;
+        const minCloseDate = formatDateTimeLocal(openDate);
+        closingDateInput.min = minCloseDate;
 
-        const maxDate = new Date(openDate.getTime() + 30 * 24 * 60 * 60 * 1000);
-        closingDateInput.max = formatDateTimeLocal(maxDate);
-
+        const maxClose = new Date(openDate.getTime() + 30 * 24 * 60 * 60 * 1000);
         const currentClose = new Date(closingDateInput.value);
-        if (currentClose < openDate || currentClose > maxDate) {
-          closingDateInput.value = minDate;
+
+        if (currentClose < openDate || currentClose > maxClose) {
+          closingDateInput.value = minCloseDate;
         }
+
+        closingDateInput.max = formatDateTimeLocal(maxClose);
       }
     }
+
+    const now = new Date();
+    const defaultOpen = roundToNearest10Minutes(now);
+    const defaultClose = roundToNearest10Minutes(new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000));
+
+    openingDateInput.min = formatDateTimeLocal(defaultOpen);
+
+    initializeInput(openingDateInput, defaultOpen);
+    initializeInput(closingDateInput, defaultClose);
+    updateClosingBounds();
 
     openingDateInput.addEventListener("blur", function () {
       openingDateInput.value = formatDateTimeLocal(roundToNearest10Minutes(new Date(openingDateInput.value)));
-      updateClosingDateBounds();
+      updateClosingBounds();
     });
 
     closingDateInput.addEventListener("blur", function () {
       closingDateInput.value = formatDateTimeLocal(roundToNearest10Minutes(new Date(closingDateInput.value)));
     });
 
-    setInitialValues();
+    document.querySelector("form")?.addEventListener("submit", function () {
+      function convertToUTC(input) {
+        const local = new Date(input.value);
+        input.value = local.toISOString().slice(0, 16);
+      }
+      convertToUTC(openingDateInput);
+      convertToUTC(closingDateInput);
+    });
   });
-
-
 
   const descriptionInput = document.getElementById("product-description");
   const descriptionCount = document.getElementById("description-count");
