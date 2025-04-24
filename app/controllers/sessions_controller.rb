@@ -71,7 +71,7 @@ class SessionsController < ApplicationController
       if @user.new_record?
         @user.assign_attributes(
           first_name: auth.info.first_name,
-          last_name: auth.info.last_name,
+          last_name: auth.info.last_name.presence || "",
           email: auth.info.email,
           password: "#{SecureRandom.base64(16)}#",
           liquid_balance: 0,
