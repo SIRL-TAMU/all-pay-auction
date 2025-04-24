@@ -63,7 +63,8 @@ class AuctionItemsControllerTest < ActionDispatch::IntegrationTest
         min_increment: 5,
         innate_value: 500,
         opening_date: Time.zone.now,
-        closing_date: 7.days.from_now
+        closing_date: 7.days.from_now,
+        item_type: "physical"
       }
     }
 
