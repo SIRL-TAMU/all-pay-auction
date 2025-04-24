@@ -204,20 +204,24 @@
           "Geodude", "Rattata", "Clefairy", "Abra", "Drowzee", "Krabby", "Vulpix",
           "Farfetch’d", "Growlithe", "Cubone"
         ] %>
+
         <% bidder_map = {} %>
         <% index = 0 %>
+
+        <% # Assign fake names in ascending order of bids (earliest first) %>
+        <% @auction_item.bids.order(created_at: :asc).each do |bid| %>
+          <% if !@auction_item.names_visible && current_user != @auction_item.seller && bid.buyer != current_user %>
+            <% unless bidder_map.key?(bid.buyer.id) %>
+              <% bidder_map[bid.buyer.id] = fake_names[index % fake_names.length] %>
+              <% index += 1 %>
+            <% end %>
+          <% end %>
+        <% end %>
 
         <div class="auction-item-bid-history">
           <p class="auction-item-user-card-title">Bid History</p>
           <div class="auction-bid-scroll">
             <% @auction_item.bids.order(created_at: :desc).each do |bid| %>
-              <% if !@auction_item.names_visible && current_user != @auction_item.seller && bid.buyer != current_user %>
-                <% unless bidder_map.key?(bid.buyer.id) %>
-                  <% bidder_map[bid.buyer.id] = fake_names[index % fake_names.length] %>
-                  <% index += 1 %>
-                <% end %>
-              <% end %>
-
               <div class="auction-item-bid-entry">
                 <div class="auction-item-user-card">
                   <p>
@@ -248,6 +252,7 @@
             <% end %>
           </div>
         </div>
+
 
 
       <% end %>
