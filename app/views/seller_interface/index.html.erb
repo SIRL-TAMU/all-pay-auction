@@ -107,7 +107,7 @@
     <% if @past_auctions.any? %>
       <% @past_auctions.each do |auction| %>
         <%= link_to auction_item_path(auction), class: "past-auction-card-link" do %>
-          <div class="past-auction-card">
+          <div class="past-auction-card min-h-[500px]">
             <div class="past-auction-image-container">
               <% if auction.images.attached? %>
                 <%= image_tag auction.images.first, class: "past-auction-image" %>
