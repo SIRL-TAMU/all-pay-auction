@@ -177,39 +177,40 @@
     const countdownElements = document.querySelectorAll('.countdown-text');
 
     countdownElements.forEach(countdownElement => {
-    const endTime = new Date(countdownElement.dataset.endTime).getTime();
+      const endTime = new Date(countdownElement.dataset.endTime).getTime();
 
-    function updateCountdown() {
-      const now = new Date().getTime();
-      const timeRemaining = endTime - now;
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const timeRemaining = endTime - now;
 
-      if (timeRemaining <= 0) {
-        container.innerHTML = "Closed on " + new Date(endTime).toLocaleDateString(undefined, {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
-        });
-        return;
+        if (timeRemaining <= 0) {
+          const parent = countdownElement.closest(".countdown-text") || countdownElement.parentElement;
+          parent.innerHTML = "Closed on " + new Date(endTime).toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZoneName: 'short'
+          });
+          return;
+        }
+
+        const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+        let output = [];
+        if (days > 0) output.push(`${days}d`);
+        if (hours > 0 || days > 0) output.push(`${hours}h`);
+        output.push(`${minutes}m`);
+        if (days === 0 && hours === 0) {
+          output.push(`${seconds}s`);
+        }
+
+        countdownElement.textContent = output.join(" ");
       }
-
-      const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-
-      let output = [];
-
-      if (days > 0) output.push(`${days}d`);
-      if (hours > 0 || days > 0) output.push(`${hours}h`);
-      output.push(`${minutes}m`);
-
-      if (days === 0 && hours === 0) {
-        output.push(`${seconds}s`);
-      }
-
-      textElement.textContent = output.join(' ');
-    }
-
 
       updateCountdown();
       setInterval(updateCountdown, 1000);
