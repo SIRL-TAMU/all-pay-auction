@@ -5,8 +5,13 @@ class BidsController < ApplicationController
     before_action :ensure_buyer
 
     def create
-      @bid = current_user.bids.new(bid_params)
       @auction_item = AuctionItem.find(params[:bid][:auction_item_id])
+      if @auction_item.closed? || @auction_item.archived? 
+        redirect_to auction_item_path(@auction_item), alert: "This auction has ended. You cannot place a bid."
+        return
+      end
+      @bid = current_user.bids.new(bid_params)
+
       highest_previous_bid = current_user.bids.where(auction_item: @auction_item).maximum(:amount) || 0
 
       if @bid.amount.present?

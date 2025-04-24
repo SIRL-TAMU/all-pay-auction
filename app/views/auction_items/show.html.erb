@@ -47,23 +47,17 @@
           <p><%= @auction_item.description %></p>
         </div>
       </div>
-
-      <%# <div class="auction-item-details-section">
-        <button class="auction-item-details-toggle" onclick="toggleDetails(this, 'auction-item-shipping-info')">
-          Payment & Shipping <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div id="auction-item-shipping-info" class="auction-item-details-content">
-          <p>Lorem ipsum odor amet, consectetuer adipiscing elit. Lacus aliquam id convallis class scelerisque, conubia taciti mi. Arcu bibendum placerat aliquam non nisi nostra. Adipiscing rutrum tempus at id in arcu. Accumsan nulla nisl magna ridiculus mattis per. Elementum leo himenaeos convallis volutpat auctor ultrices pretium.
-
-Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesuada suscipit quam integer dictumst, litora montes. Arcu semper et cubilia; semper ultricies pretium. Nisi feugiat justo vulputate massa tellus eget metus. Litora porta lectus lectus eros libero auctor. Sociosqu feugiat eget magnis sagittis natoque felis. Dui vivamus rhoncus lacus; conubia est erat. Hac tellus ac auctor vivamus massa nisl erat vitae! Lacinia vitae per arcu odio hac nisl elementum primis.</p>
-        </div>
-      </div> %>
     </div>
 
     
   </div>
 
   <div class="auction-item-info">
+    <% if current_user == @auction_item.seller && !@auction_item.archived? %>
+      <%= button_to "Manually Settle Auction", close_auction_item_path(@auction_item), method: :post, data: { confirm: "Are you sure you want to manually settle this auction?" }, class: "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700" %>
+    <% end %>
+
+
     <% if seller? && current_user == @auction_item.seller %>
       <div class="auction-item-seller-actions">
         <%= link_to edit_auction_item_path(@auction_item), class: "auction-item-edit-btn", title: "Edit Auction" do %>
@@ -129,23 +123,22 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
 
             <% min_bid = @auction_item.max_bid + @auction_item.min_increment %>
             <% bid_options = (0..500).map { |i| min_bid + i * @auction_item.min_increment } %>
+            <% default_label = "#{number_to_currency(min_bid, unit: '$', precision: 2)} USD" %>
 
-            <% min_bid = @auction_item.max_bid + @auction_item.min_increment %>
-            <% default_label = "$#{min_bid} USD" %>
             <div x-data="{ open: false, selectedText: '<%= default_label %>', selectedValue: <%= min_bid %> }" class="relative w-full mt-2">
-                <button @click="open = !open" type="button"
-                        class="w-full border border-gray-300 rounded px-4 py-2 text-left bg-white cursor-pointer pr-10 relative">
-                  <span x-text="selectedText"></span>
-
-                  <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"></i>
-                </button>
+              <button @click="open = !open" type="button"
+                      class="w-full border border-gray-300 rounded px-4 py-2 text-left bg-white cursor-pointer pr-10 relative">
+                <span x-text="selectedText"></span>
+                <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+              </button>
 
               <ul x-show="open" @click.outside="open = false"
                   class="absolute z-10 mt-1 max-h-40 w-full overflow-y-auto border border-gray-300 rounded bg-white shadow">
                 <% bid_options.each do |amt| %>
-                  <li @click="selectedText = '$<%= amt %> USD'; selectedValue = <%= amt %>; open = false"
+                  <% display_amt = "#{number_to_currency(amt, unit: '$', precision: 2)} USD" %>
+                  <li @click="selectedText = '<%= display_amt %>'; selectedValue = <%= amt %>; open = false"
                       class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                    $<%= amt %> USD
+                    <%= display_amt %>
                   </li>
                 <% end %>
               </ul>
@@ -156,6 +149,7 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
             <%= form.submit "Place Bid", class: "auction-item-bid-btn mt-2 cursor-pointer" %>
           <% end %>
         <% end %>
+
 
       </div>
 
@@ -177,36 +171,88 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
     <% end %>
     </div>
 
+
     <% if @auction_item.bids.any? %>
-      <div class="auction-item-bid-history">
-        <p class="auction-item-user-card-title">Bid History</p>
-        <div class="auction-bid-scroll">
-          <% @auction_item.bids.order(created_at: :desc).each do |bid| %>
-            <div class="auction-item-bid-entry">
-              <div class="auction-item-user-card">
-                <% if @auction_item.names_visible || current_user == @auction_item.seller%>
-                  <p><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></p>
-                <% else %>
-                  <p><em>Anonymous Bidder</em></p>
-                <% end %>
-                <p class="auction-item-user-card-subtext">
-                  <%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %>
-                </p>
-              </div>
-              <% if @auction_item.bid_amount_visible || current_user == @auction_item.seller%>
-                <p class="auction-item-user-card-amount">
-                  <strong><%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD</strong>
-                </p>
-              <% else %>
-                <p class="auction-item-user-card-amount">
-                  <strong><em>Amount Hidden</em></strong>
-                </p>
+      <% if @auction_item.hide_bidding_history && current_user != @auction_item.seller %>
+        <!-- Show 'My Bids' to regular users if bid history is hidden -->
+        <% my_bids = @auction_item.bids.where(buyer: current_user).order(created_at: :desc) %>
+        <% if my_bids.any? %>
+          <div class="auction-item-bid-history">
+            <p class="auction-item-user-card-title">My Bids</p>
+            <div class="auction-bid-scroll">
+              <% my_bids.each do |bid| %>
+                <div class="auction-item-bid-entry">
+                  <div class="auction-item-user-card">
+                    <p><%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %></p>
+                  </div>
+                  <p class="auction-item-user-card-amount">
+                    <strong><%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD</strong>
+                  </p>
+                </div>
               <% end %>
             </div>
-          <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-600 italic">You have not placed any bids yet.</p>
+        <% end %>
+
+      <% else %>
+        <% fake_names = [
+          "Pikachu", "Bulbasaur", "Charmander", "Squirtle", "Jigglypuff", "Snorlax",
+          "Eevee", "Psyduck", "Meowth", "Gengar", "Machop", "Slowpoke", "Oddish",
+          "Zubat", "Diglett", "Pidgey", "Magikarp", "Caterpie", "Weedle", "Koffing",
+          "Geodude", "Rattata", "Clefairy", "Abra", "Drowzee", "Krabby", "Vulpix",
+          "Farfetch’d", "Growlithe", "Cubone"
+        ] %>
+        <% bidder_map = {} %>
+        <% index = 0 %>
+
+        <div class="auction-item-bid-history">
+          <p class="auction-item-user-card-title">Bid History</p>
+          <div class="auction-bid-scroll">
+            <% @auction_item.bids.order(created_at: :desc).each do |bid| %>
+              <% if !@auction_item.names_visible && current_user != @auction_item.seller && bid.buyer != current_user %>
+                <% unless bidder_map.key?(bid.buyer.id) %>
+                  <% bidder_map[bid.buyer.id] = fake_names[index % fake_names.length] %>
+                  <% index += 1 %>
+                <% end %>
+              <% end %>
+
+              <div class="auction-item-bid-entry">
+                <div class="auction-item-user-card">
+                  <p>
+                    <% if @auction_item.names_visible || current_user == @auction_item.seller || bid.buyer == current_user %>
+                      <%= bid.buyer.first_name %> <%= bid.buyer.last_name %>
+                      <% if bid.buyer == current_user %>
+                        <span class="text-green-600 font-semibold">(You)</span>
+                      <% end %>
+                    <% else %>
+                      <em><%= bidder_map[bid.buyer.id] %></em>
+                    <% end %>
+                  </p>
+                  <p class="auction-item-user-card-subtext">
+                    <%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %>
+                  </p>
+                </div>
+
+                <% if @auction_item.bid_amount_visible || current_user == @auction_item.seller || bid.buyer == current_user %>
+                  <p class="auction-item-user-card-amount">
+                    <strong><%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD</strong>
+                  </p>
+                <% else %>
+                  <p class="auction-item-user-card-amount">
+                    <strong><em>Amount Hidden</em></strong>
+                  </p>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
         </div>
-      </div>
+
+
+      <% end %>
     <% end %>
+
 
     <div class="auction-item-seller-info">
       <div class="auction-item-user-card-title">Seller Information</div>
@@ -219,12 +265,13 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
 <!-- Modal -->
 <div id="auction-item-image-modal" class="auction-item-modal auction-item-hidden">
   <div class="auction-item-modal-backdrop">
+    <span class="auction-item-close-btn" id="auction-item-close-modal">&times;</span>
     <div class="auction-item-modal-content">
-      <span class="auction-item-close-btn" id="auction-item-close-modal">&times;</span>
       <img id="auction-item-modal-image" class="auction-item-modal-image" src="" alt="Expanded Auction Image">
     </div>
   </div>
 </div>
+
 
 <div class="bottom-padding"></div>
 <div class="bottom-padding"></div>

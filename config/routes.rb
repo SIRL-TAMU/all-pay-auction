@@ -70,6 +70,7 @@ Rails.application.routes.draw do
   resources :auction_items do
     member do
       delete "remove_image/:image_id", to: "auction_items#remove_image", as: "remove_image"
+      post :close
     end
   end
 

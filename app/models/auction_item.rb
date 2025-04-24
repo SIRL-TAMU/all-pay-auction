@@ -91,9 +91,9 @@ class AuctionItem < ApplicationRecord
     File.write("test_cron.txt", "\n", mode: "a")
   end
 
-  def close_auction!
-    if archived? || ! closed?
-      puts "Auction #{name} is either settled or closed."
+  def close_auction!(force: false)
+    if archived? || (!closed? && !force)
+      puts "Auction #{name} is either settled or not closed yet."
       return
     end
 

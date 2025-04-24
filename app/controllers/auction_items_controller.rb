@@ -93,6 +93,17 @@ class AuctionItemsController < ApplicationController
     redirect_to edit_auction_item_path(@auction_item)
   end
 
+  def close
+    auction_item = AuctionItem.find(params[:id])
+    if current_user == auction_item.seller
+      auction_item.close_auction!(force: true)
+      redirect_to auction_item_path(auction_item), notice: "Auction settled manually. (Testing)"
+    else
+      redirect_to auction_item_path(auction_item), alert: "You are not authorized to settle this auction."
+    end
+  end
+
+
   private
 
   def set_auction_item
@@ -103,7 +114,7 @@ class AuctionItemsController < ApplicationController
     params.require(:auction_item).permit(
       :name, :description, :curr_max_bid, :min_increment, :innate_value,
       :opening_date, :closing_date, :is_archived, :item_type, :names_visible,
-      :bid_amount_visible, images: [])
+      :bid_amount_visible, :hide_bidding_history, images: [])
   end
 
   def require_seller_login
