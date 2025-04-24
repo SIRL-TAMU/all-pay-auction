@@ -1,7 +1,13 @@
-<%# Home Page Image %>
-<div class="w-full items-center flex flex-col px-4">
-  <%= image_tag "home_image.png", class: "h-auto object-cover" %>
+<div class="flex items-center justify-center">
+  <div class="max-w-2xl mx-auto text-center px-6 py-12">
+    <p class="text-lg text-gray-700 leading-relaxed">
+      AllPAY is a kind of auction where every bid matters — even if you don’t win. 
+      Every participant pays their bid, but only the highest bidder takes the prize. 
+    </p>
+  </div>
 </div>
+
+
 
 <%# Auction Block Carousel %>
 <div class="w-full px-4 mt-10 relative">
@@ -9,26 +15,22 @@
     <div class="flex flex-row items-center space-x-4">
       <div class="font-bold text-md">The Auction Block</div>
       <%= link_to "Explore More →", auction_items_path, class: "text-sm underline" %>
-      <div id="auction-loader" class=" hidden">
+      <div id="auction-loader" class="hidden">
         <div class="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     </div>
+  </div>
 
-
-    <div class="mr-10 space-x-4">
-      <button id="auction-left" class="disabled:opacity-40" disabled>
-        <i class="fas fa-chevron-left"></i>
-      </button>
-      <button id="auction-right" class="disabled:opacity-40">
-        <i class="fas fa-chevron-right"></i>
-      </button>
+  <% if @auction_items.present? %>
+    <div id="auction-carousel" class="flex space-x-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 hide-scrollbar">
+      <%= render partial: "shared/auction_item_cards", locals: { auction_items: @auction_items } %>
     </div>
-  </div>
-
-  <div id="auction-carousel" class="flex space-x-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 hide-scrollbar">
-    <%= render partial: "shared/auction_item_cards", locals: { auction_items: @auction_items } %>
-  </div>
-
+  <% else %>
+    <div id="no-auction-items-message" class="italic text-[#808080] ml-4">
+      <p>No <span id="auction-status-text"></span> auction items available.</p>
+    </div>
+  <% end %>
 </div>
+
 
 <div class="py-20"></div>

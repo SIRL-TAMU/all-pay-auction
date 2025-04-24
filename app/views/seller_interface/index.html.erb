@@ -1,96 +1,93 @@
-<% if @active_or_upcoming_auction %>
-  <% is_active = @active_or_upcoming_auction.opening_date <= Time.zone.now && @active_or_upcoming_auction.closing_date >= Time.zone.now %>
-  
-  <div class="active-auction">
-    <%= link_to auction_item_path(@active_or_upcoming_auction), class: "auction-card-link" do %>
-      <div class="auction-card">
-        <%# Image and Countdown %>
+<% if @active_or_upcoming_auctions.any? %>
+  <div class="m-2 w-full justify-center flex items-center">
+    <%= link_to new_auction_item_path, class: "w-[50%] flex items-center justify-center gap-2 bg-blue-800 hover:bg-[#142766] text-white px-4 py-2 rounded-md shadow transition-colors duration-200 mt-4" do %>
+      <i class="text-white fa-solid fa-plus"></i>
+      <div class="text-white">Add Auction Item</div>
+    <% end %>
+  </div>
+
+  <% @active_or_upcoming_auctions.each do |auction| %>
+    <% is_active = auction.opening_date <= Time.zone.now && auction.closing_date >= Time.zone.now %>
+
+   <div class="active-auction">
+    <div>
+      <%= link_to auction_item_path(auction), class: "auction-card-link auction-card" do %>
         <div class="auction-card-image">
-          <% if @active_or_upcoming_auction.images.attached? %>
-            <%= image_tag @active_or_upcoming_auction.images.first, width: 200 %>
+          <% if auction.images.attached? %>
+            <%= image_tag auction.images.first, width: 200 %>
           <% else %>
             <%= image_tag "default_item.png", width: 200 %>
           <% end %>
 
           <div class="countdown-container">
             <% if is_active %>
-              <p>Closing in&nbsp;
-                <strong><span id="countdown" data-end-time="<%= @active_or_upcoming_auction.closing_date.iso8601 %>"></span></strong>
+              <p class="countdown-wrapper">
+                <span class="countdown-text" data-end-time="<%= auction.closing_date.iso8601 %>">...</span>
               </p>
             <% end %>
           </div>
+
+
         </div>
 
-        <%# Info %>
         <div class="auction-card-info">
           <div class="main-info">
-            <div class="card-title"><%= @active_or_upcoming_auction.name %></div>
+            <div class="card-title"><%= auction.name %></div>
+            <div class="card-subtitle">Est: <%= auction.innate_value %></div>
 
-            <%# Estimated Value %>
-            <div class="card-subtitle">
-              Est: <%= @active_or_upcoming_auction.innate_value%>
-            </div>
-
-            <%# Bidding Info %>
             <div class="bid-info">
               <div class="bid-item">
-                <span class="bid-value">
-                  <%= number_to_currency(@active_or_upcoming_auction.bid_pool, unit: "$", precision: 2) %> USD
-                </span>
+                <span class="bid-value"><%= number_to_currency(auction.bid_pool, unit: "$", precision: 2) %> USD</span>
                 <span class="bid-label">Bid Pool</span>
               </div>
-
               <div class="bid-item">
-                <span class="bid-value">
-                  <%= number_to_currency(@active_or_upcoming_auction.max_bid, unit: "$", precision: 2) %> USD
-                </span>
+                <span class="bid-value"><%= number_to_currency(auction.max_bid, unit: "$", precision: 2) %> USD</span>
                 <span class="bid-label">Highest Bid</span>
               </div>
-
               <div class="bid-item">
-                <span class="bid-value"><%= @active_or_upcoming_auction.total_bids %> bids</span>
+                <span class="bid-value"><%= auction.total_bids %> bids</span>
                 <span class="bid-label">Total Bids</span>
               </div>
-            </div>            
+            </div>
           </div>
 
-          <%# Latest Bid/Upcoming Auction Start Date %>
-          <% if is_active %>
-            <div class="latest-bids-title">Latest Bids</div>
 
-            <% if @active_or_upcoming_auction.latest_bids(4).any? %>
-              <ul class="latest-bids">
-                <% @active_or_upcoming_auction.latest_bids(4).each do |bid| %>
-                  <li class="bidder-item">
-                    <div class="bidder-info">
-                      <div class="bidder-details">
-                        <%= bid.buyer.first_name %> <%= bid.buyer.last_name %>
-                        <span class="bidder-time"><%= bid.created_at.strftime("%B %d, %Y at %I:%M%p") %></span>
-                      </div>
-                    </div>
-                    <div class="bidder-amount">
-                      <%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD
-                    </div>
-                  </li>
-                <% end %>
-              </ul>
-            <% else %>
-              <p class="no-bids-message">No bids have been placed yet.</p>
+          <% if is_active %>
+        <div class="latest-bids-title">Highest Bid</div>
+        <% if auction.latest_bids(1).any? %>
+          <ul class="latest-bids">
+            <% auction.latest_bids(1).each do |bid| %>
+              <li class="bidder-item">
+                <div class="bidder-info">
+                  <div class="bidder-details">
+                    <%= bid.buyer.first_name %> <%= bid.buyer.last_name %>
+                    <span class="bidder-time"><%= bid.created_at.strftime("%B %d, %Y at %I:%M%p") %></span>
+                  </div>
+                </div>
+                <div class="bidder-amount">
+                  <%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD
+                </div>
+              </li>
             <% end %>
-          <% else %>
-            <div class="upcoming-auction">
-              <p>This auction will begin on</p>
-              <div class="upcoming-date"><%= @active_or_upcoming_auction.opening_date.strftime('%B %d, %Y %I:%M %p') %></div>
-            </div>
-          <% end %>
+          </ul>
+        <% else %>
+          <p class="no-bids-message">No bids have been placed yet.</p>
+        <% end %>
+      <% else %>
+        <div class="upcoming-auction">
+          <p>This auction will begin on</p>
+          <div class="upcoming-date" data-start-time="<%= auction.opening_date.iso8601 %>"></div>
         </div>
-      </div>
-    <% end %>
-    
-    <%= link_to auction_item_path(@active_or_upcoming_auction), class: "view-auction-btn" do %>
-      <i class="fa-solid fa-eye"></i> View Listing
-    <% end %>
+      <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
+
+
+
+
+  <% end %>
 <% else %>
   <div class="create-auction-container">
     <div class="create-auction">
@@ -102,6 +99,7 @@
   </div>
 <% end %>
 
+
 <div class="past-auctions-container">
   <div class="past-auctions-title">My Past Auctions</div>
   
@@ -109,7 +107,7 @@
     <% if @past_auctions.any? %>
       <% @past_auctions.each do |auction| %>
         <%= link_to auction_item_path(auction), class: "past-auction-card-link" do %>
-          <div class="past-auction-card">
+          <div class="past-auction-card min-h-[500px]">
             <div class="past-auction-image-container">
               <% if auction.images.attached? %>
                 <%= image_tag auction.images.first, class: "past-auction-image" %>
@@ -121,9 +119,17 @@
             <div class="past-auction-details">
               <div class="past-auction-closed-badge">
                 <% if auction.is_archived %>
-                  Closed <%= auction.closing_date.strftime('%B %d, %Y') %>
+                  Closed <%= auction.closing_date.strftime('%B %d, %Y') %> <br>
+                  <% if auction.winning_bid.present? %>
+                    $<%= number_with_precision(auction.bid_pool, precision: 2) %> received<br>
+                    Net: <%= number_to_currency(auction.bid_pool - auction.innate_value, precision: 2) %>
+                  <% elsif auction.currency? %>
+                    <%= number_to_currency(auction.innate_value, precision: 2) %> refunded
+                    <% else %>
+                      Item returned
+                    <% end %>
                 <% else %>
-                  Unsettled <%= auction.closing_date.strftime('%B %d, %Y') %>
+                  Unsettled <%= auction.closing_date.strftime('%B %d, %Y') %> 
                 <% end %>
               </div>
 
@@ -180,28 +186,83 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-      const countdownElement = document.getElementById("countdown");
-      if (!countdownElement) return;
+    const countdownElements = document.querySelectorAll(".countdown-text");
 
-      const endTime = new Date(countdownElement.dataset.endTime).getTime();
+    countdownElements.forEach(countdownElement => {
+      const wrapper = countdownElement.closest(".countdown-wrapper");
+      const endTime = new Date(countdownElement.dataset.endTime);
+      const endTimeMs = endTime.getTime();
+
+      const now = new Date().getTime();
+      const timeRemaining = endTimeMs - now;
+
+      if (timeRemaining > 24 * 60 * 60 * 1000) {
+        const formatted = endTime.toLocaleString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit"
+        });
+        wrapper.innerHTML = `Closes on <strong>${formatted}</strong>`;
+        return;
+      }
 
       function updateCountdown() {
-          const now = new Date().getTime();
-          const timeRemaining = endTime - now;
+        const now = new Date().getTime();
+        const remaining = endTimeMs - now;
 
-          if (timeRemaining <= 0) {
-              countdownElement.innerHTML = "Auction Closed";
-              return;
-          }
+        if (remaining <= 0) {
+          const closedStr = endTime.toLocaleString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit'
+          });
+          wrapper.innerHTML = `Closed on ${closedStr}`;
+          return;
+        }
 
-          const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-          const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
 
-          countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m`;
+        const output = [];
+        if (days > 0) output.push(`${days}d`);
+        if (hours > 0 || days > 0) output.push(`${hours}h`);
+        output.push(`${minutes}m`);
+        if (days === 0 && hours === 0) output.push(`${seconds}s`);
+
+        countdownElement.textContent = output.join(" ");
       }
 
       updateCountdown();
-      setInterval(updateCountdown, 60000); // Update every minute
+      setInterval(updateCountdown, 1000);
+    });
   });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const upcomingDates = document.querySelectorAll(".upcoming-date");
+
+    upcomingDates.forEach(el => {
+      const iso = el.dataset.startTime;
+      if (iso) {
+        const local = new Date(iso);
+        const options = {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        };
+        el.textContent = local.toLocaleString(undefined, options);
+      }
+    });
+  });
+
+
 </script>
+

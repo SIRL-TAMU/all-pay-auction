@@ -13,6 +13,7 @@ class Buyer < ApplicationRecord
 
   has_many :bids, dependent: :destroy
   has_many :transactions, dependent: :destroy
+  has_many :stripe_transactions
   validates :liquid_balance, numericality: { greater_than_or_equal_to: 0 }
   has_many :auction_items, through: :bids
   # Association for auction_items the buyer has won

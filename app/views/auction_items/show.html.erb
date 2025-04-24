@@ -1,7 +1,7 @@
 <div class="auction-item-container" data-auction-item-id="<%= @auction_item.id %>">
   <div class="auction-item-info-left">
     <div class="auction-item-title">
-      <%= @auction_item.name %>
+    <%= @auction_item.name %> (<%= @auction_item.currency? ? "Currency Bid" : "Physical Bid" %>)
     </div>
 
     <div class="auction-gallery">
@@ -30,9 +30,9 @@
       <!-- Main Image Display -->
       <div class="auction-item-image-container">
         <% if @auction_item.images.attached? %>
-          <%= image_tag @auction_item.images.first, class: "auction-item-image", id: "main-image" %>
+          <%= image_tag @auction_item.images.first, class: "auction-item-image", id: "auction-item-main-image" %>
         <% else %>
-          <%= image_tag "default_item.png", class: "auction-item-image", id: "main-image" %>
+          <%= image_tag "default_item.png", class: "auction-item-image", id: "auction-item-main-image" %>
         <% end %>
       </div>
     </div>
@@ -48,7 +48,7 @@
         </div>
       </div>
 
-      <div class="auction-item-details-section">
+      <%# <div class="auction-item-details-section">
         <button class="auction-item-details-toggle" onclick="toggleDetails(this, 'auction-item-shipping-info')">
           Payment & Shipping <i class="fa-solid fa-chevron-down"></i>
         </button>
@@ -57,18 +57,7 @@
 
 Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesuada suscipit quam integer dictumst, litora montes. Arcu semper et cubilia; semper ultricies pretium. Nisi feugiat justo vulputate massa tellus eget metus. Litora porta lectus lectus eros libero auctor. Sociosqu feugiat eget magnis sagittis natoque felis. Dui vivamus rhoncus lacus; conubia est erat. Hac tellus ac auctor vivamus massa nisl erat vitae! Lacinia vitae per arcu odio hac nisl elementum primis.</p>
         </div>
-      </div>
-
-      <div class="auction-item-details-section">
-        <button class="auction-item-details-toggle" onclick="toggleDetails(this, 'auction-item-terms-conditions')">
-          Terms & Conditions <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div id="auction-item-terms-conditions" class="auction-item-details-content">
-          <p>Lorem ipsum odor amet, consectetuer adipiscing elit. Lacus aliquam id convallis class scelerisque, conubia taciti mi. Arcu bibendum placerat aliquam non nisi nostra. Adipiscing rutrum tempus at id in arcu. Accumsan nulla nisl magna ridiculus mattis per. Elementum leo himenaeos convallis volutpat auctor ultrices pretium.
-
-Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesuada suscipit quam integer dictumst, litora montes. Arcu semper et cubilia; semper ultricies pretium. Nisi feugiat justo vulputate massa tellus eget metus. Litora porta lectus lectus eros libero auctor. Sociosqu feugiat eget magnis sagittis natoque felis. Dui vivamus rhoncus lacus; conubia est erat. Hac tellus ac auctor vivamus massa nisl erat vitae! Lacinia vitae per arcu odio hac nisl elementum primis.</p>
-        </div>
-      </div>
+      </div> %>
     </div>
 
     
@@ -77,30 +66,13 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
   <div class="auction-item-info">
     <% if seller? && current_user == @auction_item.seller %>
       <div class="auction-item-seller-actions">
-        <% if @auction_item.active? || @auction_item.closed? %>
-          <a class="auction-item-edit-btn disabled" title="Cannot edit an active or closed auction" onclick="showDisabledAlert()">
-            <i class="fa-solid fa-pen-to-square"></i>
-          </a>
-          <a class="auction-item-delete-btn disabled" title="Cannot delete an active or closed auction" onclick="showDisabledAlert()">
-            <i class="fa-solid fa-trash"></i>
-          </a>
-
-          <%= link_to edit_auction_item_path(@auction_item), title: "Edit Auction" do %>
-            Edit (for testing)
-          <% end %>
-
-          <%= link_to auction_item_path(@auction_item), method: :delete, data: { confirm: "Are you sure?" }, title: "Delete Auction" do %>
-            Delete (for testing)
-          <% end %>
-        <% else %>
-          <%= link_to edit_auction_item_path(@auction_item), class: "auction-item-edit-btn", title: "Edit Auction" do %>
+        <%= link_to edit_auction_item_path(@auction_item), class: "auction-item-edit-btn", title: "Edit Auction" do %>
             <i class="fa-solid fa-pen-to-square"></i>
           <% end %>
 
           <%= link_to auction_item_path(@auction_item), method: :delete, data: { confirm: "Are you sure?" }, class: "auction-item-delete-btn", title: "Delete Auction" do %>
             <i class="fa-solid fa-trash"></i>
           <% end %>
-        <% end %>
       </div>
     <% end %>
 
@@ -115,14 +87,36 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
     <% end %>
 
     <div class="auction-item-bid-section">
-      <div class="auction-item-status">
-        <%= @auction_item.status_text %>
+      <div class="auction-item-status auction-item-timer" data-end-time="<%= @auction_item.closing_date.iso8601 %>">
+        <% now = Time.zone.now %>
+        <% if @auction_item.opening_date > now %>
+          <span class="local-time" data-time="<%= @auction_item.opening_date.iso8601 %>">Opens on ...</span>
+        
+        <% elsif @auction_item.closing_date < now %>
+          <span class="local-time" data-time="<%= @auction_item.closing_date.iso8601 %>">Closed on ...</span>
+          
+          <% if @auction_item.is_archived? %>
+            <span class="status-label settled"> – Settled <br> $<%= number_with_precision(@auction_item.bid_pool, precision: 2) %> paid to seller</span>
+          <% else %>
+            <span class="status-label unsettled"> – Unsettled </span>
+          <% end %>
+
+        <% else %>
+          <span>Closing in <strong><span class="countdown-text">...</span></strong></span>
+        <% end %>
       </div>
 
+
+
       <div class="auction-item-bid-info-container">
-        <div class="auction-item-estimate-value">
+      <div class="auction-item-estimate-value">
+        <% if @auction_item.currency? %>
+          Value: <%= number_to_currency(@auction_item.innate_value, unit: "$", precision: 2) %>
+        <% else %>
           Est: <%= number_to_currency(@auction_item.innate_value, unit: "$", precision: 2) %>
-        </div>
+        <% end %>
+      </div>
+
         <div class="auction-item-bid-info-text">
           <strong id="max-bid"><%= number_to_currency(@auction_item.max_bid, unit: "$", precision: 2) %> USD</strong> •
           <span class="info-text-subtext"><strong id="total-bids"><%= @auction_item.total_bids %> bids</strong></span>
@@ -132,10 +126,37 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
           <strong><label for="bid_amount">Set Bid:</label></strong>
           <%= form_with(model: Bid.new, local: true, class: "auction-item-bid-form") do |form| %>
             <%= form.hidden_field :auction_item_id, value: @auction_item.id %>
-            <%= form.number_field :amount, step: @auction_item.min_increment, min: @auction_item.max_bid + @auction_item.min_increment, required: true, class: "auction-item-bid-input",  data: { min_increment: @auction_item.min_increment } %>
-            <%= form.submit "Place Bid", class: "auction-item-bid-btn" %>
+
+            <% min_bid = @auction_item.max_bid + @auction_item.min_increment %>
+            <% bid_options = (0..500).map { |i| min_bid + i * @auction_item.min_increment } %>
+
+            <% min_bid = @auction_item.max_bid + @auction_item.min_increment %>
+            <% default_label = "$#{min_bid} USD" %>
+            <div x-data="{ open: false, selectedText: '<%= default_label %>', selectedValue: <%= min_bid %> }" class="relative w-full mt-2">
+                <button @click="open = !open" type="button"
+                        class="w-full border border-gray-300 rounded px-4 py-2 text-left bg-white cursor-pointer pr-10 relative">
+                  <span x-text="selectedText"></span>
+
+                  <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+                </button>
+
+              <ul x-show="open" @click.outside="open = false"
+                  class="absolute z-10 mt-1 max-h-40 w-full overflow-y-auto border border-gray-300 rounded bg-white shadow">
+                <% bid_options.each do |amt| %>
+                  <li @click="selectedText = '$<%= amt %> USD'; selectedValue = <%= amt %>; open = false"
+                      class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    $<%= amt %> USD
+                  </li>
+                <% end %>
+              </ul>
+
+              <input type="hidden" name="bid[amount]" :value="selectedValue">
+            </div>
+
+            <%= form.submit "Place Bid", class: "auction-item-bid-btn mt-2 cursor-pointer" %>
           <% end %>
-        <% end %> 
+        <% end %>
+
       </div>
 
 
@@ -156,23 +177,36 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
     <% end %>
     </div>
 
-    <% if @auction_item.latest_bids.any? %>
+    <% if @auction_item.bids.any? %>
       <div class="auction-item-bid-history">
         <p class="auction-item-user-card-title">Bid History</p>
-        <% @auction_item.latest_bids.each do |bid| %>
-          <div class="auction-item-bid-entry">
-            <div class="auction-item-user-card">
-              <p><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></p>
-              <p class="auction-item-user-card-subtext"><%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %></p>
+        <div class="auction-bid-scroll">
+          <% @auction_item.bids.order(created_at: :desc).each do |bid| %>
+            <div class="auction-item-bid-entry">
+              <div class="auction-item-user-card">
+                <% if @auction_item.names_visible || current_user == @auction_item.seller%>
+                  <p><%= bid.buyer.first_name %> <%= bid.buyer.last_name %></p>
+                <% else %>
+                  <p><em>Anonymous Bidder</em></p>
+                <% end %>
+                <p class="auction-item-user-card-subtext">
+                  <%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %>
+                </p>
+              </div>
+              <% if @auction_item.bid_amount_visible || current_user == @auction_item.seller%>
+                <p class="auction-item-user-card-amount">
+                  <strong><%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD</strong>
+                </p>
+              <% else %>
+                <p class="auction-item-user-card-amount">
+                  <strong><em>Amount Hidden</em></strong>
+                </p>
+              <% end %>
             </div>
-            <p class="auction-item-user-card-amount">
-              <strong><%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD</strong>
-            </p>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
       </div>
     <% end %>
-
 
     <div class="auction-item-seller-info">
       <div class="auction-item-user-card-title">Seller Information</div>
@@ -182,10 +216,22 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
   </div>
 </div>
 
+<!-- Modal -->
+<div id="auction-item-image-modal" class="auction-item-modal auction-item-hidden">
+  <div class="auction-item-modal-backdrop">
+    <div class="auction-item-modal-content">
+      <span class="auction-item-close-btn" id="auction-item-close-modal">&times;</span>
+      <img id="auction-item-modal-image" class="auction-item-modal-image" src="" alt="Expanded Auction Image">
+    </div>
+  </div>
+</div>
+
 <div class="bottom-padding"></div>
 <div class="bottom-padding"></div>
 
+
 <script>
+
   function toggleDetails(button, contentId) {
     const content = document.getElementById(contentId);
     const icon = button.querySelector("i");
@@ -211,61 +257,154 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
   }
 
   document.addEventListener("DOMContentLoaded", function () {
+    const mainImage = document.getElementById("auction-item-main-image");
     const thumbnails = document.querySelectorAll(".thumbnail-wrapper");
-    const mainImage = document.getElementById("main-image");
 
-    thumbnails.forEach(thumbnail => {
+    if (mainImage && thumbnails.length > 0) {
+      thumbnails.forEach(thumbnail => {
         thumbnail.addEventListener("click", function () {
-            mainImage.src = this.getAttribute("data-image-url");
+          mainImage.src = this.getAttribute("data-image-url");
 
-            thumbnails.forEach(thumb => thumb.classList.remove("selected"));
-            this.classList.add("selected");
+          thumbnails.forEach(thumb => thumb.classList.remove("selected"));
+          this.classList.add("selected");
         });
-    });
-});
+      });
+    }
 
-
-  document.addEventListener("DOMContentLoaded", function () {
     const thumbnailsContainer = document.getElementById("thumbnails");
     const scrollUpBtn = document.getElementById("scroll-up");
     const scrollDownBtn = document.getElementById("scroll-down");
-    const thumbnails = document.querySelectorAll(".thumbnail-wrapper");
-    const mainImage = document.getElementById("main-image");
 
-    function updateScrollButtons() {
-        if (thumbnailsContainer.scrollTop > 0) {
-            scrollUpBtn.classList.add("visible");
-        } else {
-            scrollUpBtn.classList.remove("visible");
-        }
+    if (thumbnailsContainer) {
+      function updateScrollButtons() {
+        scrollUpBtn?.classList.toggle("visible", thumbnailsContainer.scrollTop > 0);
+        scrollDownBtn?.classList.toggle(
+          "visible",
+          thumbnailsContainer.scrollHeight > thumbnailsContainer.clientHeight + thumbnailsContainer.scrollTop
+        );
+      }
 
-        if (thumbnailsContainer.scrollHeight > thumbnailsContainer.clientHeight + thumbnailsContainer.scrollTop) {
-            scrollDownBtn.classList.add("visible");
-        } else {
-            scrollDownBtn.classList.remove("visible");
-        }
+      scrollUpBtn?.addEventListener("click", () => {
+        thumbnailsContainer.scrollBy({ top: -100, behavior: "smooth" });
+      });
+
+      scrollDownBtn?.addEventListener("click", () => {
+        thumbnailsContainer.scrollBy({ top: 100, behavior: "smooth" });
+      });
+
+      thumbnailsContainer.addEventListener("scroll", updateScrollButtons);
+      updateScrollButtons();
     }
 
-    scrollUpBtn.addEventListener("click", function () {
-        thumbnailsContainer.scrollBy({ top: -100, behavior: "smooth" });
-    });
+    const modal = document.getElementById("auction-item-image-modal");
+    const closeBtn = document.getElementById("auction-item-close-modal");
+    const modalImage = document.getElementById("auction-item-modal-image");
 
-    scrollDownBtn.addEventListener("click", function () {
-        thumbnailsContainer.scrollBy({ top: 100, behavior: "smooth" });
-    });
+    if (mainImage && modal && closeBtn && modalImage) {
+      mainImage.addEventListener("click", () => {
+        modalImage.src = mainImage.src;
+        modal.style.display = "block";
+      });
 
-    thumbnailsContainer.addEventListener("scroll", updateScrollButtons);
-    updateScrollButtons();
-    
-    thumbnails.forEach(thumbnail => {
-        thumbnail.addEventListener("click", function () {
-            mainImage.src = this.getAttribute("data-image-url");
+      closeBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+        modalImage.src = "";
+      });
 
-            thumbnails.forEach(thumb => thumb.classList.remove("selected"));
-            this.classList.add("selected");
+      window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.style.display = "none";
+          modalImage.src = "";
+        }
+      });
+    }
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const timers = document.querySelectorAll(".auction-item-timer");
+
+    timers.forEach(container => {
+      const endTime = new Date(container.dataset.endTime);
+      const endTimeMs = endTime.getTime();
+      const textElement = container.querySelector(".countdown-text");
+
+      if (!textElement) return;
+
+      const now = new Date().getTime();
+      const timeRemaining = endTimeMs - now;
+
+      // If more than 24 hours remaining, show date/time instead of countdown
+      if (timeRemaining > 24 * 60 * 60 * 1000) {
+        const formatted = endTime.toLocaleString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit"
         });
+        container.innerHTML = `Closes on <strong>${formatted}</strong>`;
+        return;
+      }
+
+      // Otherwise, show live countdown
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const remaining = endTimeMs - now;
+
+        if (remaining <= 0) {
+          const formatted = endTime.toLocaleString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit"
+          });
+          container.innerHTML = `Closed on ${formatted}`;
+          return;
+        }
+
+        const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+
+        let output = [];
+        if (days > 0) output.push(`${days}d`);
+        if (hours > 0 || days > 0) output.push(`${hours}h`);
+        output.push(`${minutes}m`);
+        if (days === 0 && hours === 0) output.push(`${seconds}s`);
+
+        textElement.textContent = output.join(" ");
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
     });
   });
 
 
+  document.addEventListener("DOMContentLoaded", function () {
+    const localTimeElements = document.querySelectorAll(".local-time");
+
+    localTimeElements.forEach(el => {
+      const iso = el.dataset.time;
+      if (iso) {
+        const date = new Date(iso);
+        const formatted = date.toLocaleString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+
+        if (el.textContent.includes("Opens")) {
+          el.textContent = `Opens on ${formatted}`;
+        } else if (el.textContent.includes("Closed")) {
+          el.textContent = `Closed on ${formatted}`;
+        }
+      }
+    });
+  });
 </script>

@@ -1,3 +1,9 @@
+<% def round_to_nearest_10_min(time)
+     seconds = time.sec + time.min % 10 * 60
+     adjustment = seconds >= 5 * 60 ? 10 - time.min % 10 : -(time.min % 10)
+     time.change(min: (time.min + adjustment) % 60, sec: 0)
+   end %>
+
 <%= form_with(model: @auction_item, local: true, html: { multipart: true }, class: "auction-form") do |form| %>
   <div class="auction-container">
     <div class="create-auction-title-container">
@@ -13,50 +19,79 @@
             <p>Product Name</p>
             <%= form.text_field :name, required: true, class: "input-field" %>
           </div>
-
+          <div class="input-group-product" style="position: relative;">
+            <div class="text-sm">Product Description</div>
+            <%= form.text_area :description,
+                  required: true,
+                  class: "input-field textarea",
+                  maxlength: 500,
+                  id: "product-description" %>
+            <small id="description-count">0/500</small>
+          </div>
           <div class="input-group">
-            <p class="input-group-product">Product Description</p>
-            <%= form.text_area :description, required: true, class: "input-field textarea" %>
+            <p>Item Type</p>
+            <%= form.select :item_type, AuctionItem.item_types.keys.map { |k| [k.titleize, k] },
+            {}, class: "input-field", id: "item_type_select" %>
           </div>
         </div>
-
         <div class="auction-left-general">
           <p>Bid Details</p>
           <div class="bid-details-grid">
-            <div class="input-group">
+            <div class="input-group col-span-4">
               <p>Starting Bid</p>
               <%= form.number_field :curr_max_bid, step: 0.01, required: true, class: "input-field" %>
             </div>
 
-            <div class="input-group">
+            <div class="input-group col-span-4">
               <p>Minimum Increment</p>
               <%= form.number_field :min_increment, step: 0.01, required: true, class: "input-field" %>
             </div>
 
-            <div class="input-group">
-              <p>Product Estimated Value</p>
+            <div class="input-group col-span-4">
+              <p id="estimated_value_label">Product Estimated Value</p>
               <%= form.number_field :innate_value, step: 0.01, required: true, class: "input-field" %>
             </div>
-            
-            <div> </div>
 
-            <div class="input-group">
+            <div class="input-group col-span-6">
               <p>Open Date</p>
-              <%= form.datetime_local_field :opening_date, required: true, class: "input-field",
-                  min: Time.zone.now.strftime("%Y-%m-%dT%H:%M"),
-                  value: (form.object.opening_date || Time.zone.now).strftime("%Y-%m-%dT%H:%M"),
-                  id: "opening_date" %>
+              <%= form.datetime_local_field :opening_date,
+                  required: true,
+                  class: "input-field",
+                  id: "opening_date",
+                  data: { utc: @auction_item.opening_date&.iso8601 } %>
             </div>
 
-            <div class="input-group">
+            <div class="input-group col-span-6">
               <p>Close Date</p>
-              <%= form.datetime_local_field :closing_date, required: true, class: "input-field",
-                  min: Time.zone.now.strftime("%Y-%m-%dT%H:%M"),
-                  value: (form.object.closing_date || (Time.zone.now + 1.week)).strftime("%Y-%m-%dT%H:%M"),
-                  id: "closing_date" %>
+              <%= form.datetime_local_field :closing_date,
+                  required: true,
+                  class: "input-field",
+                  id: "closing_date",
+                  data: { utc: @auction_item.closing_date&.iso8601 } %>
             </div>
-
-
+          </div>
+        </div>
+        <div class="auction-left-general">
+          <p>Bidder Information Confidentiality</p>
+          <div class="bid-visibility-grid">
+            <div class="input-group">
+              <div class="visible-toggle-wrapper">
+                <span>Allow bidders to see the names of other bidders</span>
+                <label class="switch">
+                  <%= form.check_box :names_visible %>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="visible-toggle-wrapper">
+                <span>Allow bidders to see the amount of other bids</span>
+                <label class="switch">
+                  <%= form.check_box :bid_amount_visible %>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -87,7 +122,6 @@
   </div>
 
 <% end %>
-
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -154,20 +188,112 @@
     });
   });
 
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("DOMContentLoaded", function () {
     const openingDateInput = document.getElementById("opening_date");
     const closingDateInput = document.getElementById("closing_date");
 
-    function updateClosingDateMin() {
-      const openDate = new Date(openingDateInput.value);
-      if (!isNaN(openDate)) {
-        closingDateInput.min = openDate.toISOString().slice(0, 16);
-        if (new Date(closingDateInput.value) < openDate) {
-          closingDateInput.value = openDate.toISOString().slice(0, 16);
-        }
+    function roundToNearest10Minutes(date) {
+      const rounded = new Date(date);
+      const minutes = rounded.getMinutes();
+      const remainder = minutes % 10;
+      if (remainder >= 5) {
+        rounded.setMinutes(minutes + (10 - remainder));
+      } else {
+        rounded.setMinutes(minutes - remainder);
+      }
+      rounded.setSeconds(0);
+      rounded.setMilliseconds(0);
+      return rounded;
+    }
+
+    function formatDateTimeLocal(date) {
+      const pad = (n) => n.toString().padStart(2, "0");
+      return (
+        date.getFullYear() +
+        "-" + pad(date.getMonth() + 1) +
+        "-" + pad(date.getDate()) +
+        "T" + pad(date.getHours()) +
+        ":" + pad(date.getMinutes())
+      );
+    }
+
+    function initializeInput(inputElement, fallbackDate) {
+      if (inputElement.dataset.utc && !inputElement.value) {
+        const local = roundToNearest10Minutes(new Date(inputElement.dataset.utc));
+        inputElement.value = formatDateTimeLocal(local);
+      } else if (!inputElement.value) {
+        inputElement.value = formatDateTimeLocal(fallbackDate);
       }
     }
 
-    openingDateInput.addEventListener("change", updateClosingDateMin);
+    function updateClosingBounds() {
+      const openDate = new Date(openingDateInput.value);
+      if (!isNaN(openDate)) {
+        const minCloseDate = formatDateTimeLocal(openDate);
+        closingDateInput.min = minCloseDate;
+
+        const maxClose = new Date(openDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+        const currentClose = new Date(closingDateInput.value);
+
+        if (currentClose < openDate || currentClose > maxClose) {
+          closingDateInput.value = minCloseDate;
+        }
+
+        closingDateInput.max = formatDateTimeLocal(maxClose);
+      }
+    }
+
+    const now = new Date();
+    const defaultOpen = roundToNearest10Minutes(now);
+    const defaultClose = roundToNearest10Minutes(new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000));
+
+    openingDateInput.min = formatDateTimeLocal(defaultOpen);
+
+    initializeInput(openingDateInput, defaultOpen);
+    initializeInput(closingDateInput, defaultClose);
+    updateClosingBounds();
+
+    openingDateInput.addEventListener("blur", function () {
+      openingDateInput.value = formatDateTimeLocal(roundToNearest10Minutes(new Date(openingDateInput.value)));
+      updateClosingBounds();
+    });
+
+    closingDateInput.addEventListener("blur", function () {
+      closingDateInput.value = formatDateTimeLocal(roundToNearest10Minutes(new Date(closingDateInput.value)));
+    });
+
+    document.querySelector("form")?.addEventListener("submit", function () {
+      function convertToUTC(input) {
+        const local = new Date(input.value);
+        input.value = local.toISOString().slice(0, 16);
+      }
+      convertToUTC(openingDateInput);
+      convertToUTC(closingDateInput);
+    });
+  });
+
+  const descriptionInput = document.getElementById("product-description");
+  const descriptionCount = document.getElementById("description-count");
+
+  if (descriptionInput && descriptionCount) {
+    descriptionInput.addEventListener("input", function () {
+      const len = descriptionInput.value.length;
+      descriptionCount.textContent = `${len}/500`;
+    });
+  }
+  document.addEventListener("DOMContentLoaded", function() {
+    const itemTypeSelect = document.getElementById("item_type_select");
+    const label = document.getElementById("estimated_value_label");
+
+    function updateLabel() {
+      if (itemTypeSelect.value === "currency") {
+        label.textContent = "Currency Amount";
+      } else {
+        label.textContent = "Product Estimated Value";
+      }
+    }
+
+    itemTypeSelect.addEventListener("change", updateLabel);
+    updateLabel(); // call it once on load
   });
 </script>

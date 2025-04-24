@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_09_231230) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_23_200837) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,6 +64,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_09_231230) do
     t.boolean "is_archived", default: false, null: false
     t.decimal "curr_max_bid", null: false
     t.bigint "winning_buyer_id"
+    t.integer "item_type", default: 0, null: false
+    t.boolean "hide_bidding_history", default: false, null: false
+    t.boolean "names_visible", default: true, null: false
+    t.boolean "bid_amount_visible", default: true, null: false
     t.index ["seller_id"], name: "index_auction_items_on_seller_id"
   end
 
@@ -93,6 +97,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_09_231230) do
     t.string "verification_token"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
+    t.string "stripe_account_id"
     t.index ["email"], name: "index_buyers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_buyers_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_buyers_on_uid_and_provider", unique: true, where: "(uid IS NOT NULL)"
@@ -113,9 +118,23 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_09_231230) do
     t.string "verification_token"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
+    t.string "stripe_account_id"
     t.index ["email"], name: "index_sellers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_sellers_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_sellers_on_uid_and_provider", unique: true, where: "(uid IS NOT NULL)"
+  end
+
+  create_table "stripe_transactions", force: :cascade do |t|
+    t.bigint "buyer_id"
+    t.bigint "seller_id"
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.string "transaction_type", null: false
+    t.string "stripe_transaction_id"
+    t.datetime "transaction_date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["buyer_id"], name: "index_stripe_transactions_on_buyer_id"
+    t.index ["seller_id"], name: "index_stripe_transactions_on_seller_id"
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -137,6 +156,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_09_231230) do
   add_foreign_key "auction_items", "sellers"
   add_foreign_key "bids", "auction_items"
   add_foreign_key "bids", "buyers"
+  add_foreign_key "stripe_transactions", "buyers"
+  add_foreign_key "stripe_transactions", "sellers"
   add_foreign_key "transactions", "buyers"
   add_foreign_key "transactions", "sellers"
 end

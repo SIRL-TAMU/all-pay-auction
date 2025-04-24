@@ -3,7 +3,7 @@
 
     <%# Top Nav %>
     <div id="top-nav" class="flex flex-row justify-between items-center transition-all duration-300 text-md z-20">
-      <div>Contact us</div>
+      <div></div>
       <div class="flex flex-row items-center space-x-3">
         <div>
           <% if logged_in? %>
@@ -21,22 +21,33 @@
 
     <%# Logo %>
     <div id="logo" class="flex justify-center items-center transition-all duration-300 -mt-4 z-10">
-    <%= link_to "BIDRUSH", logged_in? ? root_path : login_path(account_type: params[:account_type] || "buyer"),
-        class: "font-bold text-5xl transition-all duration-300" %>
+        <%= link_to root_path, class: "font-bold text-5xl transition-all duration-300" do %>
+          ALLPAY
+        <% end %>
     </div>
+
 
 
     <%# Nav Links %>
     <div class="mt-3 flex flex-row items-center justify-center mx-auto space-x-8 text-sm font-medium transition-all duration-300">
-      <%= link_to "Home", root_path,
-        class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?(root_path) ? 'bg-[#E5E5E5]' : ''}" %>
+      <% unless logged_in? %>
+        <%= link_to "Home", root_path,
+          class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?(root_path) ? 'bg-[#E5E5E5]' : ''}" %>
+      <% end %> 
+
+      <% if logged_in? %>
+        <% if seller? %>
+          <%= link_to "Dashboard", seller_dashboard_path,
+            class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?(seller_dashboard_path) ? 'bg-[#E5E5E5]' : ''}" %>
+        <% elsif buyer? %>
+          <%= link_to "Dashboard", buyer_dashboard_path,
+            class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?(buyer_dashboard_path) ? 'bg-[#E5E5E5]' : ''}" %>
+        <% end %>
+      <% end %>
+
+      
       <%= link_to "Auction Block", auction_items_path,
         class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?(auction_items_path) ? 'bg-[#E5E5E5]' : ''}" %>
-      <%= link_to "Sell", "/sell",
-        class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?('/sell') ? 'bg-[#E5E5E5]' : ''}" %>
-      <%= link_to "About Us", "/about",
-        class: "px-3 py-2 rounded-md transition hover:bg-blue-200 hover:underline #{current_page?('/about') ? 'bg-[#E5E5E5]' : ''}" %>
     </div>
-
   </nav>
 </div>

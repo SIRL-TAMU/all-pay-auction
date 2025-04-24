@@ -7,6 +7,7 @@ class AuctionItem < ApplicationRecord
   has_many :buyers, through: :bids
   belongs_to :winning_buyer, class_name: "Buyer", optional: true
   has_many_attached :images
+  enum item_type: { currency: 0, physical: 1 }
 
   # validates :opening_date, presence: true, comparison: { greater_than_or_equal_to: -> { Time.zone.now } }
   # validates :closing_date, presence: true, comparison: { greater_than: :opening_date }
@@ -97,17 +98,31 @@ class AuctionItem < ApplicationRecord
     end
 
     puts "Auction #{name} has closed and now will be settled."
-    if winning_bid.nil?
-      puts "There is no winning bid"
-      update!(winning_buyer_id: nil, is_archived: true)
+
+
+    unless winning_bid.present? # if not, no bids placed for this item
+      Rails.logger.info("Auction #{name} has no bids and will be marked as closed without payout.")
+      if currency?
+        # For currency items, return to sellers liquid balance
+        seller.update!(liquid_balance: seller.liquid_balance + innate_value)
+      end
+      update!(is_archived: true)
       return
     end
 
     winning_buyer = winning_bid.buyer
 
+
     # Updates itself, the winning buyer, and the seller
     update!(winning_buyer_id: winning_buyer.id, is_archived: true)
-    winning_buyer.update!(asset_balance: winning_buyer.asset_balance + innate_value)
+    if physical?
+      # Keep current logic for physical items
+      winning_buyer.update!(asset_balance: winning_buyer.asset_balance + innate_value)
+    elsif currency?
+      # For currency items, transfer value into the buyer's liquid_balance instead
+      winning_buyer.update!(liquid_balance: winning_buyer.liquid_balance + innate_value)
+    end
+
     seller.update!(liquid_balance: seller.liquid_balance + bid_pool)
 
     # Add notification logic if we can

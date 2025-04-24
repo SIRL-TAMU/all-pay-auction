@@ -3,7 +3,6 @@
   <div class="w-48 p-6 text-sm">
     <ul class="space-y-3">
       <li><%= link_to "Your Profile", seller_setting_path, class: "#{current_page?(seller_setting_path) ? 'underline' : ''}" %></li>
-      <li><%= link_to "Dashboard", seller_dashboard_path %></li>
       <li><%= link_to "Manage Funds", manage_funds_path %></li>
       <li><%= link_to "Log Out", logout_path, method: :delete %></li>
     </ul>
@@ -75,6 +74,10 @@
       <% if @seller.provider == "google_oauth2" %>
         <div class="text-sm text-gray-700">
           You are logged in with Google and cannot change your password here.
+        </div>
+
+        <div class="mt-4">
+          <button type="button" id="done-password" class="text-sm underline">Done</button>
         </div>
       <% else %>
         <%= form_with(model: @seller, url: update_password_seller_setting_path, method: :patch, local: true) do |form| %>
