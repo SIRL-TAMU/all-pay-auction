@@ -129,23 +129,22 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
 
             <% min_bid = @auction_item.max_bid + @auction_item.min_increment %>
             <% bid_options = (0..500).map { |i| min_bid + i * @auction_item.min_increment } %>
+            <% default_label = "#{number_to_currency(min_bid, unit: '$', precision: 2)} USD" %>
 
-            <% min_bid = @auction_item.max_bid + @auction_item.min_increment %>
-            <% default_label = "$#{min_bid} USD" %>
             <div x-data="{ open: false, selectedText: '<%= default_label %>', selectedValue: <%= min_bid %> }" class="relative w-full mt-2">
-                <button @click="open = !open" type="button"
-                        class="w-full border border-gray-300 rounded px-4 py-2 text-left bg-white cursor-pointer pr-10 relative">
-                  <span x-text="selectedText"></span>
-
-                  <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"></i>
-                </button>
+              <button @click="open = !open" type="button"
+                      class="w-full border border-gray-300 rounded px-4 py-2 text-left bg-white cursor-pointer pr-10 relative">
+                <span x-text="selectedText"></span>
+                <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+              </button>
 
               <ul x-show="open" @click.outside="open = false"
                   class="absolute z-10 mt-1 max-h-40 w-full overflow-y-auto border border-gray-300 rounded bg-white shadow">
                 <% bid_options.each do |amt| %>
-                  <li @click="selectedText = '$<%= amt %> USD'; selectedValue = <%= amt %>; open = false"
+                  <% display_amt = "#{number_to_currency(amt, unit: '$', precision: 2)} USD" %>
+                  <li @click="selectedText = '<%= display_amt %>'; selectedValue = <%= amt %>; open = false"
                       class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                    $<%= amt %> USD
+                    <%= display_amt %>
                   </li>
                 <% end %>
               </ul>
@@ -156,6 +155,7 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
             <%= form.submit "Place Bid", class: "auction-item-bid-btn mt-2 cursor-pointer" %>
           <% end %>
         <% end %>
+
 
       </div>
 
