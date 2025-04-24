@@ -75,6 +75,9 @@
         <div class="text-sm text-gray-700">
           You are logged in with Google and cannot change your password here.
         </div>
+        <div class="mt-4">
+          <button type="button" id="done-password" class="text-sm underline">Done</button>
+        </div>
       <% else %>
         <%= form_with(model: @buyer, url: update_password_buyer_setting_path, method: :patch, local: true) do |form| %>
           <div class="grid grid-cols-1 gap-4">
