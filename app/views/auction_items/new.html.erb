@@ -31,7 +31,7 @@
           <div class="input-group">
             <p>Item Type</p>
             <%= form.select :item_type, AuctionItem.item_types.keys.map { |k| [k.titleize, k] },
-            {}, class: "input-field" %>
+            {}, class: "input-field", id: "item_type_select" %>
           </div>
         </div>
         <div class="auction-left-general">
@@ -48,7 +48,7 @@
             </div>
 
             <div class="input-group col-span-4">
-              <p>Product Estimated Value</p>
+              <p id="estimated_value_label">Product Estimated Value</p>
               <%= form.number_field :innate_value, step: 0.01, required: true, class: "input-field" %>
             </div>
 
@@ -281,4 +281,19 @@
       descriptionCount.textContent = `${len}/500`;
     });
   }
+  document.addEventListener("DOMContentLoaded", function() {
+    const itemTypeSelect = document.getElementById("item_type_select");
+    const label = document.getElementById("estimated_value_label");
+
+    function updateLabel() {
+      if (itemTypeSelect.value === "currency") {
+        label.textContent = "Currency Amount";
+      } else {
+        label.textContent = "Product Estimated Value";
+      }
+    }
+
+    itemTypeSelect.addEventListener("change", updateLabel);
+    updateLabel(); // call it once on load
+  });
 </script>

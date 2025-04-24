@@ -25,13 +25,20 @@ class AuctionItemsController < ApplicationController
   def create
     @auction_item = current_user.auction_items.build(auction_item_params.except(:images))
 
+    if @auction_item.currency? && current_user.liquid_balance < @auction_item.innate_value
+      flash.now[:alert] = "You don't have enough balance to create a currency item with that value."
+      return render :new
+    end
+
     if @auction_item.save
       if params[:auction_item][:images].present?
         params[:auction_item][:images].each do |image|
           @auction_item.images.attach(image)
         end
       end
-
+      if @auction_item.currency?
+        current_user.update!(liquid_balance: current_user.liquid_balance - @auction_item.innate_value)
+      end
       redirect_to seller_dashboard_path, notice: t("notices.auction_item_created")
     else
       render :new
