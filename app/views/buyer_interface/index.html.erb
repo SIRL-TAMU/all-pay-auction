@@ -114,13 +114,17 @@
               </tbody>
             </table>
           </div>
+          <% end %>
+        <% if @bidded_items.none? { |item| Time.current < item.closing_date } %>
+          <div id="empty-current-bids" class="empty-state">
+          <i class="fas fa-box-open"></i>
+          <p class="lead">You don't have any current bids.</p>
+          <%= link_to "You Have no Current Bids. Start Bidding Now", auction_items_path, class: "button button-primary" %>
+        </div>
         <% else %>
-          <div class="empty-state">
-            <i class="fas fa-box-open"></i>
-            <p class="lead">You haven't placed any bids yet.</p>
-            <%= link_to "Start Bidding Now", auction_items_path, class: "button button-primary" %>
-          </div>
+          <div id="empty-current-bids" class="empty-state hide"></div>
         <% end %>
+
       </div>
     </div>
 
@@ -138,12 +142,16 @@
         activeBtn.classList.add('active');
         inactiveBtn.classList.remove('active');
 
+        const emptyState = document.getElementById('empty-current-bids');
+
         if (activeBtn === currentBidsBtn) {
           auctionEndsHeader.textContent = 'Auction Ends';
           currentBidsContent.classList.remove('hide');
           currentBidsContent.classList.add('show');
           previousBidsContent.classList.add('hide');
           previousBidsContent.classList.remove('show');
+
+          emptyState.classList.remove('hide'); // Show if server already rendered it
         } else {
           previousBidsContent.classList.remove('hide');
           previousBidsContent.classList.add('show');
@@ -151,6 +159,7 @@
           currentBidsContent.classList.remove('show');
           auctionEndsHeader.textContent = 'Net';
 
+          emptyState.classList.add('hide');
         }
       }
 
