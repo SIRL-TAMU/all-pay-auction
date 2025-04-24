@@ -47,7 +47,10 @@
             <span class="px-3 font-mono text-gray-500 select-none">$</span>
             <input type="number" name="amount" id="add-amount-input" step="0.01" min="0" class="w-full p-2 focus:outline-none font-mono text-sm" placeholder="0.00" required />
           </div>
-          <%= submit_tag "Add Funds", id: "add-submit-button", class: "px-4 py-2 bg-black text-white rounded hover:bg-gray-800" %>
+          <div class="flex items-center gap-4 mt-4">
+            <%= submit_tag "Add Funds", id: "add-submit-button", class: "px-4 py-2 bg-black text-white rounded hover:bg-gray-800" %>
+            <button type="button" id="cancel-add" class="text-sm underline">Cancel</button>
+          </div>
         <% end %>
       </div>
 
@@ -55,25 +58,54 @@
       <div id="withdraw-form" class="mt-6 hidden">
         <% if current_user.stripe_account_id.blank? %>
           <p>You must connect to Stripe to withdraw funds.</p>
-          <%= button_to "Connect Stripe Account", connect_stripe_account_path, method: :get, class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" %>
+          <%= button_to "Connect Stripe Account", connect_stripe_account_path,
+            method: :get,
+            class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" %>
         <% else %>
           <%= form_tag withdraw_funds_path, id: "withdraw-form-handler" do %>
-            <label for="amount" class="block text-xs font-semibold uppercase mb-2">Withdraw Amount</label>
-            <div class="flex items-center bg-white border rounded w-full max-w-xs mb-4 overflow-hidden">
-              <span class="px-3 font-mono text-gray-500 select-none">$</span>
-              <input type="number" name="amount" id="withdraw-amount-input" step="0.01" min="0" class="w-full p-2 focus:outline-none font-mono text-sm" placeholder="0.00" required />
+            <!-- Section Label -->
+            <h3 class="text-sm font-semibold uppercase mb-4">Withdraw Funds</h3>
+
+            <!-- Amount Field -->
+            <div class="mb-4">
+              <label for="amount" class="block text-xs font-semibold uppercase mb-1">Withdraw Amount</label>
+              <div class="flex items-center bg-gray-100 border rounded w-full max-w-xs overflow-hidden">
+                <span class="px-3 font-mono text-gray-500 select-none">$</span>
+                <input
+                  type="number"
+                  name="amount"
+                  id="withdraw-amount-input"
+                  step="0.01"
+                  min="0"
+                  class="w-full p-2 focus:outline-none font-mono text-sm bg-gray-100"
+                  placeholder="0.00"
+                  required
+                />
+              </div>
             </div>
+
+            <!-- Action Row -->
             <div class="flex items-center justify-between text-sm text-gray-700 mb-4">
-              <span class="font-semibold">Stripe</span>
-              <span class="font-mono"><%= "Account ID: #{current_user.stripe_account_id}" %></span>
+              <!-- Left: Buttons -->
+              <div class="flex gap-4">
+                <%= submit_tag "Withdraw", class: "px-4 py-2 bg-black text-white rounded hover:bg-gray-800", data: { disable_with: "Processing..." } %>
+                <button type="button" id="cancel-withdraw" class="text-sm underline">Cancel</button>
+              </div>
+
+              <!-- Right: Stripe Info -->
+              <div class="text-right">
+                <div class="font-mono">Account ID: <%= current_user.stripe_account_id %></div>
+                <%= link_to "Disconnect", disconnect_stripe_account_path,
+                    method: :post,
+                    data: { confirm: "Are you sure you want to disconnect your Stripe account?" },
+                    class: "text-red-600 underline text-xs hover:text-red-700"
+                  %>
+              </div>
             </div>
-            <%= submit_tag "Withdraw", class: "withdraw-btn px-4 py-2 bg-black text-white rounded hover:bg-gray-800", data: { disable_with: "Processing..." } %>
           <% end %>
-          <div class="mt-4">
-            <%= button_to "Disconnect Stripe Account", disconnect_stripe_account_path, method: :post, class: "px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700", data: { confirm: "Are you sure you want to disconnect your Stripe account?" } %>
-          </div>
         <% end %>
       </div>
+
     </div>
 
     <!-- Transactions Section -->
@@ -113,31 +145,48 @@
     const withdrawForm = document.getElementById('withdraw-form');
     const addBtn = document.getElementById('add-btn');
     const withdrawBtn = document.getElementById('withdraw-btn');
+    const connectBtn = document.querySelector('form[action*="connect_stripe_account"], button[formaction*="connect_stripe_account"]');
+
+    // 1. Save state if connecting to Stripe
+    connectBtn?.addEventListener('click', () => {
+      localStorage.setItem('lastForm', 'withdraw');
+    });
+
+    // 2. On load, show the form if needed
+    const lastForm = localStorage.getItem('lastForm');
+    if (lastForm === 'withdraw') {
+      withdrawForm.classList.remove('hidden');
+      addForm.classList.add('hidden');
+
+      // Clear it only after showing it
+      localStorage.removeItem('lastForm');
+    }
 
     // Toggle logic
     const toggleForm = (type) => {
       if (type === 'add') {
         addForm.classList.remove('hidden');
         withdrawForm.classList.add('hidden');
-        localStorage.removeItem('lastForm'); // don't persist add
       } else if (type === 'withdraw') {
+        const wasVisible = !withdrawForm.classList.contains('hidden');
         addForm.classList.add('hidden');
-        withdrawForm.classList.remove('hidden');
-        localStorage.setItem('lastForm', 'withdraw');
+        withdrawForm.classList.toggle('hidden', wasVisible);
       }
     };
 
-    addBtn.addEventListener('click', () => toggleForm('add'));
-    withdrawBtn.addEventListener('click', () => toggleForm('withdraw'));
+    addBtn?.addEventListener('click', () => toggleForm('add'));
+    withdrawBtn?.addEventListener('click', () => toggleForm('withdraw'));
 
-    // Check if user returned from Stripe and show Withdraw
-    const lastForm = localStorage.getItem('lastForm');
-    if (lastForm === 'withdraw') {
-      toggleForm('withdraw');
-      localStorage.removeItem('lastForm'); // show once
-    }
+    // Cancel buttons
+    document.getElementById('cancel-add')?.addEventListener('click', () => {
+      addForm.classList.add('hidden');
+    });
 
-    // Dynamic withdraw button label
+    document.getElementById('cancel-withdraw')?.addEventListener('click', () => {
+      withdrawForm.classList.add('hidden');
+    });
+
+    // Withdraw button label update
     const amountInput = document.getElementById('withdraw-amount-input');
     const submitButton = document.querySelector('#withdraw-form-handler input[type="submit"]');
     if (amountInput && submitButton) {
@@ -149,7 +198,7 @@
       updateWithdrawLabel();
     }
 
-    // Dynamic add button label
+    // Add button label update
     const addInput = document.getElementById('add-amount-input');
     const addSubmit = document.getElementById('add-submit-button');
     if (addInput && addSubmit) {
