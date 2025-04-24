@@ -1,7 +1,7 @@
 <div class="auction-item-container" data-auction-item-id="<%= @auction_item.id %>">
   <div class="auction-item-info-left">
     <div class="auction-item-title">
-      <%= @auction_item.name %>
+    <%= @auction_item.name %> (<%= @auction_item.currency? ? "Currency Bid" : "Physical Bid" %>)
     </div>
 
     <div class="auction-gallery">
@@ -110,6 +110,14 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
           Opens on <%= @auction_item.opening_date.strftime('%b %d, %Y') %>
         <% elsif @auction_item.closing_date < now %>
           Closed on <%= @auction_item.closing_date.strftime('%b %d, %Y') %>
+          <% if @auction_item.is_archived? %>
+            <span class="status-label settled"> – Settled <br> $<%= number_with_precision(@auction_item.bid_pool, precision: 2) %> paid to seller</span>
+
+          <% else %>
+            <span class="status-label unsettled"> – Unsettled </span>
+
+          <% end %>
+          
         <% else %>
           <span>Closing in <strong><span class="countdown-text">...</span></strong></span>
         <% end %>
@@ -117,9 +125,14 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
 
 
       <div class="auction-item-bid-info-container">
-        <div class="auction-item-estimate-value">
+      <div class="auction-item-estimate-value">
+        <% if @auction_item.currency? %>
+          Value: <%= number_to_currency(@auction_item.innate_value, unit: "$", precision: 2) %>
+        <% else %>
           Est: <%= number_to_currency(@auction_item.innate_value, unit: "$", precision: 2) %>
-        </div>
+        <% end %>
+      </div>
+
         <div class="auction-item-bid-info-text">
           <strong id="max-bid"><%= number_to_currency(@auction_item.max_bid, unit: "$", precision: 2) %> USD</strong> •
           <span class="info-text-subtext"><strong id="total-bids"><%= @auction_item.total_bids %> bids</strong></span>
