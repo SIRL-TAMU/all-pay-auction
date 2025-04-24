@@ -33,8 +33,9 @@
         <div class="auction-card-info">
           <div class="main-info">
             <div class="card-title"><%= auction.name %></div>
-            <div class="card-subtitle">Est: <%= auction.innate_value %></div>
-
+            <div class="card-subtitle">
+              <%= auction.physical? ? "Est: #{auction.innate_value}" : "Value: #{auction.innate_value}" %>
+            </div>
             <div class="bid-info">
               <div class="bid-item">
                 <span class="bid-value"><%= number_to_currency(auction.bid_pool, unit: "$", precision: 2) %> USD</span>
