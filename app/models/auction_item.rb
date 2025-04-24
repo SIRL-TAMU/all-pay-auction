@@ -110,6 +110,8 @@ class AuctionItem < ApplicationRecord
       winning_buyer.update!(liquid_balance: winning_buyer.liquid_balance + innate_value)
     end
 
+    seller.update!(liquid_balance: seller.liquid_balance + bid_pool)
+
     # Add notification logic if we can
     puts "Notification logic NOT implemented yet."
 

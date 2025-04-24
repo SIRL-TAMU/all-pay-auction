@@ -73,6 +73,29 @@
             </div>
           </div>
         </div>
+        <div class="auction-left-general">
+          <p>Bidder Information Confidentiality</p>
+          <div class="bid-visibility-grid">
+            <div class="input-group">
+              <div class="visible-toggle-wrapper">
+                <span>Allow bidders to see the names of other bidders</span>
+                <label class="switch">
+                  <%= form.check_box :names_visible %>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="visible-toggle-wrapper">
+                <span>Allow bidders to see the amount of other bids</span>
+                <label class="switch">
+                  <%= form.check_box :bid_amount_visible %>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     
       <!-- Right Side: Image Upload -->
@@ -101,7 +124,6 @@
   </div>
 
 <% end %>
-
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -244,8 +266,6 @@
 
     setInitialValues();
   });
-
-
 
   const descriptionInput = document.getElementById("product-description");
   const descriptionCount = document.getElementById("description-count");
