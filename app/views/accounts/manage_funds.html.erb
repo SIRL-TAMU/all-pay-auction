@@ -58,9 +58,14 @@
       <div id="withdraw-form" class="mt-6 hidden">
         <% if current_user.stripe_account_id.blank? %>
           <p>You must connect to Stripe to withdraw funds.</p>
-          <%= button_to "Connect Stripe Account", connect_stripe_account_path,
-            method: :get,
-            class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" %>
+          <div class="flex gap-4 mt-4">
+            <%= button_to "Connect Stripe Account", connect_stripe_account_path,
+              method: :get,
+              class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" %>
+
+            <!-- Cancel Button -->
+            <button type="button" id="cancel-withdraw" class="text-sm underline">Cancel</button>
+          </div>
         <% else %>
           <%= form_tag withdraw_funds_path, id: "withdraw-form-handler" do %>
             <!-- Section Label -->
