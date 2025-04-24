@@ -115,9 +115,10 @@
             <div class="past-auction-details">
               <div class="past-auction-closed-badge">
                 <% if auction.is_archived %>
-                  Closed <%= auction.closing_date.strftime('%B %d, %Y') %>
+                  Closed <%= auction.closing_date.strftime('%B %d, %Y') %> <br>
+                   $<%= number_with_precision(auction.bid_pool, precision: 2) %> received
                 <% else %>
-                  Unsettled <%= auction.closing_date.strftime('%B %d, %Y') %>
+                  Unsettled <%= auction.closing_date.strftime('%B %d, %Y') %> 
                 <% end %>
               </div>
 

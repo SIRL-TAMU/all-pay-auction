@@ -110,6 +110,14 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
           Opens on <%= @auction_item.opening_date.strftime('%b %d, %Y') %>
         <% elsif @auction_item.closing_date < now %>
           Closed on <%= @auction_item.closing_date.strftime('%b %d, %Y') %>
+          <% if @auction_item.is_archived? %>
+            <span class="status-label settled"> – Settled <br> $<%= number_with_precision(@auction_item.bid_pool, precision: 2) %> paid to seller</span>
+
+          <% else %>
+            <span class="status-label unsettled"> – Unsettled </span>
+
+          <% end %>
+          
         <% else %>
           <span>Closing in <strong><span class="countdown-text">...</span></strong></span>
         <% end %>
