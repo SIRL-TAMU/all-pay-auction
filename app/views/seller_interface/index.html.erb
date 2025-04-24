@@ -118,9 +118,17 @@
             <div class="past-auction-details">
               <div class="past-auction-closed-badge">
                 <% if auction.is_archived %>
-                  Closed <%= auction.closing_date.strftime('%B %d, %Y') %>
+                  Closed <%= auction.closing_date.strftime('%B %d, %Y') %> <br>
+                  <% if auction.winning_bid.present? %>
+                    $<%= number_with_precision(auction.bid_pool, precision: 2) %> received<br>
+                    Net: <%= number_to_currency(auction.bid_pool - auction.innate_value, precision: 2) %>
+                  <% elsif auction.currency? %>
+                    <%= number_to_currency(auction.innate_value, precision: 2) %> refunded
+                    <% else %>
+                      Item returned
+                    <% end %>
                 <% else %>
-                  Unsettled <%= auction.closing_date.strftime('%B %d, %Y') %>
+                  Unsettled <%= auction.closing_date.strftime('%B %d, %Y') %> 
                 <% end %>
               </div>
 
