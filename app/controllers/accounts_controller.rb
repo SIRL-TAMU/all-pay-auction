@@ -24,7 +24,7 @@ class AccountsController < ApplicationController
   def manage_funds
     # Add logic for managing funds here
     @balance = current_user.liquid_balance
-    
+
     if params[:success] == "true"
       flash.now[:notice] = "Successfully added funds to your account."
     end

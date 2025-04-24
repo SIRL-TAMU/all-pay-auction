@@ -100,7 +100,7 @@ class AuctionItem < ApplicationRecord
     puts "Auction #{name} has closed and now will be settled."
 
 
-    unless winning_bid.present? #if not, no bids placed for this item
+    unless winning_bid.present? # if not, no bids placed for this item
       Rails.logger.info("Auction #{name} has no bids and will be marked as closed without payout.")
       if currency?
         # For currency items, return to sellers liquid balance

@@ -55,7 +55,29 @@
               <p>Product Estimated Value</p>
               <%= form.number_field :innate_value, step: 0.01, required: true, class: "input-field" %>
             </div>
-        <div class="auction-left-general">
+            
+            <div class="input-group col-span-6">
+              <p>Open Date</p>
+              <%= form.datetime_local_field :opening_date,
+                  required: true,
+                  class: "input-field",
+                  id: "opening_date",
+                  data: { utc: @auction_item.opening_date&.iso8601 } %>
+            </div>
+
+            <div class="input-group col-span-6">
+              <p>Close Date</p>
+              <%= form.datetime_local_field :closing_date,
+                  required: true,
+                  class: "input-field",
+                  id: "closing_date",
+                  data: { utc: @auction_item.closing_date&.iso8601 } %>
+            </div>
+
+
+          </div>
+
+                  <div class="auction-left-general">
           <p>Bidder Information Confidentiality</p>
           <div class="bid-visibility-grid">
             <div class="input-group">
@@ -78,27 +100,6 @@
             </div>
           </div>
         </div>
-            
-            <div class="input-group col-span-6">
-              <p>Open Date</p>
-              <%= form.datetime_local_field :opening_date,
-                  required: true,
-                  class: "input-field",
-                  id: "opening_date",
-                  data: { utc: @auction_item.opening_date&.iso8601 } %>
-            </div>
-
-            <div class="input-group col-span-6">
-              <p>Close Date</p>
-              <%= form.datetime_local_field :closing_date,
-                  required: true,
-                  class: "input-field",
-                  id: "closing_date",
-                  data: { utc: @auction_item.closing_date&.iso8601 } %>
-            </div>
-
-
-          </div>
         </div>
       </div>
 
@@ -236,7 +237,7 @@
       }
     }
 
-    function updateMinAndMaxBounds() {
+    function updateClosingBounds() {
       const openDate = new Date(openingDateInput.value);
       if (!isNaN(openDate)) {
         const minClose = openDate;
@@ -253,18 +254,15 @@
     }
 
     const now = new Date();
-    const roundedNow = roundToNearest10Minutes(now);
     const defaultClose = roundToNearest10Minutes(new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)); // +1 week
 
-    openingDateInput.min = formatDateTimeLocal(roundedNow); // Prevent past time
-
-    initializeInput(openingDateInput, roundedNow);
+    initializeInput(openingDateInput, now);
     initializeInput(closingDateInput, defaultClose);
-    updateMinAndMaxBounds();
+    updateClosingBounds();
 
     openingDateInput.addEventListener("blur", function () {
       openingDateInput.value = formatDateTimeLocal(roundToNearest10Minutes(new Date(openingDateInput.value)));
-      updateMinAndMaxBounds();
+      updateClosingBounds();
     });
 
     closingDateInput.addEventListener("blur", function () {
@@ -280,6 +278,7 @@
       convertToUTC(closingDateInput);
     });
   });
+
 
   const descriptionInput = document.getElementById("product-description");
   const descriptionCount = document.getElementById("description-count");
