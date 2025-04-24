@@ -327,42 +327,58 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
     const timers = document.querySelectorAll(".auction-item-timer");
 
     timers.forEach(container => {
-      const endTime = new Date(container.dataset.endTime).getTime();
+      const endTime = new Date(container.dataset.endTime);
+      const endTimeMs = endTime.getTime();
       const textElement = container.querySelector(".countdown-text");
 
       if (!textElement) return;
 
+      const now = new Date().getTime();
+      const timeRemaining = endTimeMs - now;
+
+      // If more than 24 hours remaining, show date/time instead of countdown
+      if (timeRemaining > 24 * 60 * 60 * 1000) {
+        const formatted = endTime.toLocaleString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit"
+        });
+        container.innerHTML = `Closes on <strong>${formatted}</strong>`;
+        return;
+      }
+
+      // Otherwise, show live countdown
       function updateCountdown() {
         const now = new Date().getTime();
-        const timeRemaining = endTime - now;
+        const remaining = endTimeMs - now;
 
-        if (timeRemaining <= 0) {
-          container.innerHTML = "Closed on " + new Date(endTime).toLocaleDateString(undefined, {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
+        if (remaining <= 0) {
+          const formatted = endTime.toLocaleString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit"
           });
+          container.innerHTML = `Closed on ${formatted}`;
           return;
         }
 
-        const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+        const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
 
         let output = [];
-
         if (days > 0) output.push(`${days}d`);
         if (hours > 0 || days > 0) output.push(`${hours}h`);
         output.push(`${minutes}m`);
+        if (days === 0 && hours === 0) output.push(`${seconds}s`);
 
-        if (days === 0 && hours === 0) {
-          output.push(`${seconds}s`);
-        }
-
-        textElement.textContent = output.join(' ');
+        textElement.textContent = output.join(" ");
       }
-
 
       updateCountdown();
       setInterval(updateCountdown, 1000);
