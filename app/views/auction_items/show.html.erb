@@ -66,30 +66,13 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
   <div class="auction-item-info">
     <% if seller? && current_user == @auction_item.seller %>
       <div class="auction-item-seller-actions">
-        <% if @auction_item.active? || @auction_item.closed? %>
-          <a class="auction-item-edit-btn disabled" title="Cannot edit an active or closed auction" onclick="showDisabledAlert()">
-            <i class="fa-solid fa-pen-to-square"></i>
-          </a>
-          <a class="auction-item-delete-btn disabled" title="Cannot delete an active or closed auction" onclick="showDisabledAlert()">
-            <i class="fa-solid fa-trash"></i>
-          </a>
-
-          <%= link_to edit_auction_item_path(@auction_item), title: "Edit Auction" do %>
-            Edit (for testing)
-          <% end %>
-
-          <%= link_to auction_item_path(@auction_item), method: :delete, data: { confirm: "Are you sure?" }, title: "Delete Auction" do %>
-            Delete (for testing)
-          <% end %>
-        <% else %>
-          <%= link_to edit_auction_item_path(@auction_item), class: "auction-item-edit-btn", title: "Edit Auction" do %>
+        <%= link_to edit_auction_item_path(@auction_item), class: "auction-item-edit-btn", title: "Edit Auction" do %>
             <i class="fa-solid fa-pen-to-square"></i>
           <% end %>
 
           <%= link_to auction_item_path(@auction_item), method: :delete, data: { confirm: "Are you sure?" }, class: "auction-item-delete-btn", title: "Delete Auction" do %>
             <i class="fa-solid fa-trash"></i>
           <% end %>
-        <% end %>
       </div>
     <% end %>
 
@@ -107,21 +90,22 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
       <div class="auction-item-status auction-item-timer" data-end-time="<%= @auction_item.closing_date.iso8601 %>">
         <% now = Time.zone.now %>
         <% if @auction_item.opening_date > now %>
-          Opens on <%= @auction_item.opening_date.strftime('%b %d, %Y') %>
+          <span class="local-time" data-time="<%= @auction_item.opening_date.iso8601 %>">Opens on ...</span>
+        
         <% elsif @auction_item.closing_date < now %>
-          Closed on <%= @auction_item.closing_date.strftime('%b %d, %Y') %>
+          <span class="local-time" data-time="<%= @auction_item.closing_date.iso8601 %>">Closed on ...</span>
+          
           <% if @auction_item.is_archived? %>
             <span class="status-label settled"> – Settled <br> $<%= number_with_precision(@auction_item.bid_pool, precision: 2) %> paid to seller</span>
-
           <% else %>
             <span class="status-label unsettled"> – Unsettled </span>
-
           <% end %>
-          
+
         <% else %>
           <span>Closing in <strong><span class="countdown-text">...</span></strong></span>
         <% end %>
       </div>
+
 
 
       <div class="auction-item-bid-info-container">
@@ -398,4 +382,29 @@ Blandit quisque egestas eget, arcu cursus vehicula mauris. Massa integer malesua
     });
   });
 
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const localTimeElements = document.querySelectorAll(".local-time");
+
+    localTimeElements.forEach(el => {
+      const iso = el.dataset.time;
+      if (iso) {
+        const date = new Date(iso);
+        const formatted = date.toLocaleString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+
+        if (el.textContent.includes("Opens")) {
+          el.textContent = `Opens on ${formatted}`;
+        } else if (el.textContent.includes("Closed")) {
+          el.textContent = `Closed on ${formatted}`;
+        }
+      }
+    });
+  });
 </script>

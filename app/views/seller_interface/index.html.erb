@@ -1,6 +1,6 @@
 <% if @active_or_upcoming_auctions.any? %>
   <div class="m-2 w-full justify-center flex items-center">
-    <%= link_to new_auction_item_path, class: "w-[50%] flex items-center justify-center gap-2 bg-blue-800 hover:bg-[#142766] text-white px-4 py-2 rounded-md shadow transition-colors duration-200" do %>
+    <%= link_to new_auction_item_path, class: "w-[50%] flex items-center justify-center gap-2 bg-blue-800 hover:bg-[#142766] text-white px-4 py-2 rounded-md shadow transition-colors duration-200 mt-4" do %>
       <i class="text-white fa-solid fa-plus"></i>
       <div class="text-white">Add Auction Item</div>
     <% end %>
@@ -22,10 +22,11 @@
           <div class="countdown-container">
             <% if is_active %>
               <p class="countdown-wrapper">
-                Closing in <strong><span class="countdown-text" data-end-time="<%= auction.closing_date.iso8601 %>">...</span></strong>
+                <span class="countdown-text" data-end-time="<%= auction.closing_date.iso8601 %>">...</span>
               </p>
             <% end %>
           </div>
+
 
         </div>
 
@@ -75,7 +76,7 @@
       <% else %>
         <div class="upcoming-auction">
           <p>This auction will begin on</p>
-          <div class="upcoming-date"><%= auction.opening_date.strftime('%B %d, %Y %I:%M %p') %></div>
+          <div class="upcoming-date" data-start-time="<%= auction.opening_date.iso8601 %>"></div>
         </div>
       <% end %>
         </div>
@@ -187,43 +188,81 @@
   document.addEventListener("DOMContentLoaded", function () {
     const countdownElements = document.querySelectorAll(".countdown-text");
 
-  countdownElements.forEach(countdownElement => {
-    
-    const endTime = new Date(countdownElement.dataset.endTime).getTime();
+    countdownElements.forEach(countdownElement => {
+      const wrapper = countdownElement.closest(".countdown-wrapper");
+      const endTime = new Date(countdownElement.dataset.endTime);
+      const endTimeMs = endTime.getTime();
 
-    function updateCountdown() {
       const now = new Date().getTime();
-      const timeRemaining = endTime - now;
+      const timeRemaining = endTimeMs - now;
 
-      if (timeRemaining <= 0) {
-        countdownElement.closest(".countdown-wrapper").innerHTML = "Closed on " +
-          new Date(endTime).toLocaleString(undefined, {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          });
+      if (timeRemaining > 24 * 60 * 60 * 1000) {
+        const formatted = endTime.toLocaleString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit"
+        });
+        wrapper.innerHTML = `Closes on <strong>${formatted}</strong>`;
         return;
       }
 
-      const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const remaining = endTimeMs - now;
 
-      const output = [];
-      if (days > 0) output.push(`${days}d`);
-      if (hours > 0 || days > 0) output.push(`${hours}h`);
-      output.push(`${minutes}m`);
-      if (days === 0 && hours === 0) output.push(`${seconds}s`);
+        if (remaining <= 0) {
+          const closedStr = endTime.toLocaleString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit'
+          });
+          wrapper.innerHTML = `Closed on ${closedStr}`;
+          return;
+        }
 
-      countdownElement.textContent = output.join(" ");
-    }
+        const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
 
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+        const output = [];
+        if (days > 0) output.push(`${days}d`);
+        if (hours > 0 || days > 0) output.push(`${hours}h`);
+        output.push(`${minutes}m`);
+        if (days === 0 && hours === 0) output.push(`${seconds}s`);
+
+        countdownElement.textContent = output.join(" ");
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    });
   });
-});
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const upcomingDates = document.querySelectorAll(".upcoming-date");
+
+    upcomingDates.forEach(el => {
+      const iso = el.dataset.startTime;
+      if (iso) {
+        const local = new Date(iso);
+        const options = {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        };
+        el.textContent = local.toLocaleString(undefined, options);
+      }
+    });
+  });
+
+
 </script>
 
