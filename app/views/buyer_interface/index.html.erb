@@ -51,7 +51,7 @@
                   <th>Estimated Value</th>
                   <th>Current Max Bid</th>
                   <th>Your Highest Bid</th>
-                  <th>Auction Ends</th>
+                  <th id="auction-ends-header">Auction Ends</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -92,11 +92,14 @@
 
                       <% user_bid = current_user.bids.where(auction_item: item).maximum(:amount) %>
                         <% is_highest = user_bid == item.max_bid %>
-                        <td class="bid-cell <%= is_highest ? 'winning-bid' : 'losing-bid' %>">                        $<%= number_with_precision(current_user.bids.where(auction_item: item).maximum(:amount), precision: 2) %>
-                      </td>
-                      <td class="date-cell">
-                        <i class="far fa-clock"></i>
-                        <%= item.closing_date.strftime('%B %d, %Y at %I:%M %p') %>
+                        <td class="bid-cell <%= is_highest ? 'winning-bid' : 'losing-bid' %>"> 
+                          $<%= number_with_precision(current_user.bids.where(auction_item: item).maximum(:amount), precision: 2) %>
+                      </td>                      
+  
+                      
+                      <td class="bid-cell <%= is_highest ? 'winning-bid' : 'losing-bid' %>">
+                        <% net = is_highest ? (item.innate_value - user_bid) : -user_bid %>
+                        $<%= number_with_precision(net, precision: 2) %>
                       </td>
                       <td>
                         <% if item.is_archived %>
@@ -121,18 +124,22 @@
       </div>
     </div>
 
+  
   <script>
+
     document.addEventListener('DOMContentLoaded', function () {
       const currentBidsBtn = document.getElementById('current-bids');
       const previousBidsBtn = document.getElementById('previous-bids');
       const currentBidsContent = document.getElementById('current-bids-content');
       const previousBidsContent = document.getElementById('previous-bids-content');
+      const auctionEndsHeader = document.getElementById('auction-ends-header');
 
       function setActive(activeBtn, inactiveBtn) {
         activeBtn.classList.add('active');
         inactiveBtn.classList.remove('active');
 
         if (activeBtn === currentBidsBtn) {
+          auctionEndsHeader.textContent = 'Auction Ends';
           currentBidsContent.classList.remove('hide');
           currentBidsContent.classList.add('show');
           previousBidsContent.classList.add('hide');
@@ -142,12 +149,16 @@
           previousBidsContent.classList.add('show');
           currentBidsContent.classList.add('hide');
           currentBidsContent.classList.remove('show');
+          auctionEndsHeader.textContent = 'Net';
+
         }
       }
 
       currentBidsBtn.addEventListener('click', () => setActive(currentBidsBtn, previousBidsBtn));
       previousBidsBtn.addEventListener('click', () => setActive(previousBidsBtn, currentBidsBtn));
     });
+
+
   </script>
 </body>
 </html>
