@@ -7,6 +7,7 @@ class Bid < ApplicationRecord
 
   validates :amount, presence: true, numericality: { greater_than: 0 }
   validate :bid_must_be_higher_than_current_max
+  validate :auction_must_be_open_for_bidding  # validate auction is still open 
 
   after_create_commit :broadcast_new_bid
 
@@ -28,4 +29,11 @@ class Bid < ApplicationRecord
                                    total_bids: auction_item.total_bids
                                  })
   end
+
+  def auction_must_be_open_for_bidding
+    if auction_item.closed? || auction_item.archived?
+      errors.add(:base, "You cannot place a bid on a closed or archived auction.")
+    end
+  end
+
 end
