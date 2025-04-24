@@ -98,7 +98,16 @@ class AuctionItem < ApplicationRecord
     end
 
     puts "Auction #{name} has closed and now will be settled."
+
+
+    unless winning_bid.present? #if not, no bids placed for this item
+      Rails.logger.info("Auction #{name} has no bids and will be marked as closed without payout.")
+      update!(is_archived: true)
+      return
+    end
+
     winning_buyer = winning_bid.buyer
+
 
     # Updates itself, the winning buyer, and the seller
     update!(winning_buyer_id: winning_buyer.id, is_archived: true)
