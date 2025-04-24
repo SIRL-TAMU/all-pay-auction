@@ -237,7 +237,7 @@
       }
     }
 
-    function updateMinAndMaxBounds() {
+    function updateClosingBounds() {
       const openDate = new Date(openingDateInput.value);
       if (!isNaN(openDate)) {
         const minClose = openDate;
@@ -254,18 +254,15 @@
     }
 
     const now = new Date();
-    const roundedNow = roundToNearest10Minutes(now);
     const defaultClose = roundToNearest10Minutes(new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)); // +1 week
 
-    openingDateInput.min = formatDateTimeLocal(roundedNow); // Prevent past time
-
-    initializeInput(openingDateInput, roundedNow);
+    initializeInput(openingDateInput, now);
     initializeInput(closingDateInput, defaultClose);
-    updateMinAndMaxBounds();
+    updateClosingBounds();
 
     openingDateInput.addEventListener("blur", function () {
       openingDateInput.value = formatDateTimeLocal(roundToNearest10Minutes(new Date(openingDateInput.value)));
-      updateMinAndMaxBounds();
+      updateClosingBounds();
     });
 
     closingDateInput.addEventListener("blur", function () {
@@ -281,6 +278,7 @@
       convertToUTC(closingDateInput);
     });
   });
+
 
   const descriptionInput = document.getElementById("product-description");
   const descriptionCount = document.getElementById("description-count");
