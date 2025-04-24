@@ -102,6 +102,10 @@ class AuctionItem < ApplicationRecord
 
     unless winning_bid.present? #if not, no bids placed for this item
       Rails.logger.info("Auction #{name} has no bids and will be marked as closed without payout.")
+      if currency?
+        # For currency items, return to sellers liquid balance
+        seller.update!(liquid_balance: seller.liquid_balance + innate_value)
+      end
       update!(is_archived: true)
       return
     end
