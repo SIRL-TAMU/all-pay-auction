@@ -9,8 +9,14 @@
           <% if logged_in? %>
             <% if seller? %>
               <%= link_to "My Account", seller_setting_path, class: "hover:underline" %>
+              <div class="text-xs text-gray-600">
+                Balance: <span class="font-semibold text-green-600 text-base">$<%= number_with_precision(current_user.liquid_balance, precision: 2) %></span>
+              </div>
             <% elsif buyer? %>
               <%= link_to "My Account", buyer_setting_path, class: "hover:underline" %>
+              <div class="text-xs text-gray-600">
+                Balance: <span class="font-semibold text-green-600 text-base">$<%= number_with_precision(current_user.liquid_balance, precision: 2) %></span>
+              </div>
             <% end %>
           <% else %>
             <%= link_to "Login", login_path(account_type: "buyer"), class: "hover:underline" %>
