@@ -65,9 +65,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_25_152622) do
     t.decimal "curr_max_bid", null: false
     t.bigint "winning_buyer_id"
     t.integer "item_type", default: 0, null: false
-    t.boolean "hide_bidding_history", default: false, null: false
     t.boolean "names_visible", default: true, null: false
     t.boolean "bid_amount_visible", default: true, null: false
+    t.boolean "hide_bidding_history", default: false, null: false
     t.index ["seller_id"], name: "index_auction_items_on_seller_id"
   end
 
