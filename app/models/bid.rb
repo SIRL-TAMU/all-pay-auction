@@ -7,6 +7,7 @@ class Bid < ApplicationRecord
 
   validates :amount, presence: true, numericality: { greater_than: 0 }
   validate :bid_must_be_higher_than_current_max
+  validate :auction_must_be_open_for_bidding  # validate auction is still open 
 
   after_create_commit :broadcast_new_bid
 
@@ -20,6 +21,8 @@ class Bid < ApplicationRecord
   private
 
   def broadcast_new_bid
+    return if auction_item.hide_bidding_history   # do not broadcast bids if we want to hide bidding history
+
     ActionCable.server.broadcast("bids_#{auction_item.id}", {
                                    auction_item_id: auction_item.id,
                                    amount: amount,
@@ -28,4 +31,11 @@ class Bid < ApplicationRecord
                                    total_bids: auction_item.total_bids
                                  })
   end
+
+  def auction_must_be_open_for_bidding
+    if auction_item.closed? || auction_item.archived?
+      errors.add(:base, "You cannot place a bid on a closed or archived auction.")
+    end
+  end
+
 end
