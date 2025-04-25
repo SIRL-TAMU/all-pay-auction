@@ -1,4 +1,10 @@
-<div class="auction-item-container" data-auction-item-id="<%= @auction_item.id %>">
+<div class="auction-item-container"
+     data-auction-item-id="<%= @auction_item.id %>"
+     data-names-visible="<%= @auction_item.names_visible %>"
+     data-bid-amount-visible="<%= @auction_item.bid_amount_visible %>"
+     data-is-seller="<%= current_user == @auction_item.seller %>"
+     data-current-user-id="<%= current_user.id %>"
+     data-min-increment="<%= @auction_item.min_increment %>">
   <div class="auction-item-info-left">
     <div class="auction-item-title">
     <%= @auction_item.name %> (<%= @auction_item.currency? ? "Currency Bid" : "Physical Bid" %>)
@@ -171,10 +177,9 @@
     <% end %>
     </div>
 
-
     <% if @auction_item.bids.any? %>
       <% if @auction_item.hide_bidding_history && current_user != @auction_item.seller %>
-        <!-- Show 'My Bids' to regular users if bid history is hidden -->
+        <!-- Show 'My Bids' section when bid history is hidden -->
         <% my_bids = @auction_item.bids.where(buyer: current_user).order(created_at: :desc) %>
         <% if my_bids.any? %>
           <div class="auction-item-bid-history">
@@ -183,7 +188,7 @@
               <% my_bids.each do |bid| %>
                 <div class="auction-item-bid-entry">
                   <div class="auction-item-user-card">
-                    <p><%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %></p>
+                    <p class="auction-item-user-card-subtext" data-created-at="<%= bid.created_at.iso8601 %>"></p>
                   </div>
                   <p class="auction-item-user-card-amount">
                     <strong><%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD</strong>
@@ -195,50 +200,8 @@
         <% else %>
           <p class="text-gray-600 italic">You have not placed any bids yet.</p>
         <% end %>
-
       <% else %>
-        <% fake_names = [
-          "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
-          "Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree",
-          "Weedle", "Kakuna", "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot",
-          "Rattata", "Raticate", "Spearow", "Fearow", "Ekans", "Arbok",
-          "Pikachu", "Raichu", "Sandshrew", "Sandslash", "Nidoran♀", "Nidorina",
-          "Nidoqueen", "Nidoran♂", "Nidorino", "Nidoking", "Clefairy", "Clefable",
-          "Vulpix", "Ninetales", "Jigglypuff", "Wigglytuff", "Zubat", "Golbat",
-          "Oddish", "Gloom", "Vileplume", "Paras", "Parasect", "Venonat",
-          "Venomoth", "Diglett", "Dugtrio", "Meowth", "Persian", "Psyduck",
-          "Golduck", "Mankey", "Primeape", "Growlithe", "Arcanine", "Poliwag",
-          "Poliwhirl", "Poliwrath", "Abra", "Kadabra", "Alakazam", "Machop",
-          "Machoke", "Machamp", "Bellsprout", "Weepinbell", "Victreebel", "Tentacool",
-          "Tentacruel", "Geodude", "Graveler", "Golem", "Ponyta", "Rapidash",
-          "Slowpoke", "Slowbro", "Magnemite", "Magneton", "Farfetch’d", "Doduo",
-          "Dodrio", "Seel", "Dewgong", "Grimer", "Muk", "Shellder",
-          "Cloyster", "Gastly", "Haunter", "Gengar", "Onix", "Drowzee",
-          "Hypno", "Krabby", "Kingler", "Voltorb", "Electrode", "Exeggcute",
-          "Exeggutor", "Cubone", "Marowak", "Hitmonlee", "Hitmonchan", "Lickitung",
-          "Koffing", "Weezing", "Rhyhorn", "Rhydon", "Chansey", "Tangela",
-          "Kangaskhan", "Horsea", "Seadra", "Goldeen", "Seaking", "Staryu",
-          "Starmie", "MrMime", "Scyther", "Jynx", "Electabuzz", "Magmar",
-          "Pinsir", "Tauros", "Magikarp", "Gyarados", "Lapras", "Ditto",
-          "Eevee", "Vaporeon", "Jolteon", "Flareon", "Porygon", "Omanyte",
-          "Omastar", "Kabuto", "Kabutops", "Aerodactyl", "Snorlax", "Articuno",
-          "Zapdos", "Moltres", "Dratini", "Dragonair", "Dragonite", "Mewtwo", "Mew"
-        ] %>
-
-
-        <% bidder_map = {} %>
-        <% index = 0 %>
-
-        <% # Assign fake names in ascending order of bids (earliest first) %>
-        <% @auction_item.bids.order(created_at: :asc).each do |bid| %>
-          <% if !@auction_item.names_visible && current_user != @auction_item.seller && bid.buyer != current_user %>
-            <% unless bidder_map.key?(bid.buyer.id) %>
-              <% bidder_map[bid.buyer.id] = fake_names[index % fake_names.length] %>
-              <% index += 1 %>
-            <% end %>
-          <% end %>
-        <% end %>
-
+        <!-- Full Bid History -->
         <div class="auction-item-bid-history">
           <p class="auction-item-user-card-title">Bid History</p>
           <div class="auction-bid-scroll">
@@ -252,14 +215,12 @@
                         <span class="text-green-600 font-semibold">(You)</span>
                       <% end %>
                     <% else %>
-                      <em><%= bidder_map[bid.buyer.id] %></em>
+                      <em>Anonymous Bidder</em>
                     <% end %>
                   </p>
-                  <p class="auction-item-user-card-subtext">
-                    <%= bid.created_at.strftime('%b %d, %Y at %I:%M%p') %>
-                  </p>
-                </div>
+                  <p class="auction-item-user-card-subtext" data-created-at="<%= bid.created_at.iso8601 %>"></p>
 
+                </div>
                 <% if @auction_item.bid_amount_visible || current_user == @auction_item.seller || bid.buyer == current_user %>
                   <p class="auction-item-user-card-amount">
                     <strong><%= number_to_currency(bid.amount, unit: "$", precision: 2) %> USD</strong>
@@ -273,9 +234,6 @@
             <% end %>
           </div>
         </div>
-
-
-
       <% end %>
     <% end %>
 
@@ -480,4 +438,26 @@
       }
     });
   });
+
+  document.querySelectorAll('.auction-item-user-card-subtext').forEach((el) => {
+    const formatToLocalTime = (isoString) => {
+      const date = new Date(isoString);
+      const options = {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      };
+      return date.toLocaleString(undefined, options).replace(',', ' at');
+    };
+
+
+    const utcTime = el.dataset.createdAt;
+    if (utcTime) {
+      el.textContent = formatToLocalTime(utcTime);
+    }
+  });
+
 </script>

@@ -4,10 +4,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const auctionItemContainer = document.querySelector(
     ".auction-item-container"
   );
-
   if (!auctionItemContainer) return;
 
   const auctionItemId = auctionItemContainer.dataset.auctionItemId;
+  const namesVisible = auctionItemContainer.dataset.namesVisible === "true";
+  const bidAmountVisible =
+    auctionItemContainer.dataset.bidAmountVisible === "true";
+  const isSeller = auctionItemContainer.dataset.isSeller === "true";
+  const currentUserId = parseInt(auctionItemContainer.dataset.currentUserId);
+  const minIncrement = parseFloat(
+    auctionItemContainer.dataset.minIncrement || "0.01"
+  );
 
   consumer.subscriptions.create(
     { channel: "BidChannel", auction_item_id: auctionItemId },
@@ -35,13 +42,13 @@ document.addEventListener("DOMContentLoaded", () => {
           totalBidsEl.textContent = `${data.total_bids} bids`;
         }
 
-        const bidInput = document.querySelector(".auction-item-bid-input");
-        if (bidInput) {
-          const minIncrement = parseFloat(
-            bidInput.dataset.minIncrement || "0.01"
-          );
+        // Update min bid input (Alpine.js component)
+        const alpineBidComponent = document.querySelector("[x-data]");
+        if (alpineBidComponent && window.Alpine) {
+          const component = Alpine.$data(alpineBidComponent);
           const newMin = parseFloat(data.amount) + minIncrement;
-          bidInput.min = newMin.toFixed(2);
+          component.selectedValue = newMin;
+          component.selectedText = `$${newMin.toFixed(2)} USD`;
         }
 
         // Prepend bid to history
@@ -49,18 +56,62 @@ document.addEventListener("DOMContentLoaded", () => {
         if (bidHistory) {
           const newBid = document.createElement("div");
           newBid.className = "auction-item-bid-entry";
+
+          // Buyer name logic
+          let buyerName = data.buyer_name;
+          if (!namesVisible && !isSeller && currentUserId !== data.buyer_id) {
+            buyerName = "Anonymous Bidder";
+          } else if (currentUserId === data.buyer_id) {
+            buyerName += " (You)";
+          }
+
+          // Amount logic
+          let amountDisplay = `<strong>$${parseFloat(data.amount).toFixed(
+            2
+          )} USD</strong>`;
+          if (
+            !bidAmountVisible &&
+            !isSeller &&
+            currentUserId !== data.buyer_id
+          ) {
+            amountDisplay = `<strong><em>Amount Hidden</em></strong>`;
+          }
+
+          const formatToLocalTime = (isoString) => {
+            const date = new Date(isoString);
+            const options = {
+              year: "numeric",
+              month: "short",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            };
+            return date.toLocaleString(undefined, options).replace(",", " at");
+          };
+
+          const createdAtLocal = formatToLocalTime(data.created_at);
+
           newBid.innerHTML = `
             <div class="auction-item-user-card">
-              <p>${data.buyer_name}</p>
-              <p class="auction-item-user-card-subtext">${data.created_at}</p>
+              <p>${buyerName}</p>
+              <p class="auction-item-user-card-subtext">${createdAtLocal}</p>
             </div>
             <p class="auction-item-user-card-amount">
               <strong>$${parseFloat(data.amount).toFixed(2)} USD</strong>
             </p>
           `;
-          bidHistory
-            .querySelector(".auction-item-user-card-title")
-            .after(newBid);
+
+          const scrollContainer = bidHistory.querySelector(
+            ".auction-bid-scroll"
+          );
+          if (scrollContainer) {
+            scrollContainer.insertBefore(newBid, scrollContainer.firstChild);
+
+            if (scrollContainer.scrollTop === 0) {
+              scrollContainer.scrollTop = 0;
+            }
+          }
         }
       },
     }
