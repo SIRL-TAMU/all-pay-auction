@@ -21,6 +21,8 @@ class Bid < ApplicationRecord
   private
 
   def broadcast_new_bid
+    return if auction_item.hide_bidding_history   # do not broadcast bids if we want to hide bidding history
+
     ActionCable.server.broadcast("bids_#{auction_item.id}", {
                                    auction_item_id: auction_item.id,
                                    amount: amount,
