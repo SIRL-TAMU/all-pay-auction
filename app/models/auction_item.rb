@@ -92,13 +92,19 @@ class AuctionItem < ApplicationRecord
   end
 
   def close_auction!(force: false)
-    if archived? || (!closed? && !force)
+    if force
+      puts "Closing and settling auction by force."
+      update!(closing_date: Time.zone.now)
+      sleep(0.5)
+    end
+
+    if archived? || !closed?
       puts "Auction #{name} is either settled or not closed yet."
       return
     end
 
     puts "Auction #{name} has closed and now will be settled."
-
+    update!(is_archived: true)
 
     unless winning_bid.present? # if not, no bids placed for this item
       Rails.logger.info("Auction #{name} has no bids and will be marked as closed without payout.")
@@ -106,12 +112,10 @@ class AuctionItem < ApplicationRecord
         # For currency items, return to sellers liquid balance
         seller.update!(liquid_balance: seller.liquid_balance + innate_value)
       end
-      update!(is_archived: true)
       return
     end
 
     winning_buyer = winning_bid.buyer
-
 
     # Updates itself, the winning buyer, and the seller
     update!(winning_buyer_id: winning_buyer.id, is_archived: true)
