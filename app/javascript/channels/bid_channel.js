@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <p class="auction-item-user-card-subtext">${createdAtLocal}</p>
             </div>
             <p class="auction-item-user-card-amount">
-              <strong>$${parseFloat(data.amount).toFixed(2)} USD</strong>
+              ${amountDisplay}
             </p>
           `;
 
