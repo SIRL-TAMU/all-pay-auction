@@ -36,18 +36,28 @@ heroku create your-app-name
 ```bash
 heroku addons:create heroku-postgresql:hobby-dev
 heroku addons:create scheduler:standard
+heroku addons:create heroku-redis:mini
 ```
 
 3. **Set Environment Variables**
 ```bash
 heroku config:set RAILS_ENV=production \
-  STRIPE_PUBLIC_KEY=<your_stripe_live_public_key> \
-  STRIPE_SECRET_KEY=<your_stripe_live_secret_key> \
-  DATABASE_URL=$(heroku config:get <DATABASE_URL>)
+  STRIPE_PUBLISHABLE_KEY=your_key \
+  STRIPE_SECRET_KEY=your_key \
+  STRIPE_WEBHOOK_SECRET=your_key \
+  STRIPE_PROD_WEBHOOK_SECRET=your_key \
+  RAILS_ENV=production \
+  AWS_ACCESS_KEY_ID=your_aws_key \
+  AWS_SECRET_ACCESS_KEY=your_aws_secret \
 ```
 4. **Deploy Code To Heroku**
 ```bash
 git push heroku main
+```
+
+5. **Database Migrations**
+```bash
+heroku run rails db:migrate
 ```
 
 ## Tech Stack
@@ -55,20 +65,21 @@ git push heroku main
 - **Backend**: Ruby on Rails 7.2
 - **Language**: Ruby 3.3
 - **Database**: PostgreSQL
-- **Version** Control: Git/GitHub
+- **Version Control**: Git/GitHub
 - **Containerization**: Docker
 
 ## Environment Variables
 
 ```bash
 # Required for production
-STRIPE_PUBLIC_KEY=your_live_publishable_key
-STRIPE_SECRET_KEY=your_live_secret_key
-DATABASE_URL=your_postgresql_url
+STRIPE_PUBLISHABLE_KEY
+STRIPE_SECRET_KEY
+STRIPE_WEBHOOK_SECRET
+STRIPE_PROD_WEBHOOK_SECRET
 RAILS_ENV=production
-SECRET_KEY_BASE=your_rails_secret_key
-AWS_ACCESS_KEY_ID=your_aws_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+
 ```
 
 ## Documents
