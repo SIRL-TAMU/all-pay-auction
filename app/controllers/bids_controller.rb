@@ -6,7 +6,7 @@ class BidsController < ApplicationController
 
     def create
       @auction_item = AuctionItem.find(params[:bid][:auction_item_id])
-      if @auction_item.closed? || @auction_item.archived? 
+      if @auction_item.closed? || @auction_item.archived?
         redirect_to auction_item_path(@auction_item), alert: "This auction has ended. You cannot place a bid."
         return
       end
