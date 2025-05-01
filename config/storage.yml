@@ -12,7 +12,7 @@ amazon:
   access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
   secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
   region: us-east-2
-  bucket: swirl-all-pay-auction-bucket
+  bucket: swirl-allpay
   public: true
 # Remember not to checkin your GCS keyfile to a repository
 # google:
