@@ -26,12 +26,10 @@ Before deployment, ensure the following are installed:
 ### Heroku Setup
 
 1. **Create a Heroku App**
-   ```bash
-   heroku create your-app-name
-   
 ```bash
 # Install Heroku CLI
 curl https://cli-assets.heroku.com/install.sh | sh
+heroku create your-app-name
 ```
 
 2. **Install Required Add-Ons**
