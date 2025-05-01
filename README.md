@@ -89,6 +89,47 @@ GOOGLE_SECRET_ACCESS_KEY
 GOOGLE_CLIENT_ID
 ```
 
+## 🔐 Environment Variables – Google OAuth Setup
+
+This section explains how to generate your **Google OAuth credentials**, which are required for users to log in using Google.
+
+### ✅ Steps to Create Google Client ID and Secret
+
+1. **Create a Google Account**  
+   [https://accounts.google.com](https://accounts.google.com)
+
+2. **Visit the Google Cloud Console**  
+   [https://console.cloud.google.com](https://console.cloud.google.com)
+
+3. **Create or select a project** in the top nav bar.
+
+4. Go to the sidebar menu → **“APIs & Services” → “Credentials”**
+
+5. Click **“+ Create Credentials”**  
+   → Select **“OAuth client ID”**
+
+6. On the setup screen:
+   - **Application type**: Choose **Web application**
+   - **Name**: (e.g., "All Pay Auction Web")
+   - **Authorized redirect URIs**: Add the following URIs:
+
+     ```
+     http://localhost:3000/auth/google_oauth2/callback
+     https://your-production-url.com/auth/google_oauth2/callback
+     ```
+
+     > Example:
+     > `https://all-pay-auction3-478f271f12bd.herokuapp.com/auth/google_oauth2/callback`
+
+7. Click **Create**, then copy the following:
+   - **Client ID**
+   - **Client Secret**
+
+---
+
+
+
+
 ## Documents
 [Team Working Agreement](/documentation/TWA.md)
 
