@@ -88,21 +88,23 @@ auction_items = AuctionItem.create!([
                                       }
                                     ])
 
-# Create sample bids
-Bid.create!([
-              {
-                buyer: buyers.first,
-                auction_item: auction_items.first,
-                amount: 550.00,
-                created_date: Time.zone.now
-              },
-              {
-                buyer: buyers.last,
-                auction_item: auction_items.last,
-                amount: 1100.00,
-                created_date: Time.zone.now
-              }
-            ])
+  # Create sample bids
+  [
+    {
+      buyer: buyers.first,
+      auction_item: auction_items.first,
+      amount: 550.00,
+      created_at: Time.zone.now
+    },
+    {
+      buyer: buyers.last,
+      auction_item: auction_items.last,
+      amount: 1100.00,
+      created_at: Time.zone.now
+    }
+  ].each do |attrs|
+    Bid.new(attrs).save(validate: false)
+  end
 
 # Create sample transactions
 Transaction.create!([
@@ -159,13 +161,14 @@ Transaction.create!([
   curr_max_bid: 0.0
 )
 
-# Create a bid for the auction item
-@bid = Bid.create!(
-  buyer: @buyer,
-  auction_item: @auction_item,
-  amount: 150.0,
-  created_date: Time.zone.now - 1.day
-)
+  # Create a bid for the auction item
+  @bid = Bid.new(
+    buyer: @buyer,
+    auction_item: @auction_item,
+    amount: 150.0,
+    created_at: Time.zone.now - 1.day
+  )
+  @bid.save(validate: false)
 
 # Auction test 2
 # Create a seller
@@ -223,19 +226,20 @@ Transaction.create!([
   curr_max_bid: 0.0
 )
 
-# Create bids for the auction items
-Bid.create!(
-  buyer: @buyer1,
-  auction_item: @auction_item1,
-  amount: 150.0,
-  created_date: Time.zone.now - 1.day
-)
-Bid.create!(
-  buyer: @buyer2,
-  auction_item: @auction_item2,
-  amount: 250.0,
-  created_date: Time.zone.now - 1.day
-)
+  Bid.new(
+    buyer: @buyer1,
+    auction_item: @auction_item1,
+    amount: 150.0,
+    created_at: Time.zone.now - 1.day
+  ).save(validate: false)
+
+  Bid.new(
+    buyer: @buyer2,
+    auction_item: @auction_item2,
+    amount: 250.0,
+    created_at: Time.zone.now - 1.day
+  ).save(validate: false)
+
 
 Rails.logger.debug do
   "Created #{Buyer.count} buyers, #{Seller.count} sellers, " \
