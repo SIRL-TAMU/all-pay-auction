@@ -127,7 +127,111 @@ This section explains how to generate your **Google OAuth credentials**, which a
 
 ---
 
+## ☁️ Environment Variables – Amazon S3 Setup
 
+This section explains how to configure **Amazon S3** for use with Active Storage in a Rails app.
+
+---
+
+### ✅ Steps to Set Up an S3 Bucket
+
+1. **Create an AWS Account**  
+   [https://aws.amazon.com/](https://aws.amazon.com/)
+
+2. Navigate to the **Amazon S3** service
+
+3. Click **“Create bucket”**
+
+4. Configure your bucket:
+   - **Name**: Choose a unique name (e.g., `swirl-allpay`)
+   - **ACLs**: Enable ACLs
+   - **Block Public Access**: **Uncheck “Block all public access”**
+   - Click **“Create bucket”**
+
+---
+
+### ⚙️ Update `config/storage.yml`
+
+Replace `[bucket-name]` with your actual bucket name:
+
+```yaml
+amazon:
+  service: S3
+  access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
+  secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
+  region: us-east-2
+  bucket: [bucket-name]
+  public: true
+```
+
+---
+
+### 🔐 Set IAM Permissions
+
+1. Go to the **IAM** section in AWS Console
+
+2. Click **“Policies”** → **“Create policy”**
+
+3. Choose **JSON view** and paste the following and replace  `[bucket-name]` with your actual bucket name:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowObjectOperations",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:PutBucketAcl",
+        "s3:ListBucket",
+        "s3:DeleteObject",
+        "s3:PutObjectAcl"
+      ],
+      "Resource": "arn:aws:s3:::[bucket-name]/*"
+    },
+    {
+      "Sid": "AllowListBucket",
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::[bucket-name]"
+    }
+  ]
+}
+```
+
+4. Click **Next**, then **name the policy** (e.g., `S3AllPayAccessPolicy`)
+
+---
+
+### 👤 Create IAM User
+
+1. Go to **Users** → **Create user**
+
+2. Name your user (e.g., `swirl-user`)
+
+3. Select **“Attach policies directly”**
+
+4. Find and attach the policy you just created
+
+5. Complete the wizard and **Create user**
+
+---
+
+### 🔑 Create Access Keys
+
+1. Select your new IAM user
+
+2. Click **“Create access key”**
+
+3. Choose **“Other”** as the use case
+
+4. Click **“Next”**, then **Create access key**
+
+5. Save the **Access Key ID** and **Secret Access Key**
+
+---
 
 
 ## Documents
