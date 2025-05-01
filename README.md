@@ -5,7 +5,6 @@ All Pay Auction implements an all-pay auction where every bidder pays their bid,
 
 ⚠️ **The application is currently configured for debugging and testing purposes. Do not deploy to production without addressing the following:**
 
-- **Debug Mode**: The Rails environment is set to `debug`, which may expose sensitive information. Switch to `production` before deployment.
 - **Manual Auction Settlement**: Sellers can manually settle auctions. **This feature must be disabled in production** to ensure automated, time-based settlement.
 - **Stripe Sandbox Keys**: The Stripe API keys are configured for the sandbox environment. Replace with live keys for production use.
 
@@ -22,8 +21,6 @@ Before deployment, ensure the following are installed:
 - Heroku CLI (for Heroku deployment)
 
 ## Deployment
-
-### Heroku Setup
 
 1. **Create a Heroku App**
 ```bash
@@ -49,6 +46,8 @@ heroku config:set RAILS_ENV=production \
   RAILS_ENV=production \
   AWS_ACCESS_KEY_ID=your_aws_key \
   AWS_SECRET_ACCESS_KEY=your_aws_secret \
+  GOOGLE_SECRET_ACCESS_KEY=your_google_secret \
+  GOOGLE_CLIENT_ID=your_google_id
 ```
 4. **Deploy Code To Heroku**
 ```bash
@@ -59,6 +58,13 @@ git push heroku main
 ```bash
 heroku run rails db:migrate
 ```
+
+6. **Create cron job for auction settlement**
+- Go to the Heroku application dashboard
+- Click on resources, and then navigate to Add-on Services
+- Click on Heroku Scheduler, and add job
+- Choose a proper interval according to your scheduler plan
+- Add the command `rake scheduler:close_and_settle_auctions`
 
 ## Tech Stack
 - **Frontend**: HTML, CSS, JavaScript
@@ -79,7 +85,8 @@ STRIPE_PROD_WEBHOOK_SECRET
 RAILS_ENV=production
 AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
-
+GOOGLE_SECRET_ACCESS_KEY
+GOOGLE_CLIENT_ID
 ```
 
 ## Documents
