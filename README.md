@@ -95,6 +95,8 @@ GOOGLE_CLIENT_ID
 ## Web Application Link
 Deploy to heroku: https://all-pay-auction3-478f271f12bd.herokuapp.com/
 
+Note: The current heroku deployment is deployed using the `test-google-2` branch
+
 ## Code Quality and Test Coverage Reports
 Code climate: https://codeclimate.com/github/SIRL-TAMU/all-pay-auction
 
