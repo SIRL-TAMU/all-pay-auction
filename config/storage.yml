@@ -9,8 +9,8 @@ local:
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 amazon:
   service: S3
-  access_key_id: AKIATNVEVPDUOTL3DV7M
-  secret_access_key: 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
+  access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
+  secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
   region: us-east-2
   bucket: swirl-all-pay-auction-bucket
   public: true
