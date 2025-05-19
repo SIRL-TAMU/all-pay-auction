@@ -33,7 +33,7 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
-gem "rack", "~> 3.1.8"
+gem "rack", "~> 3.1.15"
 gem "rubocop", "~> 1.72.2"
 gem "sassc-rails"
 
