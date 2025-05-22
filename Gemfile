@@ -34,7 +34,7 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 gem "bootsnap", require: false
 
 gem "rack", "~> 3.1.8"
-gem "rubocop", "~> 1.72.2"
+gem "rubocop", "~> 1.75.7"
 gem "sassc-rails"
 
 gem "rubocop-minitest", "~> 0.37.1"
